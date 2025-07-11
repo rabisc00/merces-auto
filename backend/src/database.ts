@@ -6,6 +6,7 @@ import { Travel } from "./models/travel";
 import { WorkingHours } from "./models/workingHours";
 import { DayOfTheWeekTime } from "./models/dayOfTheWeekTime";
 import { DayOfTheWeek } from "./models/dayOfTheWeek";
+import { AppUser } from "./models/appUser";
 import * as dotenv from 'dotenv';
 import { Sequelize } from "sequelize-typescript";
 
@@ -18,6 +19,6 @@ export const sequelize = new Sequelize({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    models: [Bus, Driver, BusRoute, RouteTime, Travel, WorkingHours, DayOfTheWeek, DayOfTheWeekTime],
+    models: [Bus, Driver, BusRoute, RouteTime, Travel, WorkingHours, DayOfTheWeek, DayOfTheWeekTime, AppUser],
     logging: false
 });

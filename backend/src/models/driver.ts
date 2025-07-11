@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, NotNull, Unique } from "sequelize-typescript";
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, NotNull, Unique, AllowNull } from "sequelize-typescript";
 
 @Table({ tableName: 'driver' })
 export class Driver extends Model<Driver> {
@@ -20,6 +20,9 @@ export class Driver extends Model<Driver> {
     @Column(DataType.BOOLEAN)
     active!: boolean;
 
-    @Column(DataType.BLOB('long'))
-    picture!: Buffer;
+    @Column({
+        allowNull: true,
+        type: DataType.BLOB('long')
+    })
+    picture?: Buffer;
 }
