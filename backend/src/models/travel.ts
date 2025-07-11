@@ -2,7 +2,7 @@ import { AutoIncrement, Column, DataType, Model, PrimaryKey, BelongsTo, ForeignK
 import { Driver } from "./driver";
 import { Bus } from "./bus";
 import { BusRoute } from "./busRoute";
-import { BusTime } from "./routeTime";
+import { RouteTime } from "./routeTime";
 
 @Table({ tableName: 'travels' })
 export class Travel extends Model<Travel> {
@@ -20,7 +20,7 @@ export class Travel extends Model<Travel> {
     @ForeignKey(() => BusRoute)
     busRouteId!: number;
 
-    @ForeignKey(() => BusTime)
+    @ForeignKey(() => RouteTime)
     busTimeId!: number;
 
     @Column(DataType.DATEONLY)
@@ -41,6 +41,6 @@ export class Travel extends Model<Travel> {
     @BelongsTo(() => BusRoute)
     busRoute!: BusRoute;
 
-    @BelongsTo(() => BusTime)
-    busTime!: BusTime;
+    @BelongsTo(() => RouteTime)
+    busTime!: RouteTime;
 }

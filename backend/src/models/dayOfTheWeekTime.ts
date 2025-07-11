@@ -1,12 +1,12 @@
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
-import { BusTime } from "./routeTime";
+import { RouteTime } from "./routeTime";
 import { DayOfTheWeek } from "./dayOfTheWeek";
 
 @Table
 export class DayOfTheWeekTime extends Model<DayOfTheWeekTime> {
-    @ForeignKey(() => BusTime)
+    @ForeignKey(() => RouteTime)
     @Column
-    busTimeId!: number;
+    routeTimeId!: number;
 
     @ForeignKey(() => DayOfTheWeek)
     @Column
