@@ -1,23 +1,21 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from '../navigation/AppNavigator';;
 import axios from "axios";
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-
-type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
+import { LoginResponse } from "../types/api";
 
 export default function LoginScreen() {
-    const { login } = useAuth();
+    const { login, setIsAdmin } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = async () => {
         try {
-            const res = await axios.post('http://localhost:3000/users/login', { email, password });
-            console.log(res);
+            const res = await axios.post<LoginResponse>('http://localhost:3000/users/login', { email, password });
+
             login(res.data.token);
+            setIsAdmin(res.data.user.isAdmin);
 
             //navigation.navigate('Home');
         } catch (error) {

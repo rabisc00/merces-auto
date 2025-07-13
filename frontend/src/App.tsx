@@ -1,15 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppNavigator from './navigation/AppNavigator';
-import HomeScreen from './screens/HomeScreen';
+
+const loadFonts = async () => {
+	await Ionicons.loadFont();
+}
 
 export default function App() {
-  return (
-    <AuthProvider>
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    </AuthProvider>
-  );
+	const [fontsLoaded, setFontsLoaded] = useState(false);
+
+	useEffect(() => {
+		loadFonts().then(() => setFontsLoaded(true));
+	});
+
+    return (
+        <AuthProvider>
+            <AppNavigator />
+        </AuthProvider>
+    );
 }

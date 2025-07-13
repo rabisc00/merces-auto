@@ -47,12 +47,22 @@ export const login = async (req: Request, res: Response) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        const payload = { id: userFound.id, email: userFound.email };
+        const payload = { 
+            id: userFound.id, 
+            email: userFound.email, 
+            isAdmin: userFound.admin 
+        };
+        
         const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1d' });
         
-        res.status(200).json({ message: 'Login successful', token, user: { id: userFound.id, email: userFound.email } });
+        res.status(200).json({ message: 'Login successful', token, user: {
+            id: userFound.id, 
+            email: userFound.email, 
+            isAdmin: userFound.admin 
+        }});
+
     } catch (error) {
         console.error('Login error: ', error);
         res.status(500).json({ message: 'Invalid server error' });
     }
-}
+};
