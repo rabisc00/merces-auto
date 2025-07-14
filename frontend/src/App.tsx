@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppNavigator from './navigation/AppNavigator';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const loadFonts = async () => {
 	await Ionicons.loadFont();
@@ -17,7 +18,10 @@ export default function App() {
 
     return (
         <AuthProvider>
-            <AppNavigator />
+            <SafeAreaProvider>
+                <AppNavigator />
+            </SafeAreaProvider>
         </AuthProvider>
     );
-}
+};
+

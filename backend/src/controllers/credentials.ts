@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
-import { AppUser } from '../models/appUser';
+import { AppUser } from '../models/user.inteface';
 import bcrypt = require('bcrypt');
 
 dotenv.config();

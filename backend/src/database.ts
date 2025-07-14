@@ -6,7 +6,7 @@ import { Travel } from "./models/travel";
 import { WorkingHours } from "./models/workingHours";
 import { DayOfTheWeekTime } from "./models/dayOfTheWeekTime";
 import { DayOfTheWeek } from "./models/dayOfTheWeek";
-import { AppUser } from "./models/appUser";
+import { AppUser } from "./models/user.inteface";
 import * as dotenv from 'dotenv';
 import { Sequelize } from "sequelize-typescript";
 

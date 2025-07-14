@@ -3,6 +3,8 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    flex: 1,
+    justifyContent: 'center'
   },
   button: {
     flexDirection: 'row',
@@ -10,23 +12,16 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 8,
     borderRadius: 8,
-    backgroundColor: '#fff',
-  },
-  focusedButton: {
-    backgroundColor: '#e3f2fd', // Light blue background when focused
     borderWidth: 1,
-    borderColor: '#2196f3',
+    borderColor: '#219EBC'
   },
   icon: {
     marginRight: 16,
+    color: '#219EBC'
   },
   text: {
     fontSize: 16,
-    color: '#333',
-  },
-  focusedText: {
-    fontWeight: 'bold',
-    color: '#2196f3',
+    color: '#219EBC'
   }
 });
 

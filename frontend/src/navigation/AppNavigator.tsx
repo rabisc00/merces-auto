@@ -8,6 +8,8 @@ import { BottomTabNavigationOptions, createBottomTabNavigator } from "@react-nav
 import { NavigationContainer, RouteProp } from "@react-navigation/native";
 import AddListScreen from "../screens/AddListScreen";
 import UserRegistration from "../screens/UserRegistration";
+import CalendarScreen from "../screens/CalendarScreen";
+import WorkedHoursScreen from "../screens/WorkedHoursScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -17,7 +19,9 @@ const AddListStack = createNativeStackNavigator<AddListStackParamList>();
 const getIconName = (routeName: string, focused: boolean): string => {
   const icons: Record<string, { active: string; inactive: string }> = {
     Home: { active: 'home', inactive: 'home-outline' },
-    AddList: { active: 'add-circle', inactive: 'add-circle-outline' }
+    AddList: { active: 'add-circle', inactive: 'add-circle-outline' },
+    Calendar: { active: 'calendar-number', inactive: 'calendar-number-outline' },
+    WorkedHours: { active: 'alarm', inactive: 'alarm-outline' }
   };
   
   const icon = icons[routeName];
@@ -51,11 +55,18 @@ function AddListNavigator() {
             <AddListStack.Screen
                 name="AddListMain"
                 component={AddListScreen}
-                options={{ headerShown: false }}
+                options={{ 
+                    headerShown: false, 
+                    headerBackTitle: 'Add List'
+                }}
             />
             <AddListStack.Screen
                 name="UserRegistration"
                 component={UserRegistration}
+                options={{
+                    headerShown: false,
+                    headerBackTitle: 'User Registration'
+                }}
             />
         </AddListStack.Navigator>
     );
@@ -64,7 +75,15 @@ function AddListNavigator() {
 function MainTabs() {
     return (
         <Tab.Navigator screenOptions={navigatorScreenOptions}>
-            <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen name="Home" component={HomeScreen} options={{
+                headerShown: false
+            }} />
+            <Tab.Screen name="Calendar" component={CalendarScreen} options={{
+                headerShown: false
+            }} />
+            <Tab.Screen name="WorkedHours" component={WorkedHoursScreen} options={{
+                headerShown: false
+            }} />
             <Tab.Screen 
                 name="AddList" 
                 options={{ headerShown: false }}

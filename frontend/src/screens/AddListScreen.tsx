@@ -3,30 +3,31 @@ import { AddListNavigationProp, AddListStackParamList, NavigationProp, RootStack
 import { useState } from "react";
 import AddButtonList from "../components/AddButtonList/AddButtonList";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useSafeArea } from "../hooks/useSafeArea";
+import { View } from "react-native";
 
 
 export default function AddListScreen() {
     const navigation = useNavigation<AddListNavigationProp>();
     const [focusedId, setFocusedId] = useState('');
 
+    const insets = useSafeArea();
+
     const buttons = [
         {
             id: '1',
             title: 'Register New User',
-            iconName: {
-                active: 'person-add',
-                inactive: 'person-add-outline'
-            },
+            iconName: 'person-add',
             onPress: () => {
                 setFocusedId('1');
                 navigation.navigate('UserRegistration');
-            },
-            color: '#ffb703',
-            activeColor: '#fb8500'
+            }
         }
     ];
 
     return (
-        <AddButtonList buttons={buttons} focusedId={focusedId} />
+        <View style={insets}>
+            <AddButtonList buttons={buttons} />
+        </View>
     )
 };
