@@ -2,15 +2,14 @@ import 'reflect-metadata';
 import express from 'express';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/user';
+import tokenRoute from './routes/token';
 import { sequelize } from './database';
-import { applyAssociations } from './models/associations';
 
 const app = express();
 app.use(bodyParser.json());
 
+app.use(tokenRoute);
 app.use('/users', userRoutes);
-
-applyAssociations();
 
 async function start() {
     try {

@@ -1,47 +1,66 @@
-import { DataTypes, Optional } from 'sequelize';
-import { sequelize } from '../database';
-import { RouteTime } from './routeTime';
-import { Table, Model, Column, NotNull, AutoIncrement, PrimaryKey, DataType, HasMany } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+  CreatedAt,
+  UpdatedAt,
+  PrimaryKey,
+  AutoIncrement,
+  HasMany,
+} from 'sequelize-typescript';
+import Place from './place';
+import BusRouteTimetable from './busRouteTimetable';
 
-interface BusRouteAttributes {
-    id: number;
-    lineNumber: string;
-    origin: string;
-    destination: string;
-    distanceInKm: number;
-    averageTimeInMinutes: number;
-    createdAt?: Date;
-    updatedAt?: Date;
+@Table({
+  tableName: 'bus_routes',
+  timestamps: true,
+})
+export default class BusRoute extends Model {
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  id!: number;
+
+  @ForeignKey(() => Place)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  originId!: number;
+
+  @ForeignKey(() => Place)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  destinationId!: number;
+
+  @HasMany(() => BusRouteTimetable)
+  busRouteTimetables!: BusRouteTimetable[];
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  lineNumber!: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  distanceInKm!: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  averageTimeInMinutes!: number;
+
+  @CreatedAt
+  createdAt!: Date;
+
+  @UpdatedAt
+  updatedAt!: Date;
 }
-
-interface BusCreationAttributes extends Optional<BusRouteAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
-
-class BusRoute extends Model<BusRouteAttributes, BusCreationAttributes> implements BusRouteAttributes {
-    public id!: number;
-    public lineNumber!: string;
-    public origin!: string;
-    public destination!: string;
-    public distanceInKm!: number;
-    public averageTimeInMinutes: number;
-} 
-
-BusRoute.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    lineNumber: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    origin: DataTypes.STRING,
-    destination: DataTypes.STRING,
-    distanceInKm: DataType.INTEGER,
-    averageTimeInMinutes: DataType.INTEGER
-}, {
-    sequelize,
-    modelName: 'BusRoute',
-    tableName: 'bus_routes',
-    timestamps: true
-});

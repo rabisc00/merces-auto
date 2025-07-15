@@ -1,39 +1,47 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from "../database";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  PrimaryKey,
+  AutoIncrement,
+  CreatedAt,
+  UpdatedAt,
+  HasMany,
+} from 'sequelize-typescript';
+import BusRoute from './busRoute';
 
-interface PlaceAttributes {
-    id: number;
-    latitude: string;
-    longitude: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-}
-
-interface PlaceCreationAttributes extends Optional<PlaceAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
-
-class Place extends Model<PlaceAttributes, PlaceCreationAttributes> implements PlaceAttributes {
-    public id!: number;
-    public latitude!: string;
-    public longitude!: string;
-}
-
-Place.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    latitude: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    longitude: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }
-}, {
-    sequelize,
-    modelName: 'Place',
-    tableName: 'places',
-    timestamps: true
+@Table({
+  tableName: 'places',
+  timestamps: true,
 })
+export default class Place extends Model {
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  id!: number;
+
+  @HasMany(() => BusRoute, { foreignKey: 'originId', as: 'originRoutes' })
+  originRoutes!: BusRoute[];
+
+  @HasMany(() => BusRoute, { foreignKey: 'destinationId', as: 'destinatinationRoutes' })
+  destinationRoutes!: BusRoute[];
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  latitude!: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  longitude!: string;
+
+  @CreatedAt
+  createdAt!: Date;
+
+  @UpdatedAt
+  updatedAt!: Date;
+}

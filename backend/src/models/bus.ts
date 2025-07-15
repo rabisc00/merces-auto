@@ -1,50 +1,56 @@
-import { DataTypes, Optional } from "sequelize";
-import { Model } from "sequelize-typescript"
-import { sequelize } from '../database';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  PrimaryKey,
+  AutoIncrement,
+  CreatedAt,
+  UpdatedAt,
+  Default,
+  Unique,
+  HasMany
+} from 'sequelize-typescript';
+import Travel from './travel';
 
-interface BusAttributes {
-    id: number;
-    busNumber: string;
-    model: string;
-    capacity: number;
-    manufacturingYear: number;
-    inRepair: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
+@Table({
+  tableName: 'buses',
+  timestamps: true,
+})
+export default class Bus extends Model {
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  id!: number;
+
+  @HasMany(() => Travel)
+  travels!: Travel[];
+
+  @Unique
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  busNumber!: string;
+
+  @Column(DataType.STRING)
+  model!: string;
+
+  @Column(DataType.INTEGER)
+  capacity!: number;
+
+  @Column(DataType.INTEGER)
+  manufacturingYear!: number;
+
+  @Default(false)
+  @Column(DataType.BOOLEAN)
+  inRepair!: boolean;
+
+  @CreatedAt
+  @Column(DataType.DATE)
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column(DataType.DATE)
+  updatedAt!: Date;
 }
-
-interface BusCreationAttributes extends Optional<BusAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
-
-class Bus extends Model<BusAttributes, BusCreationAttributes> implements BusAttributes {
-    public id!: number;
-    public busNumber!: string;
-    public model!: string;
-    public capacity!: number;
-    public inRepair!: boolean;
-    public manufacturingYear!: number;
-}
-
-Bus.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    busNumber: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    },
-    inRepair: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-    },
-    model: DataTypes.STRING,
-    capacity: DataTypes.INTEGER,
-    manufacturingYear: DataTypes.INTEGER,
-}, {
-    sequelize,
-    modelName: 'Bus',
-    tableName: 'buses',
-    timestamps: true
-});

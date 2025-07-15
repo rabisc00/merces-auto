@@ -1,46 +1,77 @@
-import { AutoIncrement, Column, DataType, Model, PrimaryKey, BelongsTo, ForeignKey, Table } from "sequelize-typescript";
-import { Driver } from "./driver";
-import { Bus } from "./bus";
-import { BusRoute } from "./busRoute";
-import { RouteTime } from "./routeTime";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  PrimaryKey,
+  AutoIncrement,
+  CreatedAt,
+  UpdatedAt,
+  ForeignKey,
+} from 'sequelize-typescript';
+import Driver from './driver';
+import Bus from './bus';
+import BusRoute from './busRoute';
+import BusRouteTimetable from './busRouteTimetable';
 
-@Table({ tableName: 'travels' })
-export class Travel extends Model<Travel> {
-    @AutoIncrement
-    @PrimaryKey
-    @Column(DataType.INTEGER)
-    id!: number;
+@Table({
+  tableName: 'travel',
+  timestamps: true,
+})
+export default class Travel extends Model {
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  id!: number;
 
-    @ForeignKey(() => Driver)
-    driverId!: number;
+  @ForeignKey(() => Driver)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  driverId!: number;
 
-    @ForeignKey(() => Bus)
-    busId!: number;
+  @ForeignKey(() => Bus)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  busId!: number;
 
-    @ForeignKey(() => BusRoute)
-    busRouteId!: number;
+  @ForeignKey(() => BusRoute)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  busRouteId!: number;
 
-    @ForeignKey(() => RouteTime)
-    busTimeId!: number;
+  @ForeignKey(() => BusRouteTimetable)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  busRouteTimetableId!: number;
 
-    @Column(DataType.DATEONLY)
-    date!: string;
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+  })
+  date!: Date;
 
-    @Column(DataType.INTEGER)
-    numberOfPassangers!: number;
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  numberOfPassengers!: number;
 
-    @Column(DataType.TEXT)
-    observations!: string;
+  @Column(DataType.TEXT)
+  observations?: string;
 
-    @BelongsTo(() => Driver)
-    driver!: Driver;
+  @CreatedAt
+  @Column(DataType.DATE)
+  createdAt!: Date;
 
-    @BelongsTo(() => Bus)
-    bus!: Bus;
-
-    @BelongsTo(() => BusRoute)
-    busRoute!: BusRoute;
-
-    @BelongsTo(() => RouteTime)
-    busTime!: RouteTime;
+  @UpdatedAt
+  @Column(DataType.DATE)
+  updatedAt!: Date;
 }

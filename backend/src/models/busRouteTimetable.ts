@@ -8,43 +8,50 @@ import {
   CreatedAt,
   UpdatedAt,
   ForeignKey,
+  HasMany,
+  BelongsTo
 } from 'sequelize-typescript';
-import Driver from './driver';
+import BusRoute from './busRoute';
+import TimetableDay from './timetableDay';
+import Travel from './travel';
 
 @Table({
-  tableName: 'working_hours',
+  tableName: 'bus_route_timetable',
   timestamps: true,
 })
-export default class WorkingHours extends Model {
+export default class BusRouteTimetable extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
   id!: number;
 
-  @ForeignKey(() => Driver)
+  @ForeignKey(() => BusRoute)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
-  driverId!: number;
+  routeId!: number;
+
+  @BelongsTo(() => BusRoute)
+  busRoute!: BusRoute;
+
+  @HasMany(() => Travel)
+  travels!: Travel[];
+
+  @HasMany(() => TimetableDay)
+  timetableDays!: TimetableDay[];
 
   @Column({
     type: DataType.DATE,
     allowNull: false,
   })
-  startTime!: Date;
+  arrivalTime!: Date;
 
   @Column({
     type: DataType.DATE,
     allowNull: false,
   })
-  endTime!: Date;
-
-  @Column({
-    type: DataType.BLOB,
-    allowNull: false,
-  })
-  signature!: Buffer;
+  departureTime!: Date;
 
   @CreatedAt
   @Column(DataType.DATE)
