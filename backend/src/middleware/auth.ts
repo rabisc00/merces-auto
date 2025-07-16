@@ -18,6 +18,7 @@ export function authenticateToken(req: AuthRequest, res: Response, next: NextFun
         req.user = decoded;
         next();
     } catch (err) {
+        console.error('Authentication error', err);
         return res.status(403).json({ error: 'Invalid Token' });
     }
 }

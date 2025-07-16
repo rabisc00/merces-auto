@@ -2,19 +2,43 @@ import multer from "multer";
 import { Request } from "express";
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 
-const uploadDir = path.join(__dirname, '..', '..', 'uploads');
+const uploadDir = path.join(__dirname, '..', '..', 'uploads', 'profilePictures');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, 'uploads/profilePictures/');
     },
     filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, `${uniqueSuffix}-${file.originalname}`);
+        const hash = crypto.createHash('sha256');
+        const chunks: Buffer[] = [];
+
+        file.stream.on('data', (chunk) => chunks.push(chunk));
+
+        file.stream.on('end', () => {
+            const buffer = Buffer.concat(chunks);
+            hash.update(buffer);
+
+            const fileHash = hash.digest('hex');
+            const ext = path.extname(file.originalname);
+            const filename = `${fileHash}${ext}`;
+            const filePath = path.join(uploadDir, filename);
+
+            if (fs.existsSync(filePath)) {
+                console.log('File already exists, skipping upload');
+            }
+
+            fs.writeFileSync(filePath, buffer);
+            cb(null, filename);
+        });
+
+        file.stream.on('error', (err) => {
+            cb(err, '');
+        })
     }
 });
 

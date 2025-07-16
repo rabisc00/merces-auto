@@ -22,8 +22,6 @@ export default function LoginScreen() {
                 password: passwordRef.current
             });
 
-            console.log(res);
-
             login(res.data.token);
             setIsAdmin(res.data.user.isAdmin);
             

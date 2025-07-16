@@ -4,10 +4,10 @@ import {
   Model,
   DataType,
   PrimaryKey,
-  AutoIncrement,
   CreatedAt,
   UpdatedAt,
   ForeignKey,
+  Default,
 } from 'sequelize-typescript';
 import Driver from './driver';
 import Bus from './bus';
@@ -20,37 +20,9 @@ import BusRouteTimetable from './busRouteTimetable';
 })
 export default class Travel extends Model {
   @PrimaryKey
-  @AutoIncrement
-  @Column(DataType.INTEGER)
-  id!: number;
-
-  @ForeignKey(() => Driver)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  driverId!: number;
-
-  @ForeignKey(() => Bus)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  busId!: number;
-
-  @ForeignKey(() => BusRoute)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  busRouteId!: number;
-
-  @ForeignKey(() => BusRouteTimetable)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  busRouteTimetableId!: number;
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id!: string;
 
   @Column({
     type: DataType.DATE,
@@ -74,4 +46,25 @@ export default class Travel extends Model {
   @UpdatedAt
   @Column(DataType.DATE)
   updatedAt!: Date;
+
+  @ForeignKey(() => Driver)
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+  })
+  driverId!: string;
+
+  @ForeignKey(() => Bus)
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+  })
+  busId!: string;
+
+  @ForeignKey(() => BusRouteTimetable)
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+  })
+  busRouteTimetableId!: string;
 }

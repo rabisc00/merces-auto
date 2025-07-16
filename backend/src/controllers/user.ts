@@ -81,7 +81,7 @@ export const editUser = async function (req: Request, res: Response) {
             changed = true;
         }
 
-        if (picturePath) {
+        if (picturePath && picturePath !== user.picture) {
             user.picture = picturePath;
             changed = true;
         }
@@ -93,7 +93,7 @@ export const editUser = async function (req: Request, res: Response) {
             return res.json({ message: 'No changes made' });
         }
     } catch (error) {
-        console.error(error);
+        console.error('Edit error:', error);
         return res.status(500).json({ error: 'Something went wrong' });
     }
 }

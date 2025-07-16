@@ -3,6 +3,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/user';
 import tokenRoute from './routes/token';
+import driverRoute from './routes/driver';
+import busRoute from './routes/bus';
 import { sequelize } from './database';
 
 const app = express();
@@ -10,6 +12,8 @@ app.use(bodyParser.json());
 
 app.use(tokenRoute);
 app.use('/users', userRoutes);
+app.use('/drivers', driverRoute);
+app.use('/buses', busRoute);
 
 async function start() {
     try {
@@ -18,7 +22,7 @@ async function start() {
 
         await sequelize.sync({ alter: true });
         console.log('Tables synced with models');
-
+        
         app.listen(3000, () => {
             console.log('Server started on port 3000');
         })

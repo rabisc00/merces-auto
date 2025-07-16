@@ -3,13 +3,13 @@ import {
   Model,
   Column,
   PrimaryKey,
-  AutoIncrement,
   DataType,
   CreatedAt,
   UpdatedAt,
   ForeignKey,
   HasMany,
-  BelongsTo
+  BelongsTo,
+  Default
 } from 'sequelize-typescript';
 import BusRoute from './busRoute';
 import TimetableDay from './timetableDay';
@@ -21,25 +21,9 @@ import Travel from './travel';
 })
 export default class BusRouteTimetable extends Model {
   @PrimaryKey
-  @AutoIncrement
-  @Column(DataType.INTEGER)
-  id!: number;
-
-  @ForeignKey(() => BusRoute)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  routeId!: number;
-
-  @BelongsTo(() => BusRoute)
-  busRoute!: BusRoute;
-
-  @HasMany(() => Travel)
-  travels!: Travel[];
-
-  @HasMany(() => TimetableDay)
-  timetableDays!: TimetableDay[];
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id!: string;
 
   @Column({
     type: DataType.DATE,
@@ -60,4 +44,20 @@ export default class BusRouteTimetable extends Model {
   @UpdatedAt
   @Column(DataType.DATE)
   updatedAt!: Date;
+
+  @ForeignKey(() => BusRoute)
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+  })
+  routeId!: string;
+
+  @BelongsTo(() => BusRoute)
+  busRoute!: BusRoute;
+
+  @HasMany(() => Travel)
+  travels!: Travel[];
+
+  @HasMany(() => TimetableDay)
+  timetableDays!: TimetableDay[];
 }

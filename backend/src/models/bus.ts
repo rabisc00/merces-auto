@@ -4,7 +4,6 @@ import {
   Model,
   DataType,
   PrimaryKey,
-  AutoIncrement,
   CreatedAt,
   UpdatedAt,
   Default,
@@ -19,12 +18,9 @@ import Travel from './travel';
 })
 export default class Bus extends Model {
   @PrimaryKey
-  @AutoIncrement
-  @Column(DataType.INTEGER)
-  id!: number;
-
-  @HasMany(() => Travel)
-  travels!: Travel[];
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id!: string;
 
   @Unique
   @Column({
@@ -53,4 +49,7 @@ export default class Bus extends Model {
   @UpdatedAt
   @Column(DataType.DATE)
   updatedAt!: Date;
+
+  @HasMany(() => Travel)
+  travels!: Travel[];
 }

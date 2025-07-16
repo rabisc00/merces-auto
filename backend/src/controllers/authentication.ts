@@ -1,6 +1,7 @@
 import User from "../models/user";
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
+import bcrypt = require('bcrypt');
 import { Request, Response } from "express";
 
 dotenv.config();
@@ -12,9 +13,9 @@ export async function generateToken(req: Request, res: Response) {
         where: { email } 
     });
 
-    console.log(userFound);
+    const passwordMatch = await bcrypt.compare(password, userFound.password);
 
-    if (!userFound || !userFound.isAdmin) {
+    if (!userFound || !userFound.isAdmin || !passwordMatch) {
         return res.status(401).json({ error: "Access denied" });
     }
 

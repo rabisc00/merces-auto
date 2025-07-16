@@ -17,14 +17,14 @@ import DayOfTheWeek from './dayOfTheWeek';
 })
 export default class TimetableDay extends Model {
   @ForeignKey(() => BusRouteTimetable)
-  @Column(DataType.INTEGER)
+  @Column(DataType.UUID)
   busRouteTimetableId!: number;
 
   @BelongsTo(() => BusRouteTimetable)
   busRouteTimetable!: BusRouteTimetable;
 
   @ForeignKey(() => DayOfTheWeek)
-  @Column(DataType.INTEGER)
+  @Column(DataType.UUID)
   dayOfTheWeekId!: number;
 
   @BelongsTo(() => DayOfTheWeek)

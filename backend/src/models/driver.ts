@@ -5,10 +5,11 @@ import {
   DataType,
   ForeignKey,
   PrimaryKey,
-  AutoIncrement,
   CreatedAt,
   UpdatedAt,
   HasMany,
+  Default,
+  BelongsTo,
 } from 'sequelize-typescript';
 import User from './user';
 import Travel from './travel';
@@ -20,16 +21,9 @@ import WorkingHours from './workingHours';
 })
 class Driver extends Model<Driver> {
   @PrimaryKey
-  @AutoIncrement
-  @Column(DataType.INTEGER)
-  id!: number;
-
-  @ForeignKey(() => User)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  userId!: number;
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id!: string;
 
   @Column({
     type: DataType.STRING,
@@ -45,6 +39,17 @@ class Driver extends Model<Driver> {
   @UpdatedAt
   @Column(DataType.DATE)
   updatedAt!: Date;
+
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+    onDelete: 'CASCADE'
+  })
+  userId!: string;
+
+  @BelongsTo(() => User)
+  user!: User;
 
   @HasMany(() => Travel)
   travels!: Travel[];

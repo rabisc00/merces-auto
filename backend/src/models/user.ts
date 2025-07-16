@@ -4,7 +4,6 @@ import {
   Model,
   DataType,
   PrimaryKey,
-  AutoIncrement,
   AllowNull,
   Unique,
   Default,
@@ -18,12 +17,9 @@ import Driver from './driver';
 })
 export default class User extends Model<User> {
   @PrimaryKey
-  @AutoIncrement
-  @Column(DataType.INTEGER)
-  id!: number;
-
-  @HasOne(() => Driver)
-  driver?: Driver;
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id!: string;
 
   @AllowNull(false)
   @Column(DataType.STRING)
@@ -54,4 +50,9 @@ export default class User extends Model<User> {
 
   @Column(DataType.DATE)
   updatedAt!: Date;
+
+  @HasOne(() => Driver, {
+    onDelete: 'CASCADE'
+  })
+  driver?: Driver;
 }

@@ -24,7 +24,7 @@ export default function UserRegistration() {
             passwordRef.current = '';
         } catch (error) {
             Alert.alert("Login Failed", "Invalid email or password");
-            console.log(error);
+            console.error('Login erorr', error);
         }
     };
 

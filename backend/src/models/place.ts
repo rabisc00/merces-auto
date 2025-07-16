@@ -4,10 +4,10 @@ import {
   Model,
   DataType,
   PrimaryKey,
-  AutoIncrement,
   CreatedAt,
   UpdatedAt,
   HasMany,
+  Default,
 } from 'sequelize-typescript';
 import BusRoute from './busRoute';
 
@@ -17,15 +17,9 @@ import BusRoute from './busRoute';
 })
 export default class Place extends Model {
   @PrimaryKey
-  @AutoIncrement
-  @Column(DataType.INTEGER)
-  id!: number;
-
-  @HasMany(() => BusRoute, { foreignKey: 'originId', as: 'originRoutes' })
-  originRoutes!: BusRoute[];
-
-  @HasMany(() => BusRoute, { foreignKey: 'destinationId', as: 'destinatinationRoutes' })
-  destinationRoutes!: BusRoute[];
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id!: string;
 
   @Column({
     type: DataType.STRING,
@@ -44,4 +38,10 @@ export default class Place extends Model {
 
   @UpdatedAt
   updatedAt!: Date;
+
+  @HasMany(() => BusRoute, { foreignKey: 'originId', as: 'originRoutes' })
+  originRoutes!: BusRoute[];
+
+  @HasMany(() => BusRoute, { foreignKey: 'destinationId', as: 'destinatinationRoutes' })
+  destinationRoutes!: BusRoute[];
 }

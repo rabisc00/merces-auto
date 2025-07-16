@@ -3,11 +3,11 @@ import {
   Model,
   Column,
   PrimaryKey,
-  AutoIncrement,
   DataType,
   CreatedAt,
   UpdatedAt,
-  HasMany
+  HasMany,
+  Default
 } from 'sequelize-typescript';
 import TimetableDay from './timetableDay';
 
@@ -17,12 +17,9 @@ import TimetableDay from './timetableDay';
 })
 export default class DayOfTheWeek extends Model {
   @PrimaryKey
-  @AutoIncrement
-  @Column(DataType.INTEGER)
-  id!: number;
-
-  @HasMany(() => TimetableDay)
-  timetableDays!: TimetableDay[];
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id!: string;
 
   @Column({
     type: DataType.STRING,
@@ -37,4 +34,7 @@ export default class DayOfTheWeek extends Model {
   @UpdatedAt
   @Column(DataType.DATE)
   updatedAt!: Date;
+
+  @HasMany(() => TimetableDay)
+  timetableDays!: TimetableDay[];
 }

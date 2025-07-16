@@ -3,13 +3,14 @@ import {
   Model,
   Column,
   PrimaryKey,
-  AutoIncrement,
   DataType,
   CreatedAt,
   UpdatedAt,
   ForeignKey,
+  Default,
 } from 'sequelize-typescript';
 import Driver from './driver';
+import { DataTypes } from 'sequelize';
 
 @Table({
   tableName: 'working_hours',
@@ -17,16 +18,9 @@ import Driver from './driver';
 })
 export default class WorkingHours extends Model {
   @PrimaryKey
-  @AutoIncrement
-  @Column(DataType.INTEGER)
-  id!: number;
-
-  @ForeignKey(() => Driver)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  driverId!: number;
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id!: string;
 
   @Column({
     type: DataType.DATE,
@@ -41,10 +35,10 @@ export default class WorkingHours extends Model {
   endTime!: Date;
 
   @Column({
-    type: DataType.BLOB,
+    type: DataTypes.STRING,
     allowNull: false,
   })
-  signature!: Buffer;
+  signature!: string;
 
   @CreatedAt
   @Column(DataType.DATE)
@@ -53,4 +47,11 @@ export default class WorkingHours extends Model {
   @UpdatedAt
   @Column(DataType.DATE)
   updatedAt!: Date;
+
+  @ForeignKey(() => Driver)
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+  })
+  driverId!: string;
 }

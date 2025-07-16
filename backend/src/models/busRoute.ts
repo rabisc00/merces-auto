@@ -7,8 +7,8 @@ import {
   CreatedAt,
   UpdatedAt,
   PrimaryKey,
-  AutoIncrement,
   HasMany,
+  Default,
 } from 'sequelize-typescript';
 import Place from './place';
 import BusRouteTimetable from './busRouteTimetable';
@@ -19,26 +19,9 @@ import BusRouteTimetable from './busRouteTimetable';
 })
 export default class BusRoute extends Model {
   @PrimaryKey
-  @AutoIncrement
-  @Column(DataType.INTEGER)
-  id!: number;
-
-  @ForeignKey(() => Place)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  originId!: number;
-
-  @ForeignKey(() => Place)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  destinationId!: number;
-
-  @HasMany(() => BusRouteTimetable)
-  busRouteTimetables!: BusRouteTimetable[];
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id!: string;
 
   @Column({
     type: DataType.STRING,
@@ -63,4 +46,21 @@ export default class BusRoute extends Model {
 
   @UpdatedAt
   updatedAt!: Date;
+
+  @ForeignKey(() => Place)
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+  })
+  originId!: string;
+
+  @ForeignKey(() => Place)
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+  })
+  destinationId!: string;
+
+  @HasMany(() => BusRouteTimetable)
+  busRouteTimetables!: BusRouteTimetable[];
 }

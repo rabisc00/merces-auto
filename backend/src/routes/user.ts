@@ -6,12 +6,9 @@ import { authenticateToken } from '../middleware/auth';
 
 const router = express.Router();
 
-router.post('/register', authenticateToken);
-router.post('/register', registerUser);
-
-router.post('/edit/:id', authenticateToken);
-router.patch('/edit/:id', upload.single('picture'), editUser);
-
 router.post('/login', login);
+router.post('/register', authenticateToken, registerUser);
+
+router.patch('/edit/:id', authenticateToken, upload.single('picture'), editUser);
 
 export default router;
