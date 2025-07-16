@@ -1,14 +1,20 @@
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
 import  User from '../models/user';
 import bcrypt = require('bcrypt');
 import { AuthRequest } from '../types/authRequest';
 
 dotenv.config();
 
-export const registerUser = async(req: AuthRequest, res: Response) => {
+export const createUser = async(req: AuthRequest, res: Response) => {
     const { email, name, password, isAdmin } = req.body;
+
+    if (!email || !name || !password || typeof email !== 'string' ||
+        typeof name !== 'string' || typeof password !== 'string'
+    ) {
+        return res.status(400).json({ error: 'Some required fields are missing'});
+    }
 
     try {
         const existingUser = await User.findOne({ where: { email } });
@@ -34,6 +40,12 @@ export const registerUser = async(req: AuthRequest, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
+
+    if (!email || !password || typeof email !== 'string' ||
+        typeof password !== 'string'
+    ) {
+        res.status(400).json({ error: 'Email and password are required' });
+    }
 
     try {
         const userFound = await User.findOne({ where: { email } });
@@ -67,6 +79,10 @@ export const editUser = async function (req: Request, res: Response) {
         const userId = req.params.id;
         const { name } = req.body;
         const picturePath = req.file?.path;
+
+        if (name && typeof name !== 'string') {
+            return res.status(400).json({ message: 'Name needs to be a string'});
+        }
 
         const user = await User.findByPk(userId);
 

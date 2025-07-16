@@ -5,6 +5,7 @@ import userRoutes from './routes/user';
 import tokenRoute from './routes/token';
 import driverRoute from './routes/driver';
 import busRoute from './routes/bus';
+import busRouteRoute from './routes/busRoute';
 import { sequelize } from './database';
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(tokenRoute);
 app.use('/users', userRoutes);
 app.use('/drivers', driverRoute);
 app.use('/buses', busRoute);
+app.use('/busroutes', busRouteRoute);
 
 async function start() {
     try {

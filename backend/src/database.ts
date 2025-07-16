@@ -1,11 +1,10 @@
-import * as dotenv from 'dotenv';
 import { Sequelize } from "sequelize-typescript";
+import * as dotenv from 'dotenv';
 import Bus from './models/bus';
 import BusRoute from './models/busRoute';
 import BusRouteTimetable from './models/busRouteTimetable';
 import DayOfTheWeek from './models/dayOfTheWeek';
 import Driver from './models/driver';
-import Place from './models/place';
 import TimetableDay from './models/timetableDay';
 import Travel from './models/travel';
 import User from './models/user';
@@ -22,6 +21,6 @@ export const sequelize = new Sequelize(
         host: process.env.DB_HOST,
         port: parseInt(process.env.DB_PORT),
         logging: false,
-        models: [Bus, BusRoute, BusRouteTimetable, DayOfTheWeek, Driver, Place, TimetableDay, Travel, User, WorkingHours]
+        models: [Bus, BusRoute, BusRouteTimetable, DayOfTheWeek, Driver, TimetableDay, Travel, User, WorkingHours]
     }
 );

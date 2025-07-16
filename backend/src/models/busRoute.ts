@@ -10,7 +10,6 @@ import {
   HasMany,
   Default,
 } from 'sequelize-typescript';
-import Place from './place';
 import BusRouteTimetable from './busRouteTimetable';
 
 @Table({
@@ -30,6 +29,18 @@ export default class BusRoute extends Model {
   lineNumber!: string;
 
   @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  origin!: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  destination!: string;
+
+  @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
@@ -46,20 +57,6 @@ export default class BusRoute extends Model {
 
   @UpdatedAt
   updatedAt!: Date;
-
-  @ForeignKey(() => Place)
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-  })
-  originId!: string;
-
-  @ForeignKey(() => Place)
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-  })
-  destinationId!: string;
 
   @HasMany(() => BusRouteTimetable)
   busRouteTimetables!: BusRouteTimetable[];

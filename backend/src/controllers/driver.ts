@@ -4,8 +4,14 @@ import Driver from "../models/driver";
 import User from "../models/user";
 
 
-export const registerDriver = async function (req: AuthRequest, res: Response) {
+export const createDriver = async function (req: AuthRequest, res: Response) {
     const { userId, documentNumber } = req.body;
+
+    if (!userId || !documentNumber || typeof userId !== 'string' ||
+        typeof documentNumber !== 'string'
+    ) {
+        return res.status(400).json({ error: 'Document number and user id are required' });
+    }
 
     try {
         const existingDriver = await Driver.findOne({ where: { documentNumber }});
