@@ -8,7 +8,7 @@ import {
   CreatedAt,
   UpdatedAt
 } from 'sequelize-typescript';
-import BusRouteTimetable from './busRouteTimetable';
+import Timetable from './timetable';
 import DayOfTheWeek from './dayOfTheWeek';
 
 @Table({
@@ -16,12 +16,12 @@ import DayOfTheWeek from './dayOfTheWeek';
   timestamps: true
 })
 export default class TimetableDay extends Model {
-  @ForeignKey(() => BusRouteTimetable)
+  @ForeignKey(() => Timetable)
   @Column(DataType.UUID)
-  busRouteTimetableId!: number;
+  timetableId!: number;
 
-  @BelongsTo(() => BusRouteTimetable)
-  busRouteTimetable!: BusRouteTimetable;
+  @BelongsTo(() => Timetable)
+  timetable!: Timetable;
 
   @ForeignKey(() => DayOfTheWeek)
   @Column(DataType.UUID)

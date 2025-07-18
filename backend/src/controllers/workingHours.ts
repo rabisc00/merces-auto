@@ -1,19 +1,37 @@
 import { Response } from "express";
+import path from 'path';
+import fs from 'fs';
+import crypto from 'crypto';
 import { AuthRequest } from "../types/authRequest";
 import dayjs from '../utils/dayjs';
 import WorkingHours from "../models/workingHours";
 import { SQL_DATE_FORMAT } from "../constants/date";
 
+const uploadDir = path.join(__dirname, '..', '..', 'uploads', 'signatures');
+
 export const createWorkingHours = async function(req: AuthRequest, res: Response) {
     const { startTime, endTime, driverId} = req.body;
-    const signaturePath = req.file?.path;
+
+    const hash = crypto.createHash('sha256').update(req.file.buffer).digest('hex');
+    const ext = path.extname(req.file.originalname);
+    const fileName = `${hash}${ext}`;
+    const filePath = path.join(uploadDir, fileName);
+    const relativePath = path.join('uploads', 'signatures', fileName);
+
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    if (!fs.existsSync(filePath)) {        
+        fs.writeFileSync(filePath, req.file.buffer);
+    }
 
     try {
         await WorkingHours.create({
             driverId,
             startTime,
             endTime,
-            signature: signaturePath
+            signature: relativePath
     });
 
         return res.json({ message: 'Working hour creating successfully'});

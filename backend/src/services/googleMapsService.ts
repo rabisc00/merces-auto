@@ -5,7 +5,7 @@ dotenv.config();
 
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
-export async function getTravelTime(origin: string, destination: string) {
+export async function getTripTime(origin: string, destination: string) {
     const url = 'https://maps.googleapis.com/maps/api/directions/json';
 
     const params = {
@@ -29,6 +29,6 @@ export async function getTravelTime(origin: string, destination: string) {
             durationInSeconds: leg.duration.value
         };
     } catch (error: any) {
-        throw new Error(`Failed to get travel time: ${error.message}`);
+        throw new Error(`Failed to get trip time: ${error.message}`);
     }
 }

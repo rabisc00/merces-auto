@@ -20,8 +20,8 @@ export const createDriver = async function (req: AuthRequest, res: Response) {
 
         return res.json({ message: 'Driver created successfully' });
     } catch (error) {
-        console.error('Registration error', error);
-        res.status(500).json({ error: 'Error registering driver' });
+        console.error('Error creating driver:', error);
+        res.status(500).json({ error: 'Error creating driver' });
     }
 };
 
@@ -34,7 +34,7 @@ export const deleteDriver = async function (req: AuthRequest, res: Response) {
         });
 
         if (!driver) {
-            return res.status(406).json({ error: 'Driver with the given id was not found' });
+            return res.status(406).json({ error: 'Driver with the given id not found' });
         }
 
         if (!driver.userId) {
@@ -53,8 +53,8 @@ export const deleteDriver = async function (req: AuthRequest, res: Response) {
 
         return res.json({ message: 'Driver deleted successfully' });
     } catch (error) {
-        console.error('Deletion error', error);
-        res.status(500).json({ error: 'Error deleting user' });
+        console.error('Error deleting driver:', error);
+        res.status(500).json({ error: 'Error deleting driver' });
     }
 };
 
@@ -70,7 +70,7 @@ export const getDrivers = async function (req: AuthRequest, res: Response) {
             attributes: ['id', 'documentNumber'],
             include: {
                 model: User,
-                attributes: ['id', 'name', 'email', 'picture', 'createdAt']
+                attributes: ['name', 'email', 'picture']
             }
         });
 
@@ -81,7 +81,7 @@ export const getDrivers = async function (req: AuthRequest, res: Response) {
             drivers: rows
         });
     } catch (error) {
-        console.error('Get error', error);
-        res.status(500).json({ error: 'Failed to fetch drivers' });
+        console.error('Error fetching drivers:', error);
+        res.status(500).json({ error: 'Error fetching drivers' });
     }
 };

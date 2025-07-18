@@ -1,18 +1,18 @@
 import { Response } from "express";
 import dayjs from '../utils/dayjs';
 import { AuthRequest } from "../types/authRequest";
-import BusRouteTimetable from "../models/busRouteTimetable";
+import Timetable from "../models/timetable";
 import DayOfTheWeek from "../models/dayOfTheWeek";
 import { SQL_DATE_FORMAT } from "../constants/date";
 
-export const createBusRouteTimetable = async function(req: AuthRequest, res: Response) {
+export const createTimetable = async function(req: AuthRequest, res: Response) {
     const { busRouteId, arrivalTime, departureTime, days } = req.body;
 
     try {
         const formattedArrivalTime = new Date(arrivalTime);
         const formattedDepartureTime = new Date(departureTime);
 
-        const timetable = await BusRouteTimetable.create({
+        const timetable = await Timetable.create({
             routeId: busRouteId,
             arrivalTime: formattedArrivalTime,
             departureTime: formattedDepartureTime
@@ -34,17 +34,17 @@ export const createBusRouteTimetable = async function(req: AuthRequest, res: Res
     }
 };
 
-export const editBusRouteTimetable = async function(req: AuthRequest, res: Response) {
+export const editTimetable = async function(req: AuthRequest, res: Response) {
     const { arrivalTime, departureTime, days } = req.body;
     const id = req.params.id;
 
     try {
-        const timetableFound = await BusRouteTimetable.findByPk(id, {
+        const timetableFound = await Timetable.findByPk(id, {
             include: [DayOfTheWeek]
         });
 
         if (!timetableFound) {
-            return res.status(400).json({ error: 'No timetable with the given id found' });
+            return res.status(400).json({ error: 'Timetable with the given id not found' });
         }
 
         const formattedArrivalTime = dayjs(timetableFound.arrivalTime).format(SQL_DATE_FORMAT);
@@ -81,11 +81,11 @@ export const editBusRouteTimetable = async function(req: AuthRequest, res: Respo
     }
 };
 
-export const deleteBusRouteTimetable = async function (req: AuthRequest, res: Response) {
+export const deleteTimetable = async function (req: AuthRequest, res: Response) {
     const id = req.params.id;
 
     try {
-        const timetableFound = await BusRouteTimetable.findByPk(id);
+        const timetableFound = await Timetable.findByPk(id);
         if (!timetableFound) {
             return res.status(400).json({ error: 'Timetable with the given id not found'});
         }
@@ -93,18 +93,18 @@ export const deleteBusRouteTimetable = async function (req: AuthRequest, res: Re
         await timetableFound.destroy();
         return res.json({ message: 'Timetable deleted successfully' });
     } catch (error: any) {
-        console.error('Error deleting timetable', error);
+        console.error('Error deleting timetable:', error);
         return res.status(500).json({ error: 'Error deleting timetable' });
     }
 };
 
-export const getBusRouteTimetables = async function (req: AuthRequest, res: Response) {
+export const getTimetables = async function (req: AuthRequest, res: Response) {
     const page = parseInt(req.query.page as string) || 1;
     const offset = (page - 1) * 10;
     const limit = 10;
 
     try {
-        const { count, rows } = await BusRouteTimetable.findAndCountAll({
+        const { count, rows } = await Timetable.findAndCountAll({
             limit,
             offset,
             attributes: ['id', 'arrivalTime', 'departureTime']

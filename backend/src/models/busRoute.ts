@@ -10,7 +10,7 @@ import {
   HasMany,
   Default,
 } from 'sequelize-typescript';
-import BusRouteTimetable from './busRouteTimetable';
+import Timetable from './timetable';
 
 @Table({
   tableName: 'bus_routes',
@@ -58,6 +58,6 @@ export default class BusRoute extends Model {
   @UpdatedAt
   updatedAt!: Date;
 
-  @HasMany(() => BusRouteTimetable)
-  busRouteTimetables!: BusRouteTimetable[];
+  @HasMany(() => Timetable)
+  timetables!: Timetable[];
 }

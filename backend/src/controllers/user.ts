@@ -1,34 +1,33 @@
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import path from 'path';
+import fs from 'fs';
 import  User from '../models/user';
 import bcrypt = require('bcrypt');
+import crypto from 'crypto';
 import { AuthRequest } from '../types/authRequest';
 
 dotenv.config();
 
+const uploadDir = path.join(__dirname, '..', '..', 'uploads', 'profilePictures');
+
 export const createUser = async(req: AuthRequest, res: Response) => {
     const { email, name, password, isAdmin } = req.body;
-
-    if (!email || !name || !password || typeof email !== 'string' ||
-        typeof name !== 'string' || typeof password !== 'string'
-    ) {
-        return res.status(400).json({ error: 'Some required fields are missing'});
-    }
 
     try {
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
-            return res.status(409).json({ message: 'User with this email already registered.' });
+            return res.status(409).json({ message: 'User with the given email already registered.' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
         await User.create({
-            email: email,
-            name: name,
+            email,
+            name,
+            isAdmin,
             password: hashedPassword,
-            isAdmin: isAdmin
         });
 
         return res.json({ message: 'User registered successfully' });
@@ -40,12 +39,6 @@ export const createUser = async(req: AuthRequest, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
-
-    if (!email || !password || typeof email !== 'string' ||
-        typeof password !== 'string'
-    ) {
-        res.status(400).json({ error: 'Email and password are required' });
-    }
 
     try {
         const userFound = await User.findOne({ where: { email } });
@@ -78,16 +71,10 @@ export const editUser = async function (req: Request, res: Response) {
     try {
         const userId = req.params.id;
         const { name } = req.body;
-        const picturePath = req.file?.path;
-
-        if (name && typeof name !== 'string') {
-            return res.status(400).json({ message: 'Name needs to be a string'});
-        }
 
         const user = await User.findByPk(userId);
-
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'User with the given id not found' });
         }
 
         let changed = false;
@@ -97,9 +84,23 @@ export const editUser = async function (req: Request, res: Response) {
             changed = true;
         }
 
-        if (picturePath && picturePath !== user.picture) {
-            user.picture = picturePath;
-            changed = true;
+        if (req.file) {
+            const hash = crypto.createHash('sha256').update(req.file.buffer).digest('hex');
+            const ext = path.extname(req.file.originalname);
+            const fileName = `${hash}${ext}`;
+            const filePath = path.join(uploadDir, fileName);
+            const relativePath = path.join('uploads', 'profilePictures', fileName);
+
+            if (!fs.existsSync(uploadDir)) {
+                fs.mkdirSync(uploadDir, { recursive: true });
+            }
+
+            if (!fs.existsSync(filePath)) {
+                changed = true;
+                user.picture = relativePath;
+                
+                fs.writeFileSync(filePath, req.file.buffer);
+            }
         }
 
         if (changed) {
@@ -112,4 +113,4 @@ export const editUser = async function (req: Request, res: Response) {
         console.error('Edit error:', error);
         return res.status(500).json({ error: 'Something went wrong' });
     }
-}
+};

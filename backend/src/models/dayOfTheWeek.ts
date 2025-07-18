@@ -11,7 +11,7 @@ import {
   BelongsToMany
 } from 'sequelize-typescript';
 import TimetableDay from './timetableDay';
-import BusRouteTimetable from './busRouteTimetable';
+import Timetable from './timetable';
 
 @Table({
   tableName: 'day_of_the_week',
@@ -37,6 +37,6 @@ export default class DayOfTheWeek extends Model {
   @Column(DataType.DATE)
   updatedAt!: Date;
 
-  @BelongsToMany(() => BusRouteTimetable, () => TimetableDay)
-  timetables!: BusRouteTimetable[];
+  @BelongsToMany(() => Timetable, () => TimetableDay)
+  timetables!: Timetable[];
 }

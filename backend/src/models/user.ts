@@ -21,17 +21,23 @@ export default class User extends Model<User> {
   @Column(DataType.UUID)
   id!: string;
 
-  @AllowNull(false)
-  @Column(DataType.STRING)
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
   name!: string;
 
-  @AllowNull(false)
-  @Unique
-  @Column(DataType.STRING)
+  @Column({
+    unique: true,
+    type: DataType.STRING,
+    allowNull: false
+  })
   email!: string;
 
-  @AllowNull(false)
-  @Column(DataType.STRING)
+  @Column({
+    allowNull: false,
+    type: DataType.STRING
+  })
   password!: string;
 
   @Default(false)

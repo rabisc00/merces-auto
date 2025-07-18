@@ -7,21 +7,21 @@ import {
   CreatedAt,
   UpdatedAt,
   ForeignKey,
-  HasMany,
   BelongsTo,
   Default,
-  BelongsToMany
+  BelongsToMany,
+  HasOne
 } from 'sequelize-typescript';
 import BusRoute from './busRoute';
 import TimetableDay from './timetableDay';
-import Travel from './travel';
+import Trip from './trip';
 import DayOfTheWeek from './dayOfTheWeek';
 
 @Table({
-  tableName: 'bus_route_timetable',
+  tableName: 'timetables',
   timestamps: true,
 })
-export default class BusRouteTimetable extends Model {
+export default class Timetable extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
@@ -58,8 +58,8 @@ export default class BusRouteTimetable extends Model {
   @BelongsTo(() => BusRoute)
   busRoute!: BusRoute;
 
-  @HasMany(() => Travel)
-  travels!: Travel[];
+  @HasOne(() => Trip)
+  trip!: Trip[];
 
   @BelongsToMany(() => DayOfTheWeek, () => TimetableDay)
   days!: DayOfTheWeek[];

@@ -12,7 +12,7 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import User from './user';
-import Travel from './travel';
+import Trip from './trip';
 import WorkingHours from './workingHours';
 
 @Table({
@@ -51,8 +51,8 @@ class Driver extends Model<Driver> {
   @BelongsTo(() => User)
   user!: User;
 
-  @HasMany(() => Travel)
-  travels!: Travel[];
+  @HasMany(() => Trip)
+  trips!: Trip[];
 
   @HasMany(() => WorkingHours)
   workingHours: WorkingHours[];

@@ -10,7 +10,7 @@ import {
   Unique,
   HasMany
 } from 'sequelize-typescript';
-import Travel from './travel';
+import Trip from './trip';
 
 @Table({
   tableName: 'buses',
@@ -22,9 +22,9 @@ export default class Bus extends Model {
   @Column(DataType.UUID)
   id!: string;
 
-  @Unique
   @Column({
     type: DataType.STRING,
+    unique: true,
     allowNull: false,
   })
   busNumber!: string;
@@ -50,6 +50,6 @@ export default class Bus extends Model {
   @Column(DataType.DATE)
   updatedAt!: Date;
 
-  @HasMany(() => Travel)
-  travels!: Travel[];
+  @HasMany(() => Trip)
+  trips!: Trip[];
 }

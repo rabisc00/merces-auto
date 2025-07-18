@@ -8,27 +8,21 @@ import {
   UpdatedAt,
   ForeignKey,
   Default,
+  BelongsTo,
 } from 'sequelize-typescript';
 import Driver from './driver';
 import Bus from './bus';
-import BusRoute from './busRoute';
-import BusRouteTimetable from './busRouteTimetable';
+import Timetable from './timetable';
 
 @Table({
-  tableName: 'travel',
+  tableName: 'trip',
   timestamps: true,
 })
-export default class Travel extends Model {
+export default class Trip extends Model {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id!: string;
-
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-  })
-  date!: Date;
 
   @Column({
     type: DataType.INTEGER,
@@ -61,10 +55,13 @@ export default class Travel extends Model {
   })
   busId!: string;
 
-  @ForeignKey(() => BusRouteTimetable)
+  @ForeignKey(() => Timetable)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  busRouteTimetableId!: string;
+  timetableId!: string;
+
+  @BelongsTo(() => Timetable)
+  timetable: Timetable;
 }

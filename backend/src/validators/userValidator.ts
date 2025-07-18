@@ -12,5 +12,5 @@ export const userCreateSchema = z.object({
 });
 
 export const userEditSchema = z.object({
-    name: z.string()
+    name: z.string().optional()
 });
