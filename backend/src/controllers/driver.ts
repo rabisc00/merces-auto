@@ -7,12 +7,6 @@ import User from "../models/user";
 export const createDriver = async function (req: AuthRequest, res: Response) {
     const { userId, documentNumber } = req.body;
 
-    if (!userId || !documentNumber || typeof userId !== 'string' ||
-        typeof documentNumber !== 'string'
-    ) {
-        return res.status(400).json({ error: 'Document number and user id are required' });
-    }
-
     try {
         const existingDriver = await Driver.findOne({ where: { documentNumber }});
         if (existingDriver) {
@@ -90,4 +84,4 @@ export const getDrivers = async function (req: AuthRequest, res: Response) {
         console.error('Get error', error);
         res.status(500).json({ error: 'Failed to fetch drivers' });
     }
-}
+};

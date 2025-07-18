@@ -2,20 +2,24 @@ import 'reflect-metadata';
 import express from 'express';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/user';
-import tokenRoute from './routes/token';
-import driverRoute from './routes/driver';
-import busRoute from './routes/bus';
-import busRouteRoute from './routes/busRoute';
+import tokenRoutes from './routes/token';
+import driverRoutes from './routes/driver';
+import busRoutes from './routes/bus';
+import busRouteRoutes from './routes/busRoute';
+import busRouteTimetableRoutes from './routes/busRouteTimetable';
+import workingHoursRoutes from './routes/workingHours';
 import { sequelize } from './database';
 
 const app = express();
 app.use(bodyParser.json());
 
-app.use(tokenRoute);
+app.use(tokenRoutes);
 app.use('/users', userRoutes);
-app.use('/drivers', driverRoute);
-app.use('/buses', busRoute);
-app.use('/busroutes', busRouteRoute);
+app.use('/drivers', driverRoutes);
+app.use('/buses', busRoutes);
+app.use('/busroutes', busRouteRoutes);
+app.use('/busroutetimetables', busRouteTimetableRoutes);
+app.use('/workinghours', workingHoursRoutes);
 
 async function start() {
     try {

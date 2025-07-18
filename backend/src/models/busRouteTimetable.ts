@@ -9,11 +9,13 @@ import {
   ForeignKey,
   HasMany,
   BelongsTo,
-  Default
+  Default,
+  BelongsToMany
 } from 'sequelize-typescript';
 import BusRoute from './busRoute';
 import TimetableDay from './timetableDay';
 import Travel from './travel';
+import DayOfTheWeek from './dayOfTheWeek';
 
 @Table({
   tableName: 'bus_route_timetable',
@@ -49,6 +51,7 @@ export default class BusRouteTimetable extends Model {
   @Column({
     type: DataType.UUID,
     allowNull: false,
+    onDelete: 'CASCADE'
   })
   routeId!: string;
 
@@ -58,6 +61,6 @@ export default class BusRouteTimetable extends Model {
   @HasMany(() => Travel)
   travels!: Travel[];
 
-  @HasMany(() => TimetableDay)
-  timetableDays!: TimetableDay[];
+  @BelongsToMany(() => DayOfTheWeek, () => TimetableDay)
+  days!: DayOfTheWeek[];
 }

@@ -6,13 +6,6 @@ import { Response } from "express";
 export const createBusRoute = async function (req: AuthRequest, res: Response) {
     const { lineNumber, origin, destination } = req.body;
 
-    if (!lineNumber || !origin || !destination ||
-        typeof lineNumber !== 'string' || typeof origin !== 'string' || 
-        typeof destination !== 'string'
-    ) {
-        return res.status(400).json({ error: 'Both origin and destination are required'});
-    }
-
     try {
         const travelInfo = await getTravelTime(origin, destination);
 
@@ -37,13 +30,6 @@ export const createBusRoute = async function (req: AuthRequest, res: Response) {
 export const updateBusRoute = async function (req: AuthRequest, res: Response) {
     const { lineNumber, origin, destination } = req.body;
     const id = req.params.id;
-
-    if ((lineNumber && typeof lineNumber !== 'string') ||
-        (origin && typeof origin !== 'string') ||
-        (destination && typeof destination !== 'string')
-    ) {
-        return res.status(400).json({ error: 'Body passed is invalid' });
-    }
 
     try {
         const busRouteFound = await BusRoute.findByPk(id);
@@ -121,5 +107,4 @@ export const getBusRoutes = async function(req: AuthRequest, res: Response) {
         console.error('Error fetching bus routes:', error);
         return res.status(500).json({ error: 'Error to fetch bus routes'});
     }
-    
-}
+};

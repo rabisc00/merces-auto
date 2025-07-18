@@ -5,14 +5,6 @@ import { Response } from "express";
 export const createBus = async function(req: AuthRequest, res: Response) {
     const { busNumber, model, capacity, manufacturingYear } = req.body;
 
-    if (!busNumber || typeof busNumber !== 'string' || 
-        (model && typeof model !== 'string') || 
-        (capacity && typeof capacity !== 'number') ||
-        (manufacturingYear && typeof manufacturingYear !== 'number')
-    ) {
-        return res.status(400).json({ error: "Invalid body value type(s)" });
-    }
-
     try {
         const busFound = await Bus.findOne({ where: { busNumber }});
         if (busFound) {
@@ -36,14 +28,6 @@ export const createBus = async function(req: AuthRequest, res: Response) {
 export const editBus = async function(req: AuthRequest, res: Response) {
     const id = req.params.id;
     const { model, capacity, inRepair, manufacturingYear } = req.body;
-
-    if ((model && typeof model !== 'string') || 
-        (capacity && typeof capacity !== 'number') ||
-        (inRepair !== undefined && typeof inRepair !== 'boolean') ||
-        (manufacturingYear && typeof manufacturingYear !== 'number')
-    ) {
-        return res.status(400).json({ error: "Invalid body value type(s)" });
-    }
 
     try {
         const busFound = await Bus.findByPk(id);
@@ -124,4 +108,4 @@ export const getBuses = async function(req: AuthRequest, res: Response) {
         console.error('Get error:', error);
         res.status(500).json({ error: 'Failed to fetch buses' });
     }
-}
+};

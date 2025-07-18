@@ -7,9 +7,11 @@ import {
   CreatedAt,
   UpdatedAt,
   HasMany,
-  Default
+  Default,
+  BelongsToMany
 } from 'sequelize-typescript';
 import TimetableDay from './timetableDay';
+import BusRouteTimetable from './busRouteTimetable';
 
 @Table({
   tableName: 'day_of_the_week',
@@ -35,6 +37,6 @@ export default class DayOfTheWeek extends Model {
   @Column(DataType.DATE)
   updatedAt!: Date;
 
-  @HasMany(() => TimetableDay)
-  timetableDays!: TimetableDay[];
+  @BelongsToMany(() => BusRouteTimetable, () => TimetableDay)
+  timetables!: BusRouteTimetable[];
 }
