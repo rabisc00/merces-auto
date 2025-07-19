@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import Bus from "../models/bus";
 import { AuthRequest } from "../types/authRequest";
 import { Response } from "express";
@@ -5,15 +6,16 @@ import { Response } from "express";
 export const createBus = async function(req: AuthRequest, res: Response) {
     try {
         const { busNumber, model, capacity, manufacturingYear } = req.body;
+        const busNumberFormatted = busNumber.toUpperCase();
 
-        const busFound = await Bus.findOne({ where: { busNumber }});
+        const busFound = await Bus.findOne({ where: { busNumber: busNumberFormatted }});
         if (busFound) {
-            return res.status(409).json({ error: 'Bus with given the number already exists'});
+            return res.status(409).json({ error: 'Bus with the given number already exists'});
         }
 
         Bus.create({
-            busNumber,
-            model,
+            busNumber: busNumberFormatted,
+            model: model.toUpperCase(),
             capacity,
             manufacturingYear
         });
@@ -95,7 +97,7 @@ export const getBuses = async function(req: AuthRequest, res: Response) {
         const { count, rows } = await Bus.findAndCountAll({
             limit,
             offset,
-            attributes: ['id', 'busNumber', 'model', 'capacity', 'manufacturingYear', 'inRepair', ]
+            attributes: ['id', 'busNumber', 'model', 'inRepair']
         });
 
         res.json({
@@ -118,9 +120,36 @@ export const getBusDetails = async function(req: AuthRequest, res: Response) {
             attributes: ['id', 'busNumber', 'model', 'capacity', 'manufacturingYear', 'inRepair', 'createdAt', 'updatedAt']
         });
 
-        res.json({ busFound });
+        res.json(busFound);
     } catch (error) {
         console.error('Error fetching bus details:', error);
         res.status(500).json({ error: 'Error fetching bus details' });
     }
-}
+};
+
+export const searchBus = async function(req: AuthRequest, res: Response) {
+    try {
+        const { q } = req.query;
+        if (!q) {
+            return res.status(400).json({ error: 'Missing search query' });
+        }
+
+        const qLike = `%${q}%`;
+        
+        const busResults = await Bus.findAll({
+            attributes: ['id', 'busNumber', 'model', 'inRepair'],
+            where: {
+                [Op.or]: [
+                    { busNumber: { [Op.like]: qLike } },
+                    { model: { [Op.like]: qLike } },
+                ]
+                
+            }
+        });
+
+        return res.json(busResults);
+    } catch (error: any) {
+        console.log('Search error:', error);
+        return res.status(500).json({ error: 'Search error' });
+    }
+};

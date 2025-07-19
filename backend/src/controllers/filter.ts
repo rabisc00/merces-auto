@@ -30,25 +30,21 @@ export const searchInfo = async function(req: AuthRequest, res: Response) {
             attributes: ['id', 'lineNumber', 'origin', 'destination'],
             where: {
                 [Op.or]: [
-                    { origin: { [Op.like]: `%${q}%` } },
-                    { destination: { [Op.like]: `%${q}%` } },
-                    { lineNumber: { [Op.like]: `%${q}%` } }
+                    { origin: { [Op.like]: qLike } },
+                    { destination: { [Op.like]: qLike } },
+                    { lineNumber: { [Op.like]: qLike } }
                 ]
             }
         });
 
         const driverResults = await Driver.findAll({
-            attributes: ['id', 'documentNumber'],
+            attributes: ['id', 'documentNumber', 'name', 'picture', 'active'],
             where: {
                 [Op.or]: [
-                    { documentNumber: { [Op.like]: `%${q}%` } },
-                    { '$User.name$': { [Op.like]: `%${q}%` } }
+                    { documentNumber: { [Op.like]: qLike } },
+                    { name: { [Op.like]: qLike } }
                 ]
-            },
-            include: [{
-                model: User,
-                attributes: ['name', 'picture', 'active']
-            }]
+            }
         });
 
         return res.json({
@@ -60,4 +56,4 @@ export const searchInfo = async function(req: AuthRequest, res: Response) {
         console.log('Search error:', error);
         return res.status(500).json({ error: 'Search error' });
     }
-}
+};

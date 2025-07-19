@@ -32,6 +32,19 @@ class Driver extends Model<Driver> {
   })
   documentNumber!: string;
 
+  @Default(true)
+  @Column(DataType.BOOLEAN)
+  active!: boolean;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
+  name!: string;
+
+  @Column(DataType.STRING)
+  picture?: string;
+
   @CreatedAt
   @Column(DataType.DATE)
   createdAt!: Date;

@@ -104,7 +104,7 @@ export const deleteTrip = async function(req: AuthRequest, res: Response) {
 };
 
 export const getTripsByDriver = async function(req: AuthRequest, res: Response) {
-    const page = parseInt(req.query.page as string);
+    const page = parseInt(req.query.page as string) || 1;
     const offset = (page - 1) * 10;
     const limit = 10;
     const driverId = req.params.driverId;
@@ -138,7 +138,7 @@ export const getTripsByDriver = async function(req: AuthRequest, res: Response) 
 };
 
 export const getTripsByBus = async function(req: AuthRequest, res: Response) {
-    const page = parseInt(req.query.page as string);
+    const page = parseInt(req.query.page as string) || 1;
     const offset = (page - 1) * 10;
     const limit = 10;
     const busId = req.params.busId;
@@ -176,17 +176,13 @@ export const getTripDetails = async function(req: AuthRequest, res: Response) {
 
     try {
         const tripFound = await Trip.findByPk(id, {
-            attributes: ['numberOfPassengers', 'observations'],
+            attributes: ['id', 'numberOfPassengers', 'observations'],
             include: [{
                 model: Bus,
                 attributes: ['busNumber', 'model', 'capacity', 'manufacturingYear']
             }, {
                 model: Driver,
-                attributes: ['documentNumber'],
-                include: [{
-                    model: User,
-                    attributes: ['name', 'picture']
-                }]
+                attributes: ['documentNumber', 'name', 'picture']
             }, {
                 model: Timetable,
                 attributes: ['arrivalTime', 'departureTime'],
@@ -197,7 +193,7 @@ export const getTripDetails = async function(req: AuthRequest, res: Response) {
             }]
         });
 
-        return res.json({ tripFound });
+        return res.json(tripFound);
     } catch (error: any) {
         console.error('Error fetching trip details:', error);
         return res.status(500).json({ error: 'Error fetching trip details' });

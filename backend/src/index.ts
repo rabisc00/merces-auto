@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 import express from 'express';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/user';
@@ -12,13 +14,16 @@ import workingHoursRoutes from './routes/workingHours';
 import tripRoutes from './routes/trip';
 import filterRoutes from './routes/filter';
 import { sequelize } from './database';
+import { swaggerOptions } from './docs/swaggerOptions';
 
 const app = express();
+const swaggerSpec = swaggerJsdoc(swaggerOptions)
 
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
 app.use(bodyParser.json());
 
 app.use(tokenRoutes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/users', userRoutes);
 app.use('/drivers', driverRoutes);
 app.use('/buses', busRoutes);
@@ -38,6 +43,7 @@ async function start() {
         
         app.listen(3000, () => {
             console.log('Server started on port 3000');
+            console.log('Swagger docs at http://localhost:3000/api-docs');
         })
     } catch (error) {
         console.log(error);

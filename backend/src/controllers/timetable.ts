@@ -34,7 +34,7 @@ export const createTimetable = async function(req: AuthRequest, res: Response) {
     }
 };
 
-export const editTimetable = async function(req: AuthRequest, res: Response) {
+export const updateTimetable = async function(req: AuthRequest, res: Response) {
     try {
         const { arrivalTime, departureTime, days } = req.body;
         const id = req.params.id;
@@ -130,7 +130,7 @@ export const getTimetableDetails = async function (req: AuthRequest, res: Respon
             attributes: ['id', 'arrivalTime', 'departureTime', 'createdAt', 'updatedAt']
         });
 
-        return res.json({ timetableFound })
+        return res.json(timetableFound);
     } catch (error: any) {
         console.error('Error fetching timetable details', error);
         return res.status(500).json({ error: 'Error fetching timetable details' });

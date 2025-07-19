@@ -4,8 +4,6 @@ import {
   Model,
   DataType,
   PrimaryKey,
-  AllowNull,
-  Unique,
   Default,
   HasOne
 } from 'sequelize-typescript';
@@ -20,12 +18,6 @@ export default class User extends Model<User> {
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id!: string;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false
-  })
-  name!: string;
 
   @Column({
     unique: true,
@@ -43,14 +35,7 @@ export default class User extends Model<User> {
   @Default(false)
   @Column(DataType.BOOLEAN)
   isAdmin!: boolean;
-
-  @Default(true)
-  @Column(DataType.BOOLEAN)
-  active!: boolean;
-
-  @Column(DataType.STRING)
-  picture?: string;
-
+  
   @Column(DataType.DATE)
   createdAt!: Date;
 

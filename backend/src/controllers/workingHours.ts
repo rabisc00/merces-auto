@@ -94,7 +94,7 @@ export const deleteWorkingHours = async function(req: AuthRequest, res: Response
     }
 };
 
-export const getAllWorkingHours = async function(req: AuthRequest, res: Response) {
+export const getWorkingHours = async function(req: AuthRequest, res: Response) {
     try {
         const driverId = req.params.driverId;
         const page = parseInt(req.query.page as string) || 1;
@@ -128,9 +128,7 @@ export const getWorkingHoursDetails = async function(req: AuthRequest, res: Resp
             attributes: ['id', 'startTime', 'endTime', 'signature']
         });
         
-        return res.json({
-            workingHours
-        });
+        return res.json(workingHours);
     } catch (error: any) {
         console.error('Error fetching working hours:', error);
         return res.status(500).json({ error: 'Error fetching working hours'});

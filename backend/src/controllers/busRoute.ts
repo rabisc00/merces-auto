@@ -1,10 +1,15 @@
+import { Op } from 'sequelize';
 import BusRoute from "../models/busRoute";
 import { getTripTime } from "../services/googleMapsService";
 import { AuthRequest } from "../types/authRequest";
 import { Response } from "express";
 
 export const createBusRoute = async function (req: AuthRequest, res: Response) {
-    const { lineNumber, origin, destination } = req.body;
+    let { lineNumber, origin, destination } = req.body;
+
+    lineNumber = lineNumber.toUpperCase();
+    origin = origin.toUpperCase();
+    destination = destination.toUpperCase();
 
     try {
         const tripInfo = await getTripTime(origin, destination);
@@ -28,11 +33,18 @@ export const createBusRoute = async function (req: AuthRequest, res: Response) {
 };
 
 export const updateBusRoute = async function (req: AuthRequest, res: Response) {
-    const { lineNumber, origin, destination } = req.body;
+    let { lineNumber, origin, destination } = req.body;
     const id = req.params.id;
+
+    lineNumber = lineNumber.toUpperCase();
+    origin = origin.toUpperCase();
+    destination = destination.toUpperCase();
 
     try {
         const busRouteFound = await BusRoute.findByPk(id);
+        if (!busRouteFound) {
+            return res.status(400).json({ error: 'Bus route with the given id not found' });
+        }
         
         let changed = false;
 
@@ -87,7 +99,7 @@ export const deleteBusRoute = async function(req: AuthRequest, res: Response) {
 
 export const getBusRoutes = async function(req: AuthRequest, res: Response) {
     try {
-        const page = parseInt(req.query.page as string);
+        const page = parseInt(req.query.page as string) || 1;
         const offset = (page - 1) * 10;
         const limit = 10;
 
@@ -117,9 +129,36 @@ export const getBusRouteDetails = async function(req: AuthRequest, res: Response
             attributes: ['id', 'distanceInKm', 'averageTimeInMinutes', 'origin', 'destination']
         });
 
-        res.json({ busRouteFound });
+        res.json(busRouteFound);
     } catch (error: any) {
         console.error('Error fetching bus route details:', error);
         return res.status(500).json({ error: 'Error fetching bus route details'});
     }
 };
+
+export const searchBusRoute = async function(req: AuthRequest, res: Response) {
+    try {
+        const { q } = req.query;
+        if (!q) {
+            return res.status(400).json({ error: 'Missing search query' });
+        }
+
+        const qLike = `%${q}%`;
+
+        const routeResults = await BusRoute.findAll({
+            attributes: ['id', 'lineNumber', 'origin', 'destination'],
+            where: {
+                [Op.or]: [
+                    { origin: { [Op.like]: qLike } },
+                    { destination: { [Op.like]: qLike } },
+                    { lineNumber: { [Op.like]: qLike } }
+                ]
+            }
+        });
+
+        return res.json(routeResults);
+    } catch (error: any) {
+        console.error('Search error:', error);
+        return res.status(500).json({ error: 'Search error' });
+    }
+}
