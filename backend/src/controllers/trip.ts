@@ -8,14 +8,15 @@ import Driver from "../models/driver";
 import User from "../models/user";
 
 export const createTrip = async function (req: AuthRequest, res: Response) {
-    const { 
-        numberOfPassengers, 
-        observations, 
-        driverId, 
-        busId, 
-        timetableId } = req.body;
-
     try {
+        const { 
+            numberOfPassengers, 
+            observations, 
+            driverId, 
+            busId, 
+            timetableId 
+        } = req.body;
+
         await Trip.create({
             numberOfPassengers,
             observations,
@@ -31,16 +32,16 @@ export const createTrip = async function (req: AuthRequest, res: Response) {
 };
 
 export const editTrip = async function (req: AuthRequest, res: Response) {
-    const { 
-        numberOfPassengers, 
-        observations, 
-        driverId, 
-        busId,
-        timetableId
-    } = req.body;
-    const id = req.params.id;
-
     try {
+        const { 
+            numberOfPassengers, 
+            observations, 
+            driverId, 
+            busId,
+            timetableId
+        } = req.body;
+        const id = req.params.id;
+        
         const tripFound = await Trip.findByPk(id);
         if (!tripFound) {
             return res.status(400).json({ error: 'Trip with the given id not found' });

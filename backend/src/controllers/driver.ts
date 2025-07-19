@@ -3,11 +3,10 @@ import { AuthRequest } from "../types/authRequest";
 import Driver from "../models/driver";
 import User from "../models/user";
 
-
 export const createDriver = async function (req: AuthRequest, res: Response) {
-    const { userId, documentNumber } = req.body;
-
     try {
+        const { userId, documentNumber } = req.body;
+
         const existingDriver = await Driver.findOne({ where: { documentNumber }});
         if (existingDriver) {
             return res.status(409).json({ message: 'Driver with the given document already exists' });
@@ -26,9 +25,9 @@ export const createDriver = async function (req: AuthRequest, res: Response) {
 };
 
 export const deleteDriver = async function (req: AuthRequest, res: Response) {
-    const id = req.params.id;
-
     try {
+        const id = req.params.id;
+        
         const driver = await Driver.findByPk(id, {
             attributes: ['id', 'userId']
         });
@@ -83,5 +82,24 @@ export const getDrivers = async function (req: AuthRequest, res: Response) {
     } catch (error) {
         console.error('Error fetching drivers:', error);
         res.status(500).json({ error: 'Error fetching drivers' });
+    }
+};
+
+export const getDriverDetails = async function (req: AuthRequest, res: Response) {
+    try {
+        const id = req.params.id;
+
+        const driverFound = await Driver.findByPk(id, {
+            attributes: ['id', 'documentNumber'],
+            include: {
+                model: User,
+                attributes: ['name', 'email', 'picture', 'createdAt', 'updatedAt']
+            }
+        });
+
+        res.json({ driverFound });
+    } catch (error) {
+        console.error('Error fetching driver details:', error);
+        res.status(500).json({ error: 'Error fetching driver details' });
     }
 };

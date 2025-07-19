@@ -13,9 +13,9 @@ dotenv.config();
 const uploadDir = path.join(__dirname, '..', '..', 'uploads', 'profilePictures');
 
 export const createUser = async(req: AuthRequest, res: Response) => {
-    const { email, name, password, isAdmin } = req.body;
-
     try {
+        const { email, name, password, isAdmin } = req.body;
+
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
             return res.status(409).json({ message: 'User with the given email already registered.' });
@@ -38,9 +38,9 @@ export const createUser = async(req: AuthRequest, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-
     try {
+        const { email, password } = req.body;
+
         const userFound = await User.findOne({ where: { email } });
         if (!userFound) {
             return res.status(401).json({ message: 'Invalid email or password' });

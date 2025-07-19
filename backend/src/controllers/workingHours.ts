@@ -10,23 +10,23 @@ import { SQL_DATE_FORMAT } from "../constants/date";
 const uploadDir = path.join(__dirname, '..', '..', 'uploads', 'signatures');
 
 export const createWorkingHours = async function(req: AuthRequest, res: Response) {
-    const { startTime, endTime, driverId} = req.body;
-
-    const hash = crypto.createHash('sha256').update(req.file.buffer).digest('hex');
-    const ext = path.extname(req.file.originalname);
-    const fileName = `${hash}${ext}`;
-    const filePath = path.join(uploadDir, fileName);
-    const relativePath = path.join('uploads', 'signatures', fileName);
-
-    if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    if (!fs.existsSync(filePath)) {        
-        fs.writeFileSync(filePath, req.file.buffer);
-    }
-
     try {
+        const { startTime, endTime, driverId} = req.body;
+
+        const hash = crypto.createHash('sha256').update(req.file.buffer).digest('hex');
+        const ext = path.extname(req.file.originalname);
+        const fileName = `${hash}${ext}`;
+        const filePath = path.join(uploadDir, fileName);
+        const relativePath = path.join('uploads', 'signatures', fileName);
+
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+
+        if (!fs.existsSync(filePath)) {        
+            fs.writeFileSync(filePath, req.file.buffer);
+        }
+
         await WorkingHours.create({
             driverId,
             startTime,
@@ -42,10 +42,9 @@ export const createWorkingHours = async function(req: AuthRequest, res: Response
 };
 
 export const editWorkingHours = async function(req: AuthRequest, res: Response) {
-    const { startTime, endTime } = req.body;
-    const id = req.params.id;
-
     try {
+        const { startTime, endTime } = req.body;
+        const id = req.params.id; 
         const workingHoursFound = await WorkingHours.findByPk(id);
         if (!workingHoursFound) {
             return res.status(400).json({ error: 'No working hours with the given id found'});
@@ -79,9 +78,9 @@ export const editWorkingHours = async function(req: AuthRequest, res: Response) 
 };
 
 export const deleteWorkingHours = async function(req: AuthRequest, res: Response) {
-    const id = req.params.id;
-
     try {
+        const id = req.params.id;
+
         const workingHoursFound = await WorkingHours.findByPk(id);
         if (!workingHoursFound) {
             return res.status(400).json({ error: 'No working hours with the given id found' });
@@ -96,12 +95,12 @@ export const deleteWorkingHours = async function(req: AuthRequest, res: Response
 };
 
 export const getAllWorkingHours = async function(req: AuthRequest, res: Response) {
-    const driverId = req.params.driverId;
-    const page = parseInt(req.query.page as string) || 1;
-    const offset = (page - 1) * 10;
-    const limit = 10;
-
     try {
+        const driverId = req.params.driverId;
+        const page = parseInt(req.query.page as string) || 1;
+        const offset = (page - 1) * 10;
+        const limit = 10;
+
         const { count, rows } = await WorkingHours.findAndCountAll({ 
             offset,
             limit,
@@ -122,9 +121,9 @@ export const getAllWorkingHours = async function(req: AuthRequest, res: Response
 };
 
 export const getWorkingHoursDetails = async function(req: AuthRequest, res: Response) {
-    const workingHoursId = req.params.id;
-
     try {
+        const workingHoursId = req.params.id;
+
         const workingHours = await WorkingHours.findByPk(workingHoursId, {
             attributes: ['id', 'startTime', 'endTime', 'signature']
         });

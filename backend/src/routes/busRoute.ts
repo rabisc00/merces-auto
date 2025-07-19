@@ -2,11 +2,12 @@ import * as express from 'express';
 import { authenticateToken } from '../middleware/auth';
 import { busRouteCreateSchema, busRouteEditSchema } from '../validators/busRouteValidator';
 import { validate } from '../middleware/validate';
-import { createBusRoute, updateBusRoute, getBusRoutes, deleteBusRoute } from '../controllers/busRoute';
+import { createBusRoute, updateBusRoute, getBusRoutes, deleteBusRoute, getBusRouteDetails } from '../controllers/busRoute';
 
 const router = express.Router();
 
 router.get('/retrieve', authenticateToken, getBusRoutes);
+router.get('/retrieve/:id', authenticateToken, getBusRouteDetails);
 
 router.post('/create', authenticateToken, validate(busRouteCreateSchema), createBusRoute);
 

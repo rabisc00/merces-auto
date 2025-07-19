@@ -9,6 +9,7 @@ import {
   ForeignKey,
   Default,
   BelongsTo,
+  HasOne,
 } from 'sequelize-typescript';
 import Driver from './driver';
 import Bus from './bus';
@@ -61,6 +62,12 @@ export default class Trip extends Model {
     allowNull: false,
   })
   timetableId!: string;
+
+  @BelongsTo(() => Bus)
+  bus!: Bus;
+
+  @BelongsTo(() => Driver)
+  driver!: Driver;
 
   @BelongsTo(() => Timetable)
   timetable: Timetable;

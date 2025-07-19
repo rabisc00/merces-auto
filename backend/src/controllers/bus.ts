@@ -3,9 +3,9 @@ import { AuthRequest } from "../types/authRequest";
 import { Response } from "express";
 
 export const createBus = async function(req: AuthRequest, res: Response) {
-    const { busNumber, model, capacity, manufacturingYear } = req.body;
-
     try {
+        const { busNumber, model, capacity, manufacturingYear } = req.body;
+
         const busFound = await Bus.findOne({ where: { busNumber }});
         if (busFound) {
             return res.status(409).json({ error: 'Bus with given the number already exists'});
@@ -26,10 +26,10 @@ export const createBus = async function(req: AuthRequest, res: Response) {
 };
 
 export const editBus = async function(req: AuthRequest, res: Response) {
-    const id = req.params.id;
-    const { model, capacity, inRepair, manufacturingYear } = req.body;
-
     try {
+        const id = req.params.id;
+        const { model, capacity, inRepair, manufacturingYear } = req.body;
+
         const busFound = await Bus.findByPk(id);
         if (!busFound) {
             return res.status(404).json({ error: 'Bus with the given id not found' });
@@ -70,9 +70,9 @@ export const editBus = async function(req: AuthRequest, res: Response) {
 };
 
 export const deleteBus = async function(req: AuthRequest, res: Response) {
-    const id = req.params.id;
-
     try {
+        const id = req.params.id;
+
         const busFound = await Bus.findByPk(id);
         if (!busFound) {
             return res.status(404).json({ error: 'Bus with the given id not found'});
@@ -109,3 +109,18 @@ export const getBuses = async function(req: AuthRequest, res: Response) {
         res.status(500).json({ error: 'Error fetching buses' });
     }
 };
+
+export const getBusDetails = async function(req: AuthRequest, res: Response) {
+    try {
+        const id = req.params.id;
+
+        const busFound = await Bus.findByPk(id, {
+            attributes: ['id', 'busNumber', 'model', 'capacity', 'manufacturingYear', 'inRepair', 'createdAt', 'updatedAt']
+        });
+
+        res.json({ busFound });
+    } catch (error) {
+        console.error('Error fetching bus details:', error);
+        res.status(500).json({ error: 'Error fetching bus details' });
+    }
+}

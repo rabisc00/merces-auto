@@ -6,9 +6,9 @@ import DayOfTheWeek from "../models/dayOfTheWeek";
 import { SQL_DATE_FORMAT } from "../constants/date";
 
 export const createTimetable = async function(req: AuthRequest, res: Response) {
-    const { busRouteId, arrivalTime, departureTime, days } = req.body;
-
     try {
+        const { busRouteId, arrivalTime, departureTime, days } = req.body;
+
         const formattedArrivalTime = new Date(arrivalTime);
         const formattedDepartureTime = new Date(departureTime);
 
@@ -35,10 +35,10 @@ export const createTimetable = async function(req: AuthRequest, res: Response) {
 };
 
 export const editTimetable = async function(req: AuthRequest, res: Response) {
-    const { arrivalTime, departureTime, days } = req.body;
-    const id = req.params.id;
-
     try {
+        const { arrivalTime, departureTime, days } = req.body;
+        const id = req.params.id;
+
         const timetableFound = await Timetable.findByPk(id, {
             include: [DayOfTheWeek]
         });
@@ -99,11 +99,11 @@ export const deleteTimetable = async function (req: AuthRequest, res: Response) 
 };
 
 export const getTimetables = async function (req: AuthRequest, res: Response) {
-    const page = parseInt(req.query.page as string) || 1;
-    const offset = (page - 1) * 10;
-    const limit = 10;
-
     try {
+        const page = parseInt(req.query.page as string) || 1;
+        const offset = (page - 1) * 10;
+        const limit = 10;
+
         const { count, rows } = await Timetable.findAndCountAll({
             limit,
             offset,
@@ -119,5 +119,20 @@ export const getTimetables = async function (req: AuthRequest, res: Response) {
     } catch (error: any) {
         console.error('Error fetching timetables:', error);
         return res.status(500).json({ error: 'Error fetching timetable' });
+    }
+};
+
+export const getTimetableDetails = async function (req: AuthRequest, res: Response) {
+    try {
+        const id = req.params.id;
+
+        const timetableFound = await Timetable.findByPk(id, {
+            attributes: ['id', 'arrivalTime', 'departureTime', 'createdAt', 'updatedAt']
+        });
+
+        return res.json({ timetableFound })
+    } catch (error: any) {
+        console.error('Error fetching timetable details', error);
+        return res.status(500).json({ error: 'Error fetching timetable details' });
     }
 }

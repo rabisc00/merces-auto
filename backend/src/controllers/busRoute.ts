@@ -108,3 +108,18 @@ export const getBusRoutes = async function(req: AuthRequest, res: Response) {
         return res.status(500).json({ error: 'Error fetching bus routes'});
     }
 };
+
+export const getBusRouteDetails = async function(req: AuthRequest, res: Response) {
+    try {
+        const id = req.params.id;
+
+        const busRouteFound = await BusRoute.findByPk(id, {
+            attributes: ['id', 'distanceInKm', 'averageTimeInMinutes', 'origin', 'destination']
+        });
+
+        res.json({ busRouteFound });
+    } catch (error: any) {
+        console.error('Error fetching bus route details:', error);
+        return res.status(500).json({ error: 'Error fetching bus route details'});
+    }
+};

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { UUID_REGEX } from '../constants/id';
 
 export const tripCreateSchema = z.object({
-    numberOfPassengeres: z.number(),
+    numberOfPassengers: z.number(),
     observations: z.string(),
     driverId: z.string().regex(UUID_REGEX),
     busId: z.string().regex(UUID_REGEX),
@@ -10,7 +10,7 @@ export const tripCreateSchema = z.object({
 });
 
 export const tripEditSchema = z.object({
-    numberOfPassengeres: z.number().optional(),
+    numberOfPassengers: z.number().optional(),
     observations: z.string().optional(),
     driverId: z.string().regex(UUID_REGEX).optional(),
     busId: z.string().regex(UUID_REGEX).optional(),

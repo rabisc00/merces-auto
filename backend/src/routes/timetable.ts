@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { createTimetable, editTimetable, deleteTimetable, getTimetables } from '../controllers/timetable';
+import { createTimetable, editTimetable, deleteTimetable, getTimetables, getTimetableDetails } from '../controllers/timetable';
 import { authenticateToken } from '../middleware/auth';
 import { validate } from '../middleware/validate';
 import { timetableCreateSchema, timetableEditSchema } from '../validators/timetableValidator';
@@ -7,6 +7,7 @@ import { timetableCreateSchema, timetableEditSchema } from '../validators/timeta
 const router = express.Router();
 
 router.get('/retrieve', authenticateToken, getTimetables);
+router.get('/retrieve/:id', authenticateToken, getTimetableDetails);
 
 router.post('/create', authenticateToken, validate(timetableCreateSchema), createTimetable);
 

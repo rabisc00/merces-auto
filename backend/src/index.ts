@@ -10,6 +10,7 @@ import busRouteRoutes from './routes/busRoute';
 import timetableRoutes from './routes/timetable';
 import workingHoursRoutes from './routes/workingHours';
 import tripRoutes from './routes/trip';
+import filterRoutes from './routes/filter';
 import { sequelize } from './database';
 
 const app = express();
@@ -25,6 +26,7 @@ app.use('/busroutes', busRouteRoutes);
 app.use('/timetables', timetableRoutes);
 app.use('/workinghours', workingHoursRoutes);
 app.use('/trips', tripRoutes);
+app.use(filterRoutes);
 
 async function start() {
     try {

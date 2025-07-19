@@ -7,7 +7,6 @@ import {
   CreatedAt,
   UpdatedAt,
   Default,
-  Unique,
   HasMany
 } from 'sequelize-typescript';
 import Trip from './trip';
