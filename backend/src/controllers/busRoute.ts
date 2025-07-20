@@ -32,34 +32,34 @@ export const createBusRoute = async function (req: AuthRequest, res: Response) {
     }
 };
 
-export const updateBusRoute = async function (req: AuthRequest, res: Response) {
+export const editBusRoute = async function (req: AuthRequest, res: Response) {
     let { lineNumber, origin, destination } = req.body;
     const id = req.params.id;
 
-    lineNumber = lineNumber.toUpperCase();
-    origin = origin.toUpperCase();
-    destination = destination.toUpperCase();
+    const lineNumberFormatted = lineNumber && lineNumber.toUpperCase();
+    const originFormatted = origin && origin.toUpperCase();
+    const destinationFormatted = destination && destination.toUpperCase();
 
     try {
         const busRouteFound = await BusRoute.findByPk(id);
         if (!busRouteFound) {
-            return res.status(400).json({ error: 'Bus route with the given id not found' });
+            return res.status(404).json({ error: 'Bus route with the given id not found' });
         }
         
         let changed = false;
 
-        if (lineNumber && busRouteFound.lineNumber !== lineNumber) {
-            busRouteFound.lineNumber = lineNumber;
+        if (lineNumberFormatted && busRouteFound.lineNumber !== lineNumberFormatted) {
+            busRouteFound.lineNumber = lineNumberFormatted;
             changed = true;
         }
 
-        if (origin && busRouteFound.origin !== origin) {
-            busRouteFound.origin = origin;
+        if (originFormatted && busRouteFound.origin !== originFormatted) {
+            busRouteFound.origin = originFormatted;
             changed = true;
         }
 
-        if (destination && busRouteFound.destination !== destination) {
-            busRouteFound.destination = destination;
+        if (destinationFormatted && busRouteFound.destination !== destinationFormatted) {
+            busRouteFound.destination = destinationFormatted;
             changed = true;
         }
 
@@ -106,7 +106,7 @@ export const getBusRoutes = async function(req: AuthRequest, res: Response) {
         const { count, rows } = await BusRoute.findAndCountAll({
             limit,
             offset,
-            attributes: ['id', 'distanceInKm', 'averageTimeInMinutes', 'origin', 'destination']
+            attributes: ['id', 'lineNumber', 'distanceInKm', 'averageTimeInMinutes', 'origin', 'destination']
         });
 
         res.json({
@@ -126,7 +126,7 @@ export const getBusRouteDetails = async function(req: AuthRequest, res: Response
         const id = req.params.id;
 
         const busRouteFound = await BusRoute.findByPk(id, {
-            attributes: ['id', 'distanceInKm', 'averageTimeInMinutes', 'origin', 'destination']
+            attributes: ['id', 'lineNumber', 'distanceInKm', 'averageTimeInMinutes', 'origin', 'destination']
         });
 
         res.json(busRouteFound);

@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { createTimetable, updateTimetable, deleteTimetable, getTimetables, getTimetableDetails } from '../controllers/timetable';
+import { createTimetable, editTimetable, deleteTimetable, getTimetablesByRouteId, getTimetableDetails } from '../controllers/timetable';
 import { authenticateToken } from '../middleware/auth';
 import { validate } from '../middleware/validate';
 import { timetableCreateSchema, timetableEditSchema } from '../validators/timetableValidator';
@@ -15,9 +15,9 @@ const router = express.Router();
 
 /**
  * @swagger
- * /timetables/retrieve:
+ * /timetables/retrieve/byroute/{routeId}:
  *   get:
- *     summary: Retrieve a paginated list of bus timetables
+ *     summary: Retrieve a paginated list of bus timetables by route ID
  *     tags: [Bus Timetables]
  *     security:
  *       - bearerAuth: []
@@ -25,9 +25,16 @@ const router = express.Router();
  *       - in: query
  *         name: page
  *         schema:
- *           type: string
+ *           type: integer
  *           default: 1
- *         description: Page Number
+ *         description: Page number
+ *       - in: path
+ *         name: routeId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Bus Route ID
  *     responses:
  *       200:
  *         description: A list of bus timetables
@@ -51,15 +58,23 @@ const router = express.Router();
  *       403:
  *         description: Invalid or expired token
  *       500:
- *         description: Error fetching bus timetables
+ *         description: Server error while fetching timetables
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error fetching the timetables
  */
-router.get('/retrieve', authenticateToken, getTimetables);
+router.get('/retrieve/byroute/:routeId', authenticateToken, getTimetablesByRouteId);
 
 /**
  * @swagger
  * /timetables/retrieve/{id}:
  *   get:
- *     summary: Retrieve the details of a bus timetable by ID
+ *     summary: Retrieve the details of a timetable entry
  *     tags: [Bus Timetables]
  *     security:
  *       - bearerAuth: []
@@ -69,23 +84,40 @@ router.get('/retrieve', authenticateToken, getTimetables);
  *         required: true
  *         schema:
  *           type: string
- *         description: Bus Timetable ID
+ *           format: uuid
+ *         description: Timetable ID
  *     responses:
  *       200:
- *         description: Details of the bus timetable
+ *         description: The details of a timetable entry
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/Timetable'
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Invalid or expired token
+ *       404:
+ *         description: Timetable with the given ID not found
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 busRouteFound:
- *                   $ref: '#/components/schemas/TimetableDetails'
- *       401:
- *         description: Unauthorized
- *       403:
- *         description: Invalid or expired token
+ *                 error:
+ *                   type: string
+ *                   example: Timetable with the given ID not found
  *       500:
- *         description: Error fetching bus timetable details
+ *         description: Server error while fetching timetables
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error fetching the timetables
  */
 router.get('/retrieve/:id', authenticateToken, getTimetableDetails);
 
@@ -115,13 +147,29 @@ router.get('/retrieve/:id', authenticateToken, getTimetableDetails);
  *                   type: string
  *                   example: Bus timetable created succesfully
  *       400:
- *         description: Invalid input data
+ *         description: Invalid request (e.g. departureTime is before arrivalTime)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: departureTime must be after arrivalTime
  *       401:
  *         description: Unauthorized
  *       403:
  *         description: Invalid or expired token
  *       500:
- *         description: Error creating bus timetable
+ *         description: Server error while creating the timetable
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error creating timetable
  */
 router.post('/create', authenticateToken, validate(timetableCreateSchema), createTimetable);
 
@@ -158,15 +206,31 @@ router.post('/create', authenticateToken, validate(timetableCreateSchema), creat
  *                   type: string
  *                   example: Bus Timetable updated successfully
  *       400:
- *         description: Bus route with the given ID not found
+ *         description: Invalid request (e.g. departureTime is before arrivalTime)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: departureTime must be after arrivalTime
  *       401:
  *         description: Unauthorized
  *       403:
  *         description: Invalid or expired token
  *       500:
- *         description: Error updating bus timetable
+ *         description: Server error while updating the timetable
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error updating timetable
  */
-router.patch('/edit/:id', authenticateToken, validate(timetableEditSchema), updateTimetable);
+router.patch('/edit/:id', authenticateToken, validate(timetableEditSchema), editTimetable);
 
 /**
  * @swagger
@@ -195,13 +259,29 @@ router.patch('/edit/:id', authenticateToken, validate(timetableEditSchema), upda
  *                   type: string
  *                   example: Bus Timetable updated successfully
  *       400:
- *         description: Bus timetable with the given ID not found
+ *         description: Invalid request (timetable with the given ID not found)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Timetable with the given ID not found
  *       401:
  *         description: Unauthorized
  *       403:
  *         description: Invalid or expired token
  *       500:
- *         description: Error updating bus timetable
+ *         description: Server error while deleting the timetable
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error deleting timetable
  */
 router.delete('/delete/:id', authenticateToken, deleteTimetable);
 

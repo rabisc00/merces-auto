@@ -2,7 +2,7 @@ import * as express from 'express';
 import { authenticateToken } from '../middleware/auth';
 import { busRouteCreateSchema, busRouteEditSchema } from '../validators/busRouteValidator';
 import { validate } from '../middleware/validate';
-import { createBusRoute, updateBusRoute, getBusRoutes, deleteBusRoute, getBusRouteDetails, searchBusRoute } from '../controllers/busRoute';
+import { createBusRoute, editBusRoute, getBusRoutes, deleteBusRoute, getBusRouteDetails, searchBusRoute } from '../controllers/busRoute';
 
 /**
 * @swagger
@@ -77,8 +77,7 @@ router.get('/retrieve', authenticateToken, getBusRoutes);
  *           application/json:
  *             schema:
  *               type: object
- *               properties:
- *                  $ref: '#/components/schemas/BusRouteDetails'
+ *               $ref: '#/components/schemas/BusRouteDetails'
  *       401:
  *         description: Unauthorized
  *       403:
@@ -192,15 +191,17 @@ router.post('/create', authenticateToken, validate(busRouteCreateSchema), create
  *                   type: string
  *                   example: Bus Route updated successfully
  *       400:
- *         description: Bus route with the given ID not found
+ *         description: Invalid input data
  *       401:
  *         description: Unauthorized
  *       403:
  *         description: Invalid or expired token
+ *       404:
+ *         description: Bus route with the given id not found
  *       500:
  *         description: Error updating bus route
  */
-router.patch('/edit/:id', authenticateToken, validate(busRouteEditSchema), updateBusRoute);
+router.patch('/edit/:id', authenticateToken, validate(busRouteEditSchema), editBusRoute);
 
 /**
  * @swagger
@@ -228,12 +229,12 @@ router.patch('/edit/:id', authenticateToken, validate(busRouteEditSchema), updat
  *                 message:
  *                   type: string
  *                   example: Bus Route updated successfully
- *       400:
- *         description: Bus route with the given ID not found
  *       401:
  *         description: Unauthorized
  *       403:
  *         description: Invalid or expired token
+ *       404:
+ *         description: Bus route with the given ID not found
  *       500:
  *         description: Error updating bus route
  */

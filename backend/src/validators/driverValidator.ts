@@ -9,11 +9,12 @@ export const driverCreateSchema = z.object({
     }),
     documentNumber: z.string().regex(PPS_REGEX, {
         error: 'Invalid Irish PPS number format'
-    })
+    }),
+    name: z.string()
 });
 
 export const driverEditSchema = z.object({
-    documentNumber: z.string().regex(PPS_REGEX),
+    documentNumber: z.string().regex(PPS_REGEX).optional(),
     name: z.string().optional(),
-    active: z.boolean()
+    active: z.string().optional()
 });

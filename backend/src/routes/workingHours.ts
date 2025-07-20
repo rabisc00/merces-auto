@@ -36,8 +36,7 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               type: object
- *               properties:
- *                  $ref: '#/components/schemas/WorkingHoursDetails'
+ *               $ref: '#/components/schemas/WorkingHoursDetails'
  *       401:
  *         description: Unauthorized
  *       403:

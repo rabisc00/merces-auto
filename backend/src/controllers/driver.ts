@@ -19,8 +19,8 @@ export const createDriver = async function (req: AuthRequest, res: Response) {
         }
 
         await Driver.create({ 
-            name: name.toUpperCase(),
-            documentNumber: documentNumber.toUpperCase(),
+            name: name && name.toUpperCase(),
+            documentNumber: documentNumber && documentNumber.toUpperCase(),
             userId,
         });
 
@@ -38,18 +38,22 @@ export const updateDriver = async function (req: AuthRequest, res: Response) {
 
         const driverFound = await Driver.findByPk(id);
         if (!driverFound) {
-            return res.status(400).json({ error: 'Driver with given id not found' });
+            return res.status(404).json({ error: 'Driver with given id not found' });
         }
+
+        const formattedName = name && name.toUpperCase();
+        const formattedDocumentNumber = documentNumber && documentNumber.toUpperCase();
+        const activeBool = active as boolean;
 
         let changed = false;
 
-        if (documentNumber && documentNumber !== driverFound.documentNumber) {
-            driverFound.documentNumber = documentNumber;
+        if (formattedDocumentNumber && formattedDocumentNumber !== driverFound.documentNumber) {
+            driverFound.documentNumber = formattedDocumentNumber;
             changed = true;
         }
 
-        if (name && name !== driverFound.name) {
-            driverFound.name = name.toUpperCase();
+        if (formattedName && formattedName !== driverFound.name) {
+            driverFound.name = formattedName;
             changed = true;
         }
 
@@ -78,7 +82,8 @@ export const updateDriver = async function (req: AuthRequest, res: Response) {
         }
         
         if (changed) {
-            await driverFound.save();
+            await driverFound.save(); 
+            return res.json({ message: 'Driver updated successfully' });
         } else {
             return res.json({ message: 'No changes were made' });
         }
@@ -130,7 +135,7 @@ export const getDrivers = async function (req: AuthRequest, res: Response) {
         const { count, rows } = await Driver.findAndCountAll({
             limit,
             offset,
-            attributes: ['id', 'name', 'documentNumber', 'picture'],
+            attributes: ['id', 'name', 'active', 'documentNumber', 'picture'],
         });
 
         res.json({
@@ -150,7 +155,7 @@ export const getDriverDetails = async function (req: AuthRequest, res: Response)
         const id = req.params.id;
 
         const driverFound = await Driver.findByPk(id, {
-            attributes: ['id', 'name', 'documentNumber', 'picture', 'createdAt', 'updatedAt']
+            attributes: ['id', 'name', 'documentNumber', 'active', 'picture', 'createdAt', 'updatedAt']
         });
 
         res.json(driverFound);

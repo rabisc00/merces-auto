@@ -51,7 +51,7 @@ export const login = async (req: Request, res: Response) => {
             isAdmin: userFound.isAdmin 
         };
         
-        const token = jwt.sign(payload, process.env.JWT_SECRET, process.env.JWT_EXPIRES_IN);
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
         
         return res.json({ token });
 

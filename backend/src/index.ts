@@ -19,11 +19,16 @@ import { swaggerOptions } from './docs/swaggerOptions';
 const app = express();
 const swaggerSpec = swaggerJsdoc(swaggerOptions)
 
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use(bodyParser.json());
 
-app.use(tokenRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get('/api-docs-json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+})
+
+app.use(tokenRoutes);
 app.use('/users', userRoutes);
 app.use('/drivers', driverRoutes);
 app.use('/buses', busRoutes);
@@ -38,7 +43,7 @@ async function start() {
         await sequelize.authenticate();
         console.log('Connected to MySQL');
 
-        await sequelize.sync({ alter: true });
+        await sequelize.sync();
         console.log('Tables synced with models');
         
         app.listen(3000, () => {

@@ -36,6 +36,7 @@ export const swaggerOptions = {
             },
             distanceInKm: { type: 'integer' },
             averageTimeInMinutes: { type: 'integer' },
+            lineNumber: { type: 'string' },
             origin: {type: 'string' },
             destination: { type: 'string' }
           }
@@ -48,17 +49,9 @@ export const swaggerOptions = {
               format: 'uuid'
             },
             documentNumber: { type: 'string' },
-            user: {
-              type: 'object',
-              properties: {
-                name: { type: 'string' },
-                email: { 
-                  type: 'string',
-                  format: 'email'
-                },
-                picture: { type: 'string' }
-              }
-            }
+            name: { type: 'string' },
+            picture: { type: 'string' },
+            active: { type: 'boolean' }
           }
         },
         Timetable: {
@@ -75,6 +68,14 @@ export const swaggerOptions = {
             departureTime: {
               type: 'string',
               format: 'date-time'
+            },
+            routeId: {
+              type: 'object',
+              properties: {
+                lineNumber: { type: 'string' },
+                origin: { type: 'string' },
+                destination: { type: 'string' }
+              }
             }
           }
         }, 
@@ -149,6 +150,7 @@ export const swaggerOptions = {
               type: 'string',
               format: 'uuid'
             },
+            lineNumber: { type: 'string' },
             distanceInKm: { type: 'integer' },
             averageTimeInMinutes: { type: 'integer' },
             origin: { type: 'string' },
@@ -164,7 +166,8 @@ export const swaggerOptions = {
               },
               name: { type: 'string' },
               documentNumber: { type: 'string' },
-              picture: { type: 'picture' },
+              picture: { type: 'string' },
+              active: { type: 'boolean' },
               createdAt: { 
                 type: 'string',
                 format: 'date-time'
@@ -392,66 +395,58 @@ export const swaggerOptions = {
             destination: { type: 'string' }
           }
         },
-        DriverUpdateInput: {
+        TimetableUpdateInput: {
           type: 'object',
           properties: {
-            documentNumber: { type: 'string' },
-            name: { type: 'string' },
-            active: { type: 'boolean' }
+            arrivalTime: {
+              type: 'string',
+              format: 'date-time'
+            },
+            departureTime: {
+              type: 'string',
+              format: 'date-time'
+            },
+            days: {
+              type: 'array',
+              items: {
+                type: 'string'
+              }
+            }
           }
-        }
-      },
-      TimetableUpdateInput: {
-        type: 'object',
-        properties: {
-          arrivalTime: {
-            type: 'string',
-            format: 'date-time'
-          },
-          departureTime: {
-            type: 'string',
-            format: 'date-time'
-          },
-          days: {
-            type: 'array',
-            items: {
-              type: 'string'
+        },
+        TripUpdateInput: {
+          type: 'object',
+          properties: {
+            numberOfPassengers: { type: 'integer' },
+            observations: { type: 'string' },
+            driverId: { 
+              type: 'string',
+              format: 'uuid'
+            },
+            busId: {
+              type: 'string',
+              format: 'uuid'
+            },
+            timetableId: {
+              type: 'string',
+              format: 'uuid'
+            }
+          }
+        },
+        WorkingHoursUpdateInput: {
+          type: 'object',
+          properties: {
+            startTime: {
+              type: 'string',
+              format: 'date-time'
+            },
+            endTime: {
+              type: 'string',
+              format: 'date-time'
             }
           }
         }
       },
-      TripUpdateInput: {
-        type: 'object',
-        properties: {
-          numberOfPassengers: { type: 'integer' },
-          observations: { type: 'string' },
-          driverId: { 
-            type: 'string',
-            format: 'uuid'
-          },
-          busId: {
-            type: 'string',
-            format: 'uuid'
-          },
-          timetableId: {
-            type: 'string',
-            format: 'uuid'
-          }
-        }
-      },
-      WorkingHoursUpdateInput: {
-        type: 'object',
-        properties: {
-          startTime: {
-            type: 'string',
-            format: 'date-time'
-          },
-          endTime: {
-            type: 'string',
-            format: 'date-time'
-          }
-        }
-      }
     },
     security: [{ bearerAuth: [] }],
     servers: [{ url: 'http://localhost:3000' }],

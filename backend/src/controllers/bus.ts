@@ -6,7 +6,8 @@ import { Response } from "express";
 export const createBus = async function(req: AuthRequest, res: Response) {
     try {
         const { busNumber, model, capacity, manufacturingYear } = req.body;
-        const busNumberFormatted = busNumber.toUpperCase();
+        const busNumberFormatted = busNumber && busNumber.toUpperCase();
+        const modelFormatted = model && model.toUpperCase();
 
         const busFound = await Bus.findOne({ where: { busNumber: busNumberFormatted }});
         if (busFound) {
@@ -15,7 +16,7 @@ export const createBus = async function(req: AuthRequest, res: Response) {
 
         Bus.create({
             busNumber: busNumberFormatted,
-            model: model.toUpperCase(),
+            model: modelFormatted,
             capacity,
             manufacturingYear
         });
@@ -119,6 +120,10 @@ export const getBusDetails = async function(req: AuthRequest, res: Response) {
         const busFound = await Bus.findByPk(id, {
             attributes: ['id', 'busNumber', 'model', 'capacity', 'manufacturingYear', 'inRepair', 'createdAt', 'updatedAt']
         });
+
+        if (!busFound) {
+            return res.status(400).json({ error: 'Bus with given id not found' });
+        }
 
         res.json(busFound);
     } catch (error) {

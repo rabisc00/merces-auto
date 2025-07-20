@@ -4,18 +4,23 @@ import { AuthRequest } from "../types/authRequest";
 import Timetable from "../models/timetable";
 import DayOfTheWeek from "../models/dayOfTheWeek";
 import { SQL_DATE_FORMAT } from "../constants/date";
+import BusRoute from "../models/busRoute";
 
 export const createTimetable = async function(req: AuthRequest, res: Response) {
     try {
         const { busRouteId, arrivalTime, departureTime, days } = req.body;
 
-        const formattedArrivalTime = new Date(arrivalTime);
-        const formattedDepartureTime = new Date(departureTime);
+        const dayjsArrivalTime = dayjs(arrivalTime);
+        const dayjsDepartureTime = dayjs(departureTime);
+
+        if (!dayjsDepartureTime.isAfter(dayjsArrivalTime)) {
+            return res.status(400).json({ error: 'departureTime must be after arrivalTime' });
+        }
 
         const timetable = await Timetable.create({
             routeId: busRouteId,
-            arrivalTime: formattedArrivalTime,
-            departureTime: formattedDepartureTime
+            arrivalTime: dayjsArrivalTime.toDate(),
+            departureTime: dayjsDepartureTime.toDate()
         });
 
         const dayRecords = await Promise.all(
@@ -34,7 +39,7 @@ export const createTimetable = async function(req: AuthRequest, res: Response) {
     }
 };
 
-export const updateTimetable = async function(req: AuthRequest, res: Response) {
+export const editTimetable = async function(req: AuthRequest, res: Response) {
     try {
         const { arrivalTime, departureTime, days } = req.body;
         const id = req.params.id;
@@ -47,18 +52,26 @@ export const updateTimetable = async function(req: AuthRequest, res: Response) {
             return res.status(400).json({ error: 'Timetable with the given id not found' });
         }
 
-        const formattedArrivalTime = dayjs(timetableFound.arrivalTime).format(SQL_DATE_FORMAT);
-        const formattedDepartureTime = dayjs(timetableFound.departureTime).format(SQL_DATE_FORMAT);
+        const existingArrival = dayjs(timetableFound.arrivalTime);
+        const existingDeparture = dayjs(timetableFound.departureTime);
+
+        const newArrival = arrivalTime ? dayjs(arrivalTime) : existingArrival;
+        const newDeparture = departureTime ? dayjs(departureTime) : existingDeparture;
+
+        if (!newDeparture.isAfter(newArrival)) {
+            return res.status(400).json({ error: 'departureTime must be after arrivalTime' });
+        }
 
         let changed = false;
 
-        if (arrivalTime && formattedArrivalTime !== arrivalTime) {
-            timetableFound.arrivalTime = arrivalTime;
+        // Only update if the new value is different from what's in DB
+        if (arrivalTime && !newArrival.isSame(existingArrival)) {
+            timetableFound.arrivalTime = newArrival.toDate();
             changed = true;
         }
 
-        if (departureTime && formattedDepartureTime !== departureTime) {
-            timetableFound.departureTime = departureTime;
+        if (departureTime && !newDeparture.isSame(existingDeparture)) {
+            timetableFound.departureTime = newDeparture.toDate();
             changed = true;
         }
 
@@ -66,14 +79,17 @@ export const updateTimetable = async function(req: AuthRequest, res: Response) {
             await timetableFound.save(); 
         } 
 
-        const newDayRecords = await Promise.all(
-            days.map(async (dayName) => {
-                const [day] = await DayOfTheWeek.findOrCreate({ where: { name: dayName } });
-                return day;
-            })
-        );
+        if (days != null) {
+            const newDayRecords = await Promise.all(
+                days.map(async (dayName) => {
+                    const [day] = await DayOfTheWeek.findOrCreate({ where: { name: dayName } });
+                    return day;
+                })
+            );
 
-        await timetableFound.$set('days', newDayRecords);
+            await timetableFound.$set('days', newDayRecords);
+        }
+
         return res.json({ message: 'Timetable updated successfully' });
     } catch (error: any) {
         console.error('Error updating timetable:', error);
@@ -98,16 +114,22 @@ export const deleteTimetable = async function (req: AuthRequest, res: Response) 
     }
 };
 
-export const getTimetables = async function (req: AuthRequest, res: Response) {
+export const getTimetablesByRouteId = async function (req: AuthRequest, res: Response) {
     try {
         const page = parseInt(req.query.page as string) || 1;
         const offset = (page - 1) * 10;
         const limit = 10;
+        const routeId = req.params.routeId;
 
         const { count, rows } = await Timetable.findAndCountAll({
             limit,
             offset,
-            attributes: ['id', 'arrivalTime', 'departureTime']
+            attributes: ['id', 'arrivalTime', 'departureTime'],
+            where: { routeId },
+            include: [{
+                model: BusRoute,
+                attributes: ['id', 'lineNumber', 'origin', 'destination']
+            }]
         });
 
         return res.json({
@@ -127,12 +149,20 @@ export const getTimetableDetails = async function (req: AuthRequest, res: Respon
         const id = req.params.id;
 
         const timetableFound = await Timetable.findByPk(id, {
-            attributes: ['id', 'arrivalTime', 'departureTime', 'createdAt', 'updatedAt']
+            attributes: ['id', 'arrivalTime', 'departureTime', 'createdAt', 'updatedAt'],
+            include: [{
+                model: BusRoute,
+                attributes: ['id', 'lineNumber', 'origin', 'destination']
+            }]
         });
+
+        if (!timetableFound) {
+            return res.status(404).json({ error: 'Timetable with the given ID not found' });
+        }
 
         return res.json(timetableFound);
     } catch (error: any) {
         console.error('Error fetching timetable details', error);
         return res.status(500).json({ error: 'Error fetching timetable details' });
     }
-}
+};

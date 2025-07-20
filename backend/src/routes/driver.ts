@@ -78,8 +78,7 @@ router.get('/retrieve', authenticateToken, getDrivers);
  *           application/json:
  *             schema:
  *               type: object
- *               properties:
- *                 $ref: '#/components/schemas/DriverDetails'
+ *               $ref: '#/components/schemas/DriverDetails'
  *       401:
  *         description: Unauthorized
  *       403:
@@ -102,7 +101,7 @@ router.get('/retrieve/:id', authenticateToken, getDriverDetails);
  *         name: q
  *         schema:
  *           type: string
- *         description: Query
+ *         description: Query string for filtering drivers
  *     responses:
  *       200:
  *         description: A list of filtered bus drivers
@@ -148,13 +147,15 @@ router.get('/filter', authenticateToken, searchDriver);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Bus driver created succesfully
+ *                   example: Driver created succesfully
  *       400:
- *         description: Invalid input data
+ *         description: Invalid input
  *       401:
  *         description: Unauthorized
  *       403:
  *         description: Invalid or expired token
+ *       409:
+ *         description: Driver with the given document already exists
  *       500:
  *         description: Error creating bus driver
  */
@@ -178,9 +179,19 @@ router.post('/create', authenticateToken, validate(driverCreateSchema), createDr
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/DriverUpdateInput'
+ *             type: object
+ *             properties:
+ *               documentNumber:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               active:
+ *                 type: boolean
+ *               picture:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: Bus driver updated successfully or no changes made
@@ -191,15 +202,15 @@ router.post('/create', authenticateToken, validate(driverCreateSchema), createDr
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Bus Driver updated successfully
- *       400:
- *         description: Bus route with the given ID not found
+ *                   example: Driver updated successfully
  *       401:
  *         description: Unauthorized
  *       403:
  *         description: Invalid or expired token
+ *       404:
+ *         description: Bus route with the given ID not found
  *       500:
- *         description: Error updating bus driver
+ *         description: Error updating driver
  */
 router.patch('/edit/:id', authenticateToken, uploadPicture.single('picture'), validate(driverEditSchema), updateDriver);
 
@@ -228,15 +239,15 @@ router.patch('/edit/:id', authenticateToken, uploadPicture.single('picture'), va
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Bus Driver updated successfully
- *       400:
- *         description: Bus driver with the given ID not found
+ *                   example: Driver deleted successfully
  *       401:
  *         description: Unauthorized
  *       403:
- *         description: Invalid or expired token
+ *         description: You're not allowed to delete this user
+ *       406:
+ *         description: Driver with the given id not found
  *       500:
- *         description: Error updating bus driver
+ *         description: Error deleting driver
  */
 router.delete('/delete/:id', authenticateToken, deleteDriver);
 

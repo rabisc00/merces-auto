@@ -80,6 +80,8 @@ router.get('/retrieve', authenticateToken, getBuses);
  *               properties:
  *                 busFound:
  *                   $ref: '#/components/schemas/BusDetails'
+ *       400:
+ *         description: Bus with given id not found
  *       401:
  *         description: Unauthorized
  *       403:
@@ -148,7 +150,7 @@ router.get('/filter', authenticateToken, searchBus);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Bus route created succesfully
+ *                   example: Bus created succesfully
  *       400:
  *         description: Invalid input data
  *       401:
@@ -195,11 +197,13 @@ router.post('/create', authenticateToken, validate(busCreateSchema), createBus);
  *                   type: string
  *                   example: Bus updated successfully
  *       400:
- *         description: Bus with the given ID not found
+ *         description: Invalid input
  *       401:
  *         description: Unauthorized
  *       403:
  *         description: Invalid or expired token
+ *       404:
+ *         description: Bus with the given id not found
  *       500:
  *         description: Error updating bus
  */
@@ -230,13 +234,13 @@ router.patch('/edit/:id', authenticateToken, validate(busUpdateSchema), editBus)
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Bus updated successfully
- *       400:
- *         description: Bus with the given ID not found
+ *                   example: Bus deleted successfully
  *       401:
  *         description: Unauthorized
  *       403:
  *         description: Invalid or expired token
+ *       404:
+ *         description: Bus with the given ID not found
  *       500:
  *         description: Error updating bus 
  */

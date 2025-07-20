@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { userCreateSchema, userEditSchema } from '../validators/userValidator';
+import { userCreateSchema } from '../validators/userValidator';
 import { validate } from '../middleware/validate';
 import { createUser, login } from '../controllers/user';
 import { authenticateToken } from '../middleware/auth';
@@ -77,6 +77,8 @@ router.post('/login', login);
  *               password:
  *                 type: string
  *                 format: password
+ *               name:
+ *                 type: string
  *               isAdmin:
  *                 type: boolean
  *                 description: Set to true if user is an admin
