@@ -13,7 +13,7 @@ import timetableRoutes from './routes/timetable';
 import workingHoursRoutes from './routes/workingHours';
 import tripRoutes from './routes/trip';
 import filterRoutes from './routes/filter';
-import { sequelize } from './database';
+import { sequelize } from './config/sequelize';
 import { swaggerOptions } from './docs/swaggerOptions';
 
 const app = express();

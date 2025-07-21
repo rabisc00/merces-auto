@@ -39,11 +39,11 @@ const router = express.Router();
  *                 busRouteFound:
  *                   $ref: '#/components/schemas/TripDetails'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching trip
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve/:id', authenticateToken, getTripDetails);
 
@@ -73,11 +73,11 @@ router.get('/retrieve/:id', authenticateToken, getTripDetails);
  *                 busRouteFound:
  *                   $ref: '#/components/schemas/TripDetails'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching trip by bus ID
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve/bybus/:busId', authenticateToken, getTripsByBus);
 
@@ -107,11 +107,11 @@ router.get('/retrieve/bybus/:busId', authenticateToken, getTripsByBus);
  *                 busRouteFound:
  *                   $ref: '#/components/schemas/TripDetails'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching trip by bus ID
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve/bydriver/:driverId', authenticateToken, getTripsByDriver);
 
@@ -145,13 +145,13 @@ router.get('/retrieve/bydriver/:driverId', authenticateToken, getTripsByDriver);
  *                   format: uuid
  *                   example: 1a2b3c4d-5678-90ab-cdef-1234567890ab
  *       400:
- *         description: Invalid input data
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error creating trip
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.post('/create', authenticateToken, validate(tripCreateSchema), createTrip);
 
@@ -188,13 +188,13 @@ router.post('/create', authenticateToken, validate(tripCreateSchema), createTrip
  *                   type: string
  *                   example: Trip updated successfully
  *       400:
- *         description: Trip with the given ID not found
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error updating trip
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.patch('/edit/:id', authenticateToken, validate(tripEditSchema), editTrip);
 
@@ -225,13 +225,13 @@ router.patch('/edit/:id', authenticateToken, validate(tripEditSchema), editTrip)
  *                   type: string
  *                   example: Trip updated successfully
  *       400:
- *         description: Trip with the given ID not found
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error updating trip
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.delete('/delete/:id', authenticateToken, deleteTrip);
 

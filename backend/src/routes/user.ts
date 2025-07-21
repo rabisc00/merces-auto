@@ -46,9 +46,9 @@ const router = express.Router();
  *                 token:
  *                   type: string
  *       401:
- *         description: Invalid email or password
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       500:
- *         description: Internal server error
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.post('/login', login);
 
@@ -97,12 +97,12 @@ router.post('/login', login);
  *                   type: string
  *                   format: uuid
  *                   example: 1a2b3c4d-5678-90ab-cdef-1234567890ab
- *       409:
- *         description: Email already registered
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       409:
+ *         $ref: '#/components/responses/ConflictError'
  *       500:
- *         description: Error registering user
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.post('/create', authenticateToken, validate(userCreateSchema), createUser);
 

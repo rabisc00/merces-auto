@@ -40,13 +40,13 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Driver'
  *       400:
- *         description: Missing search query
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Search error
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/filter', authenticateToken, searchInfo);
 

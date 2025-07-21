@@ -84,8 +84,29 @@ export const swaggerOptions = {
             }
           }
         },
-        EntryNotFound: {
-          description: 'Entry with the given ID not found',
+        ConflictError: {
+          description: 'Conflict',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  error: {
+                    type: 'object',
+                    properties: {
+                      fieldName: {
+                        type: 'string',
+                        example: 'Resource already exists'
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        NotFoundError: {
+          description: 'Not Found',
           content: {
             'application/json': {
               schema: {
@@ -93,7 +114,7 @@ export const swaggerOptions = {
                 properties: {
                   error: {
                     type: 'string',
-                    example: 'Entry with the given id not found'
+                    example: 'Resource not foundd'
                   }
                 }
               }
@@ -101,7 +122,7 @@ export const swaggerOptions = {
           }
         },
         CreatedSuccessfully: {
-          description: 'Entry created successfully',
+          description: 'OK',
           content: {
             'application/json': {
               schema: {
@@ -109,28 +130,12 @@ export const swaggerOptions = {
                 properties: {
                   message: {
                     type: 'string',
-                    example: 'Driver created succesfully'
+                    example: 'Success'
                   },
                   id: {
                     type: 'string',
                     format: 'uuid',
                     example: '1a2b3c4d-5678-90ab-cdef-1234567890ab'
-                  }
-                }
-              }
-            }
-          }
-        },
-        UpdatedSuccessfully: {
-          description: 'Entry updated successfully',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  message: {
-                    type: 'string',
-                    example: 'Entry updated succesfully'
                   }
                 }
               }

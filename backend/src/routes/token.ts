@@ -43,25 +43,9 @@ const router = express.Router();
  *                   type: string
  *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       401:
- *         description: Access denied due to invalid credentials or user not being an admin
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Access denied
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       500:
- *         description: Server error while generating token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Error generating token
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.post('/token', validate(authenticationSchema), generateToken);
 

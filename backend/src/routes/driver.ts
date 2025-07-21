@@ -141,20 +141,13 @@ router.get('/filter', authenticateToken, searchDriver);
  *       200:
  *         $ref: '#/components/responses/CreatedSuccessfully'
  *       400:
- *         description: Invalid input
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
  *         $ref: '#/components/responses/InvalidToken'
  *       409:
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Driver with the given document already exists
+ *         $ref: '#/components/responses/ConflictError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -207,14 +200,7 @@ router.post('/create', authenticateToken, validate(driverCreateSchema), createDr
  *       403:
  *         $ref: '#/components/responses/InvalidToken'
  *       404:
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Driver with the given ID not found
+ *         $ref: '#/components/responses/NotFoundError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -251,14 +237,7 @@ router.patch('/edit/:id', authenticateToken, uploadPicture.single('picture'), va
  *       403:
  *         $ref: '#/components/responses/InvalidToken'
  *       404:
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Driver with the given ID not found
+ *         $ref: '#/components/responses/NotFoundError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */

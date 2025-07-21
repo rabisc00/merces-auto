@@ -28,10 +28,17 @@ export const createWorkingHours = async function(req: AuthRequest, res: Response
             fs.writeFileSync(filePath, req.file.buffer);
         }
 
+        const dayjsStartTime = dayjs(startTime);
+        const dayjsEndTime = dayjs(endTime);
+
+        if (!dayjsEndTime.isAfter(dayjsStartTime)) {
+            return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
+        }
+
         const workingHours = await WorkingHours.create({
             driverId,
-            startTime,
-            endTime,
+            startTime: dayjsStartTime.toDate(),
+            endTime: dayjsEndTime.toDate(),
             signature: relativePath
         });
 
@@ -49,23 +56,31 @@ export const editWorkingHours = async function(req: AuthRequest, res: Response) 
     try {
         const { startTime, endTime } = req.body;
         const id = req.params.id; 
+
         const workingHoursFound = await WorkingHours.findByPk(id);
         if (!workingHoursFound) {
             return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
-        const formattedStartTime = dayjs(workingHoursFound.startTime).format(SQL_DATE_FORMAT);
-        const formattedEndTime = dayjs(workingHoursFound.endTime).format(SQL_DATE_FORMAT);
+        const existingStartTime = dayjs(workingHoursFound.startTime);
+        const existingEndTime = dayjs(workingHoursFound.endTime);
+
+        const dayjsStartTime = startTime ? dayjs(startTime) : dayjs(existingStartTime);
+        const dayjsEndTime = endTime ? dayjs(endTime) : dayjs(existingEndTime);
+
+        if (!dayjsEndTime.isAfter(dayjsStartTime)) {
+            return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
+        }
 
         let changed = false;
 
-        if (startTime && startTime !== formattedStartTime) {
-            workingHoursFound.startTime = startTime;
+        if (startTime && !dayjsStartTime.isSame(existingStartTime)) {
+            workingHoursFound.startTime = dayjsStartTime.toDate();
             changed = true;
         }
 
-        if (endTime && endTime !== formattedEndTime) {
-            workingHoursFound.endTime = endTime;
+        if (endTime && !dayjsEndTime.isSame(existingEndTime)) {
+            workingHoursFound.endTime = dayjsEndTime.toDate();
             changed = true;
         }
 

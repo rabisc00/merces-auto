@@ -64,17 +64,32 @@ export const editTrip = async function (req: AuthRequest, res: Response) {
         }
 
         if (driverId && tripFound.driverId !== driverId) {
-            tripFound.driverId = driverId;
+            const driverFound = await Driver.findByPk(driverId);
+            if (!driverFound) {
+                return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
+            }
+
+            await tripFound.$set('driver', driverFound);
             changed = true;
         }
 
         if (busId && tripFound.busId !== busId) {
-            tripFound.busId = busId;
+            const busFound = await Bus.findByPk(busId);
+            if (!busFound) {
+                return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
+            }
+
+            await tripFound.$set('bus', busFound);
             changed = true;
         }
 
         if (timetableId && tripFound.timetableId !== timetableId) {
-            tripFound.timetableId = timetableId;
+            const timetableFound = await Timetable.findByPk(timetableId);
+            if (!timetableFound) {
+                return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
+            }
+
+            await tripFound.$set('timetable', timetableFound);
             changed = true;
         }
 

@@ -54,35 +54,11 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Timetable'
  *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Access Denied
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Invalid token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Server error while fetching timetables
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Error fetching the timetables
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve/byroute/:routeId', authenticateToken, getTimetablesByRouteId);
 
@@ -111,29 +87,13 @@ router.get('/retrieve/byroute/:routeId', authenticateToken, getTimetablesByRoute
  *               type: object
  *               $ref: '#/components/schemas/Timetable'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       404:
- *         description: Timetable with the given ID not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Timetable with the given ID not found
+ *         $ref: '#/components/responses/NotFoundError'
  *       500:
- *         description: Server error while fetching timetables
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Error fetching the timetables
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve/:id', authenticateToken, getTimetableDetails);
 
@@ -167,45 +127,13 @@ router.get('/retrieve/:id', authenticateToken, getTimetableDetails);
  *                   format: uuid
  *                   example: 1a2b3c4d-5678-90ab-cdef-1234567890ab
  *       400:
- *         description: Invalid request (e.g. departureTime is before arrivalTime)
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: departureTime must be after arrivalTime
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Access Denied
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Invalid token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Server error while creating the timetable
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Error creating timetable
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.post('/create', authenticateToken, validate(timetableCreateSchema), createTimetable);
 
@@ -242,45 +170,13 @@ router.post('/create', authenticateToken, validate(timetableCreateSchema), creat
  *                   type: string
  *                   example: Bus Timetable updated successfully
  *       400:
- *         description: Invalid request (e.g. departureTime is before arrivalTime)
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: departureTime must be after arrivalTime
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Access Denied
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Invalid token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Server error while updating the timetable
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Error updating timetable
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.patch('/edit/:id', authenticateToken, validate(timetableEditSchema), editTimetable);
 
@@ -311,45 +207,13 @@ router.patch('/edit/:id', authenticateToken, validate(timetableEditSchema), edit
  *                   type: string
  *                   example: Bus Timetable updated successfully
  *       400:
- *         description: Invalid request (timetable with the given ID not found)
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Timetable with the given ID not found
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Access Denied
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Invalid token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Server error while deleting the timetable
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Error deleting timetable
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.delete('/delete/:id', authenticateToken, deleteTimetable);
 

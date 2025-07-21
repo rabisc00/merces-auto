@@ -47,27 +47,11 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/BusRoutes'
  *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Access Denied
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Invalid token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching bus routes
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve', authenticateToken, getBusRoutes);
 
@@ -95,27 +79,11 @@ router.get('/retrieve', authenticateToken, getBusRoutes);
  *               type: object
  *               $ref: '#/components/schemas/BusRouteDetails'
  *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Access Denied
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Invalid token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching bus route details
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve/:id', authenticateToken, getBusRouteDetails);
 
@@ -146,27 +114,11 @@ router.get('/retrieve/:id', authenticateToken, getBusRouteDetails);
  *                   items:
  *                     $ref: '#/components/schemas/BusRoutes'
  *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Access Denied
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Invalid token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching filtered bus routes
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/filter', authenticateToken, searchBusRoute);
 
@@ -200,29 +152,13 @@ router.get('/filter', authenticateToken, searchBusRoute);
  *                   format: uuid
  *                   example: 1a2b3c4d-5678-90ab-cdef-1234567890ab
  *       400:
- *         description: Invalid input data
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Access Denied
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Invalid token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error creating bus route
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.post('/create', authenticateToken, validate(busRouteCreateSchema), createBusRoute);
 
@@ -259,31 +195,15 @@ router.post('/create', authenticateToken, validate(busRouteCreateSchema), create
  *                   type: string
  *                   example: Bus Route updated successfully
  *       400:
- *         description: Invalid input data
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Access Denied
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Invalid token
+ *         $ref: '#/components/responses/InvalidToken'
  *       404:
- *         description: Bus route with the given id not found
+ *         $ref: '#/components/responses/NotFoundError'
  *       500:
- *         description: Error updating bus route
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.patch('/edit/:id', authenticateToken, validate(busRouteEditSchema), editBusRoute);
 
@@ -314,29 +234,13 @@ router.patch('/edit/:id', authenticateToken, validate(busRouteEditSchema), editB
  *                   type: string
  *                   example: Bus Route updated successfully
  *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Access Denied
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Invalid token
+ *         $ref: '#/components/responses/InvalidToken'
  *       404:
- *         description: Bus route with the given ID not found
+ *         $ref: '#/components/responses/NotFoundError'
  *       500:
- *         description: Error updating bus route
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.delete('/delete/:id', authenticateToken, deleteBusRoute);
 

@@ -38,11 +38,11 @@ const router = express.Router();
  *               type: object
  *               $ref: '#/components/schemas/WorkingHoursDetails'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching bus working hours details
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve/:id', authenticateToken, getWorkingHoursDetails);
 
@@ -71,11 +71,11 @@ router.get('/retrieve/:id', authenticateToken, getWorkingHoursDetails);
  *               items:
  *                  $ref: '#/components/schemas/WorkingHours'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching driver's working hours
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve/bydriver/:driverId', authenticateToken, getWorkingHours);
 
@@ -109,13 +109,13 @@ router.get('/retrieve/bydriver/:driverId', authenticateToken, getWorkingHours);
  *                   format: uuid
  *                   example: 1a2b3c4d-5678-90ab-cdef-1234567890ab
  *       400:
- *         description: Invalid input data
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error creating working hours entry
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.post('/create', authenticateToken, uploadSignature.single('signature'), validate(workingHoursCreateSchema), createWorkingHours);
 
@@ -152,13 +152,13 @@ router.post('/create', authenticateToken, uploadSignature.single('signature'), v
  *                   type: string
  *                   example: Working hours entry updated successfully
  *       400:
- *         description: Working hours entry with the given ID not found
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error updating working hours entry
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.patch('/edit/:id', authenticateToken, validate(workingHoursEditSchema), editWorkingHours);
 
@@ -189,13 +189,13 @@ router.patch('/edit/:id', authenticateToken, validate(workingHoursEditSchema), e
  *                   type: string
  *                   example: Working hours entry updated successfully
  *       400:
- *         description: Working hours with the given ID not found
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error updating working hours entry
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.delete('/delete/:id', authenticateToken, deleteWorkingHours);
 

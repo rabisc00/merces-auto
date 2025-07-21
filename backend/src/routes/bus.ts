@@ -160,14 +160,7 @@ router.get('/filter', authenticateToken, searchBus);
  *       403:
  *         $ref: '#/components/responses/InvalidToken'
  *       409:
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Bus with the given number already exists
+ *         $ref: '#/components/responses/ConflictError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -204,7 +197,7 @@ router.post('/create', authenticateToken, validate(busCreateSchema), createBus);
  *       403:
  *         $ref: '#/components/responses/InvalidToken'
  *       404:
- *         $ref: '#/components/responses/EntryNotFound'
+ *         $ref: '#/components/responses/NotFoundError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -241,7 +234,7 @@ router.patch('/edit/:id', authenticateToken, validate(busUpdateSchema), editBus)
  *       403:
  *         $ref: '#/components/responses/InvalidToken'
  *       404:
- *         $ref: '#/components/responses/EntryNotFound'
+ *         $ref: '#/components/responses/NotFoundError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */

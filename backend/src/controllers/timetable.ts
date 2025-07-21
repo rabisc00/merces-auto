@@ -172,10 +172,9 @@ export const getTimetableDetails = async function (req: AuthRequest, res: Respon
             include: [{
                 model: BusRoute,
                 attributes: ['id', 'lineNumber', 'origin', 'destination'],
-                include: [{
-                    model: DayOfTheWeek,
-                    attributes: ['name']
-                }]
+            }, {
+                model: DayOfTheWeek,
+                attributes: ['name']
             }]
         });
 
