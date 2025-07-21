@@ -6,6 +6,7 @@ import BusRoute from "../models/busRoute";
 import Bus from "../models/bus";
 import Driver from "../models/driver";
 import User from "../models/user";
+import { HTTP_MESSAGES } from "../constants/httpMessages";
 
 export const createTrip = async function (req: AuthRequest, res: Response) {
     try {
@@ -17,17 +18,20 @@ export const createTrip = async function (req: AuthRequest, res: Response) {
             timetableId 
         } = req.body;
 
-        await Trip.create({
+        const trip = await Trip.create({
             numberOfPassengers,
             observations,
             driverId,
             busId,
             timetableId
         });
-        return res.json({ message: 'Trip created successfully' });
+        return res.json({ 
+            message: 'Trip created successfully',
+            id: trip.id
+        });
     } catch (error: any) {
         console.error('Error creating trip:', error);
-        return res.status(500).json({ error: 'Error creating trip' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -44,7 +48,7 @@ export const editTrip = async function (req: AuthRequest, res: Response) {
         
         const tripFound = await Trip.findByPk(id);
         if (!tripFound) {
-            return res.status(400).json({ error: 'Trip with the given id not found' });
+            return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
         let changed = false;
@@ -76,13 +80,13 @@ export const editTrip = async function (req: AuthRequest, res: Response) {
 
         if (changed) {
             await tripFound.save();
-            return res.json({ message: 'Trip updated successfully' });
+            return res.json({ message: HTTP_MESSAGES.OK });
         } else {
-            return res.json({ message: 'No changes were made' });
+            return res.json({ message: HTTP_MESSAGES.NO_CHANGES });
         }
     } catch (error: any) {
         console.error('Error updating trip:', error);
-        return res.status(500).json({ error: 'Error updating trip' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -92,14 +96,14 @@ export const deleteTrip = async function(req: AuthRequest, res: Response) {
     try {
         const tripFound = await Trip.findByPk(id);
         if (!tripFound) {
-            return res.status(400).json({ error: 'Trip with the given id not found'});
+            return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }   
 
         await tripFound.destroy();
-        return res.json({ message: 'Trip deleted successfully' });
+        return res.json({ message: HTTP_MESSAGES.OK });
     } catch (error: any) {
         console.error('Error deleting trip:', error);
-        return res.status(500).json({ error: 'Error deleting trip' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -133,7 +137,7 @@ export const getTripsByDriver = async function(req: AuthRequest, res: Response) 
         });
     } catch (error: any) {
         console.error('Error fetching trips by driver:', error);
-        return res.status(500).json({ error: 'Error fetching trips by driver' });
+        return res.status(500).json({ error: HTTP_MESSAGES.OK });
     }
 };
 
@@ -167,7 +171,7 @@ export const getTripsByBus = async function(req: AuthRequest, res: Response) {
         });
     } catch (error: any) {
         console.error('Error fetching trips by bus:', error);
-        return res.status(500).json({ error: 'Error fetching trips by bus' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -193,9 +197,13 @@ export const getTripDetails = async function(req: AuthRequest, res: Response) {
             }]
         });
 
+        if (!tripFound) {
+            return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
+        }
+
         return res.json(tripFound);
     } catch (error: any) {
         console.error('Error fetching trip details:', error);
-        return res.status(500).json({ error: 'Error fetching trip details' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };

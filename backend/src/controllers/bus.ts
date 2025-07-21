@@ -2,6 +2,7 @@ import { Op } from 'sequelize';
 import Bus from "../models/bus";
 import { AuthRequest } from "../types/authRequest";
 import { Response } from "express";
+import { HTTP_MESSAGES } from '../constants/httpMessages';
 
 export const createBus = async function(req: AuthRequest, res: Response) {
     try {
@@ -11,20 +12,23 @@ export const createBus = async function(req: AuthRequest, res: Response) {
 
         const busFound = await Bus.findOne({ where: { busNumber: busNumberFormatted }});
         if (busFound) {
-            return res.status(409).json({ error: 'Bus with the given number already exists'});
+            return res.status(409).json({ error: HTTP_MESSAGES.CONFLICT });
         }
 
-        Bus.create({
+        const bus = await Bus.create({
             busNumber: busNumberFormatted,
             model: modelFormatted,
             capacity,
             manufacturingYear
         });
 
-        return res.json({ message: 'Bus created successfully' });
+        return res.json({ 
+            message: HTTP_MESSAGES.OK,
+            id: bus.id
+        });
     } catch (error) {
         console.error('Error creating bus:', error);
-        return res.status(500).json({ error: 'Error creating bus' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -35,7 +39,7 @@ export const editBus = async function(req: AuthRequest, res: Response) {
 
         const busFound = await Bus.findByPk(id);
         if (!busFound) {
-            return res.status(404).json({ error: 'Bus with the given id not found' });
+            return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
         let changed = false;
@@ -62,13 +66,13 @@ export const editBus = async function(req: AuthRequest, res: Response) {
 
         if (changed) {
             await busFound.save();
-            return res.json({ message: 'Bus updated successfully' });
+            return res.json({ message: HTTP_MESSAGES.OK });
         } else {
-            return res.json({ message: 'No changes were made'});
+            return res.json({ message: 'No changes were made' });
         }
     } catch (error) {
         console.error('Error updating bus:', error);
-        return res.status(500).json({ error: 'Error updating bus' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -78,14 +82,14 @@ export const deleteBus = async function(req: AuthRequest, res: Response) {
 
         const busFound = await Bus.findByPk(id);
         if (!busFound) {
-            return res.status(404).json({ error: 'Bus with the given id not found'});
+            return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
         await busFound.destroy();
-        return res.json({ message: 'Bus deleted successfully' });
+        return res.json({ message: HTTP_MESSAGES.OK });
     } catch (error) {
         console.error('Error deleting bus:', error);
-        return res.status(500).json({ error: 'Error deleting bus' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -109,7 +113,7 @@ export const getBuses = async function(req: AuthRequest, res: Response) {
         });
     } catch (error) {
         console.error('Error fetching buses:', error);
-        res.status(500).json({ error: 'Error fetching buses' });
+        res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -122,13 +126,13 @@ export const getBusDetails = async function(req: AuthRequest, res: Response) {
         });
 
         if (!busFound) {
-            return res.status(400).json({ error: 'Bus with given id not found' });
+            return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
         res.json(busFound);
     } catch (error) {
         console.error('Error fetching bus details:', error);
-        res.status(500).json({ error: 'Error fetching bus details' });
+        res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -136,7 +140,7 @@ export const searchBus = async function(req: AuthRequest, res: Response) {
     try {
         const { q } = req.query;
         if (!q) {
-            return res.status(400).json({ error: 'Missing search query' });
+            return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
         }
 
         const qLike = `%${q}%`;
@@ -155,6 +159,6 @@ export const searchBus = async function(req: AuthRequest, res: Response) {
         return res.json(busResults);
     } catch (error: any) {
         console.log('Search error:', error);
-        return res.status(500).json({ error: 'Search error' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };

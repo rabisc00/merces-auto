@@ -48,8 +48,24 @@ const router = express.Router();
  *                     $ref: '#/components/schemas/BusRoutes'
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Access Denied
  *       403:
  *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid token
  *       500:
  *         description: Error fetching bus routes
  */
@@ -80,8 +96,24 @@ router.get('/retrieve', authenticateToken, getBusRoutes);
  *               $ref: '#/components/schemas/BusRouteDetails'
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Access Denied
  *       403:
  *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid token
  *       500:
  *         description: Error fetching bus route details
  */
@@ -115,8 +147,24 @@ router.get('/retrieve/:id', authenticateToken, getBusRouteDetails);
  *                     $ref: '#/components/schemas/BusRoutes'
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Access Denied
  *       403:
  *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid token
  *       500:
  *         description: Error fetching filtered bus routes
  */
@@ -147,12 +195,32 @@ router.get('/filter', authenticateToken, searchBusRoute);
  *                 message:
  *                   type: string
  *                   example: Bus route created succesfully
+ *                 id:
+ *                   type: string
+ *                   format: uuid
+ *                   example: 1a2b3c4d-5678-90ab-cdef-1234567890ab
  *       400:
  *         description: Invalid input data
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Access Denied
  *       403:
  *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid token
  *       500:
  *         description: Error creating bus route
  */
@@ -194,8 +262,24 @@ router.post('/create', authenticateToken, validate(busRouteCreateSchema), create
  *         description: Invalid input data
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Access Denied
  *       403:
  *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid token
  *       404:
  *         description: Bus route with the given id not found
  *       500:
@@ -231,8 +315,24 @@ router.patch('/edit/:id', authenticateToken, validate(busRouteEditSchema), editB
  *                   example: Bus Route updated successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Access Denied
  *       403:
  *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid token
  *       404:
  *         description: Bus route with the given ID not found
  *       500:

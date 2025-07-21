@@ -140,6 +140,10 @@ router.get('/retrieve/bydriver/:driverId', authenticateToken, getTripsByDriver);
  *                 message:
  *                   type: string
  *                   example: Trip created succesfully
+ *                 id:
+ *                   type: string
+ *                   format: uuid
+ *                   example: 1a2b3c4d-5678-90ab-cdef-1234567890ab
  *       400:
  *         description: Invalid input data
  *       401:

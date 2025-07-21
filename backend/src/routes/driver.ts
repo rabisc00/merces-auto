@@ -2,7 +2,7 @@ import * as express from 'express';
 import { driverCreateSchema, driverEditSchema } from '../validators/driverValidator';
 import { uploadPicture } from '../middleware/upload';
 import { validate } from '../middleware/validate';
-import { createDriver, deleteDriver, getDriverDetails, getDrivers, searchDriver, updateDriver } from '../controllers/driver';
+import { createDriver, deleteDriver, getDriverDetails, getDrivers, searchDriver, editDriver } from '../controllers/driver';
 import { authenticateToken } from '../middleware/auth';
 
 /**
@@ -48,11 +48,11 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Driver'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching bus routes
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve', authenticateToken, getDrivers);
 
@@ -80,11 +80,11 @@ router.get('/retrieve', authenticateToken, getDrivers);
  *               type: object
  *               $ref: '#/components/schemas/DriverDetails'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching bus driver details
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve/:id', authenticateToken, getDriverDetails);
 
@@ -115,11 +115,11 @@ router.get('/retrieve/:id', authenticateToken, getDriverDetails);
  *                   items:
  *                     $ref: '#/components/schemas/Driver'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching filtered bus drivers
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/filter', authenticateToken, searchDriver);
 
@@ -139,25 +139,24 @@ router.get('/filter', authenticateToken, searchDriver);
  *             $ref: '#/components/schemas/DriverInput'
  *     responses:
  *       200:
- *         description: Bus driver created successfully
+ *         $ref: '#/components/responses/CreatedSuccessfully'
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/InvalidToken'
+ *       409:
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
- *                   example: Driver created succesfully
- *       400:
- *         description: Invalid input
- *       401:
- *         description: Unauthorized
- *       403:
- *         description: Invalid or expired token
- *       409:
- *         description: Driver with the given document already exists
+ *                   example: Driver with the given document already exists
  *       500:
- *         description: Error creating bus driver
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.post('/create', authenticateToken, validate(driverCreateSchema), createDriver);
 
@@ -204,15 +203,22 @@ router.post('/create', authenticateToken, validate(driverCreateSchema), createDr
  *                   type: string
  *                   example: Driver updated successfully
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       404:
- *         description: Bus route with the given ID not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Driver with the given ID not found
  *       500:
- *         description: Error updating driver
+ *         $ref: '#/components/responses/InternalServerError'
  */
-router.patch('/edit/:id', authenticateToken, uploadPicture.single('picture'), validate(driverEditSchema), updateDriver);
+router.patch('/edit/:id', authenticateToken, uploadPicture.single('picture'), validate(driverEditSchema), editDriver);
 
 /**
  * @swagger
@@ -241,13 +247,20 @@ router.patch('/edit/:id', authenticateToken, uploadPicture.single('picture'), va
  *                   type: string
  *                   example: Driver deleted successfully
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: You're not allowed to delete this user
- *       406:
- *         description: Driver with the given id not found
+ *         $ref: '#/components/responses/InvalidToken'
+ *       404:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Driver with the given ID not found
  *       500:
- *         description: Error deleting driver
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.delete('/delete/:id', authenticateToken, deleteDriver);
 

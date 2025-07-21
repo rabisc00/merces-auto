@@ -17,7 +17,7 @@ import { sequelize } from './database';
 import { swaggerOptions } from './docs/swaggerOptions';
 
 const app = express();
-const swaggerSpec = swaggerJsdoc(swaggerOptions)
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use(bodyParser.json());
@@ -26,7 +26,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get('/api-docs-json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(swaggerSpec);
-})
+});
 
 app.use(tokenRoutes);
 app.use('/users', userRoutes);

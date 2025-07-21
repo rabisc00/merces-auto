@@ -3,6 +3,7 @@ import BusRoute from "../models/busRoute";
 import { getTripTime } from "../services/googleMapsService";
 import { AuthRequest } from "../types/authRequest";
 import { Response } from "express";
+import { HTTP_MESSAGES } from '../constants/httpMessages';
 
 export const createBusRoute = async function (req: AuthRequest, res: Response) {
     let { lineNumber, origin, destination } = req.body;
@@ -17,7 +18,7 @@ export const createBusRoute = async function (req: AuthRequest, res: Response) {
         const distanceInKm = Math.round(tripInfo.distanceInMeters / 1000);
         const averageTimeInMinutes = Math.round(tripInfo.durationInSeconds / 60);
 
-        await BusRoute.create({
+        const busRoute = await BusRoute.create({
             lineNumber,
             origin,
             destination,
@@ -25,10 +26,13 @@ export const createBusRoute = async function (req: AuthRequest, res: Response) {
             averageTimeInMinutes
         });
 
-        return res.json({ message: 'Bus route created succesfully' });
+        return res.json({ 
+            message: HTTP_MESSAGES.OK,
+            id: busRoute.id
+        });
     } catch (error: any) {
         console.error('Error creating bus route:', error);
-        res.status(500).json({ error: 'Error creating bus route' });
+        res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -70,9 +74,9 @@ export const editBusRoute = async function (req: AuthRequest, res: Response) {
             busRouteFound.averageTimeInMinutes = Math.round(tripInfo.durationInSeconds / 60);
             
             await busRouteFound.save();
-            return res.json({ message: 'Bus Route updated successfully' });
+            return res.json({ message: HTTP_MESSAGES.OK });
         } else {
-            return res.json({ message: 'No changes were made' });
+            return res.json({ message: HTTP_MESSAGES.NO_CHANGES });
         }
     } catch (error: any) {
         console.error('Error updating bus route:', error);
@@ -86,14 +90,14 @@ export const deleteBusRoute = async function(req: AuthRequest, res: Response) {
 
         const busRouteFound = await BusRoute.findByPk(id);
         if (!busRouteFound) {
-            return res.status(404).json({ error: 'Bus route with the given id not found'});
+            return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
         busRouteFound.destroy();
-        return res.json({ message: 'Bus route deleted successfully' });
+        return res.json({ message: HTTP_MESSAGES.OK });
     } catch (error: any) {
         console.error('Error deleting bus route:', error);
-        return res.status(500).json({ error: 'Error deleting bus route' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 }
 
@@ -117,7 +121,7 @@ export const getBusRoutes = async function(req: AuthRequest, res: Response) {
         });
     } catch (error: any) {
         console.error('Error fetching bus routes:', error);
-        return res.status(500).json({ error: 'Error fetching bus routes'});
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -129,10 +133,14 @@ export const getBusRouteDetails = async function(req: AuthRequest, res: Response
             attributes: ['id', 'lineNumber', 'distanceInKm', 'averageTimeInMinutes', 'origin', 'destination']
         });
 
+        if (!busRouteFound) {
+            return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
+        }
+
         res.json(busRouteFound);
     } catch (error: any) {
         console.error('Error fetching bus route details:', error);
-        return res.status(500).json({ error: 'Error fetching bus route details'});
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -140,7 +148,7 @@ export const searchBusRoute = async function(req: AuthRequest, res: Response) {
     try {
         const { q } = req.query;
         if (!q) {
-            return res.status(400).json({ error: 'Missing search query' });
+            return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
         }
 
         const qLike = `%${q}%`;
@@ -159,6 +167,6 @@ export const searchBusRoute = async function(req: AuthRequest, res: Response) {
         return res.json(routeResults);
     } catch (error: any) {
         console.error('Search error:', error);
-        return res.status(500).json({ error: 'Search error' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 }

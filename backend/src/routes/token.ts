@@ -9,8 +9,10 @@ const router = express.Router();
  * @swagger
  * /token:
  *   post:
- *     summary: Generate JWT token for admin user
- *     tags: [Authentication]
+ *     summary: Generate authentication token for admin users
+ *     description: Authenticates an admin user with email and password, and returns a JWT token if valid.
+ *     tags:
+ *       - Authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -24,9 +26,11 @@ const router = express.Router();
  *               email:
  *                 type: string
  *                 format: email
+ *                 example: admin@example.com
  *               password:
  *                 type: string
  *                 format: password
+ *                 example: strongpassword123
  *     responses:
  *       200:
  *         description: Token generated successfully
@@ -37,10 +41,27 @@ const router = express.Router();
  *               properties:
  *                 token:
  *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       401:
- *         description: Access denied - invalid credentials or not an admin
+ *         description: Access denied due to invalid credentials or user not being an admin
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Access denied
  *       500:
- *         description: Error generating token
+ *         description: Server error while generating token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error generating token
  */
 router.post('/token', validate(authenticationSchema), generateToken);
 

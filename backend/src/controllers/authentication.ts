@@ -31,4 +31,4 @@ export async function generateToken(req: Request, res: Response) {
         console.error('Error generating token:', error);
         return res.status(500).json({ error: 'Error generating token' });
     }
-}
+};

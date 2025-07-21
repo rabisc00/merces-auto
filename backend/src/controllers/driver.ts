@@ -6,6 +6,7 @@ import crypto from 'crypto';
 import { AuthRequest } from "../types/authRequest";
 import Driver from "../models/driver";
 import User from "../models/user";
+import { HTTP_MESSAGES } from '../constants/httpMessages';
 
 const uploadDir = path.join(__dirname, '..', '..', 'uploads', 'profilePictures');
 
@@ -15,30 +16,33 @@ export const createDriver = async function (req: AuthRequest, res: Response) {
 
         const existingDriver = await Driver.findOne({ where: { documentNumber }});
         if (existingDriver) {
-            return res.status(409).json({ message: 'Driver with the given document already exists' });
+            return res.status(409).json({ message: HTTP_MESSAGES.CONFLICT });
         }
 
-        await Driver.create({ 
+        const driver = await Driver.create({ 
             name: name && name.toUpperCase(),
             documentNumber: documentNumber && documentNumber.toUpperCase(),
             userId,
         });
 
-        return res.json({ message: 'Driver created successfully' });
+        return res.json({
+            message: 'Driver created successfully',
+            id: driver.id
+        });
     } catch (error) {
         console.error('Error creating driver:', error);
-        res.status(500).json({ error: 'Error creating driver' });
+        res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
-export const updateDriver = async function (req: AuthRequest, res: Response) {
+export const editDriver = async function (req: AuthRequest, res: Response) {
     try {
         const { documentNumber, name, active } = req.body;
         const id = req.params.id;
 
         const driverFound = await Driver.findByPk(id);
         if (!driverFound) {
-            return res.status(404).json({ error: 'Driver with given id not found' });
+            return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
         const formattedName = name && name.toUpperCase();
@@ -83,9 +87,9 @@ export const updateDriver = async function (req: AuthRequest, res: Response) {
         
         if (changed) {
             await driverFound.save(); 
-            return res.json({ message: 'Driver updated successfully' });
+            return res.json({ message: HTTP_MESSAGES.OK });
         } else {
-            return res.json({ message: 'No changes were made' });
+            return res.json({ message: HTTP_MESSAGES.NO_CHANGES });
         }
     } catch (error: any) {
         console.error('Error updating driver:', error);
@@ -102,7 +106,7 @@ export const deleteDriver = async function (req: AuthRequest, res: Response) {
         });
 
         if (!driver) {
-            return res.status(406).json({ error: 'Driver with the given id not found' });
+            return res.status(404).json({ error: 'Driver with the given id not found' });
         }
 
         if (!driver.userId) {
@@ -119,10 +123,10 @@ export const deleteDriver = async function (req: AuthRequest, res: Response) {
             await user.destroy();
         }
 
-        return res.json({ message: 'Driver deleted successfully' });
+        return res.json({ message: HTTP_MESSAGES.OK });
     } catch (error) {
         console.error('Error deleting driver:', error);
-        res.status(500).json({ error: 'Error deleting driver' });
+        res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -146,7 +150,7 @@ export const getDrivers = async function (req: AuthRequest, res: Response) {
         });
     } catch (error) {
         console.error('Error fetching drivers:', error);
-        res.status(500).json({ error: 'Error fetching drivers' });
+        res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -161,7 +165,7 @@ export const getDriverDetails = async function (req: AuthRequest, res: Response)
         res.json(driverFound);
     } catch (error) {
         console.error('Error fetching driver details:', error);
-        res.status(500).json({ error: 'Error fetching driver details' });
+        res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -169,7 +173,7 @@ export const searchDriver = async function(req: AuthRequest, res: Response) {
     try {
         const { q } = req.query;
         if (!q) {
-            return res.status(400).json({ error: 'Missing search query' });
+            return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
         }
 
         const qLike = `%${q}%`;
@@ -187,6 +191,6 @@ export const searchDriver = async function(req: AuthRequest, res: Response) {
         return res.json({ driverResults });
     } catch (error: any) {
         console.log('Search error:', error);
-        return res.status(500).json({ error: 'Search error' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };

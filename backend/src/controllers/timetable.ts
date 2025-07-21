@@ -5,6 +5,7 @@ import Timetable from "../models/timetable";
 import DayOfTheWeek from "../models/dayOfTheWeek";
 import { SQL_DATE_FORMAT } from "../constants/date";
 import BusRoute from "../models/busRoute";
+import { HTTP_MESSAGES } from "../constants/httpMessages";
 
 export const createTimetable = async function(req: AuthRequest, res: Response) {
     try {
@@ -14,7 +15,7 @@ export const createTimetable = async function(req: AuthRequest, res: Response) {
         const dayjsDepartureTime = dayjs(departureTime);
 
         if (!dayjsDepartureTime.isAfter(dayjsArrivalTime)) {
-            return res.status(400).json({ error: 'departureTime must be after arrivalTime' });
+            return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
         }
 
         const timetable = await Timetable.create({
@@ -23,19 +24,28 @@ export const createTimetable = async function(req: AuthRequest, res: Response) {
             departureTime: dayjsDepartureTime.toDate()
         });
 
-        const dayRecords = await Promise.all(
-            days.map(async (day: string) => {
-                const [dayRecord] = await DayOfTheWeek.findOrCreate({ where: { name: day.toUpperCase() } });
-                return dayRecord
-            })
-        );
+        const inputDays = days.map(day => day.toUpperCase());
+
+        const dayRecords = await DayOfTheWeek.findAll({
+            where: { name: inputDays }
+        });
+
+        const foundDayNames = dayRecords.map(record => record.name);
+        const invalidDays = inputDays.filter(day => !foundDayNames.includes(day));
+
+        if (invalidDays.length > 0) {
+            return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
+        }
 
         await timetable.$set('days', dayRecords);
 
-        return res.json({ message: 'Timetable created successfully' });
+        return res.json({ 
+            message: 'Timetable created successfully',
+            id: timetable.id
+        });
     } catch (error: any) {
         console.error('Error creating timetable:', error);
-        return res.status(500).json({ error: 'Error creating timetable' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -49,7 +59,7 @@ export const editTimetable = async function(req: AuthRequest, res: Response) {
         });
 
         if (!timetableFound) {
-            return res.status(400).json({ error: 'Timetable with the given id not found' });
+            return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
         const existingArrival = dayjs(timetableFound.arrivalTime);
@@ -59,7 +69,7 @@ export const editTimetable = async function(req: AuthRequest, res: Response) {
         const newDeparture = departureTime ? dayjs(departureTime) : existingDeparture;
 
         if (!newDeparture.isAfter(newArrival)) {
-            return res.status(400).json({ error: 'departureTime must be after arrivalTime' });
+            return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
         }
 
         let changed = false;
@@ -80,20 +90,26 @@ export const editTimetable = async function(req: AuthRequest, res: Response) {
         } 
 
         if (days != null) {
-            const newDayRecords = await Promise.all(
-                days.map(async (dayName) => {
-                    const [day] = await DayOfTheWeek.findOrCreate({ where: { name: dayName } });
-                    return day;
-                })
-            );
+            const inputDays = days.map(day => day.toUpperCase());
 
-            await timetableFound.$set('days', newDayRecords);
+            const dayRecords = await DayOfTheWeek.findAll({
+                where: { name: inputDays }
+            });
+
+            const foundDayNames = dayRecords.map(record => record.name);
+            const invalidDays = inputDays.filter((day: string) => !foundDayNames.includes(day));
+
+            if (invalidDays.length > 0) {
+                return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
+            }
+
+            await timetableFound.$set('days', dayRecords);
         }
 
-        return res.json({ message: 'Timetable updated successfully' });
+        return res.json({ message: HTTP_MESSAGES.OK });
     } catch (error: any) {
         console.error('Error updating timetable:', error);
-        return res.status(500).json({ error: 'Error updating timetable' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -103,14 +119,14 @@ export const deleteTimetable = async function (req: AuthRequest, res: Response) 
     try {
         const timetableFound = await Timetable.findByPk(id);
         if (!timetableFound) {
-            return res.status(400).json({ error: 'Timetable with the given id not found'});
+            return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
         }
 
         await timetableFound.destroy();
-        return res.json({ message: 'Timetable deleted successfully' });
+        return res.json({ message: HTTP_MESSAGES.OK });
     } catch (error: any) {
         console.error('Error deleting timetable:', error);
-        return res.status(500).json({ error: 'Error deleting timetable' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -129,6 +145,9 @@ export const getTimetablesByRouteId = async function (req: AuthRequest, res: Res
             include: [{
                 model: BusRoute,
                 attributes: ['id', 'lineNumber', 'origin', 'destination']
+            }, {
+                model: DayOfTheWeek,
+                attributes: ['name']
             }]
         });
 
@@ -140,7 +159,7 @@ export const getTimetablesByRouteId = async function (req: AuthRequest, res: Res
         });
     } catch (error: any) {
         console.error('Error fetching timetables:', error);
-        return res.status(500).json({ error: 'Error fetching timetable' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -152,17 +171,21 @@ export const getTimetableDetails = async function (req: AuthRequest, res: Respon
             attributes: ['id', 'arrivalTime', 'departureTime', 'createdAt', 'updatedAt'],
             include: [{
                 model: BusRoute,
-                attributes: ['id', 'lineNumber', 'origin', 'destination']
+                attributes: ['id', 'lineNumber', 'origin', 'destination'],
+                include: [{
+                    model: DayOfTheWeek,
+                    attributes: ['name']
+                }]
             }]
         });
 
         if (!timetableFound) {
-            return res.status(404).json({ error: 'Timetable with the given ID not found' });
+            return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
         return res.json(timetableFound);
     } catch (error: any) {
         console.error('Error fetching timetable details', error);
-        return res.status(500).json({ error: 'Error fetching timetable details' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };

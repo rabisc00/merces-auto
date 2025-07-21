@@ -6,6 +6,7 @@ import { AuthRequest } from "../types/authRequest";
 import dayjs from '../utils/dayjs';
 import WorkingHours from "../models/workingHours";
 import { SQL_DATE_FORMAT } from "../constants/date";
+import { HTTP_MESSAGES } from "../constants/httpMessages";
 
 const uploadDir = path.join(__dirname, '..', '..', 'uploads', 'signatures');
 
@@ -27,17 +28,20 @@ export const createWorkingHours = async function(req: AuthRequest, res: Response
             fs.writeFileSync(filePath, req.file.buffer);
         }
 
-        await WorkingHours.create({
+        const workingHours = await WorkingHours.create({
             driverId,
             startTime,
             endTime,
             signature: relativePath
-    });
+        });
 
-        return res.json({ message: 'Working hour creating successfully'});
+        return res.json({ 
+            message: HTTP_MESSAGES.OK,
+            id: workingHours.id
+        });
     } catch (error: any) {
         console.error('Error creating working hour:', error);
-        return res.status(500).json({ error: 'Error creating working hours'});
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -47,7 +51,7 @@ export const editWorkingHours = async function(req: AuthRequest, res: Response) 
         const id = req.params.id; 
         const workingHoursFound = await WorkingHours.findByPk(id);
         if (!workingHoursFound) {
-            return res.status(400).json({ error: 'No working hours with the given id found'});
+            return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
         const formattedStartTime = dayjs(workingHoursFound.startTime).format(SQL_DATE_FORMAT);
@@ -67,13 +71,13 @@ export const editWorkingHours = async function(req: AuthRequest, res: Response) 
 
         if (changed) {
             await workingHoursFound.save();
-            return res.json({ message: 'Successfully updated the working hours'});
+            return res.json({ message: HTTP_MESSAGES.OK });
         } else {
-            return res.json({ message: 'No changes made' });
+            return res.json({ message: HTTP_MESSAGES.NO_CHANGES });
         }
     } catch (error: any) {
         console.error('Error updating working hour:', error);
-        return res.status(500).json({ error: 'Error editing working hours' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -87,10 +91,10 @@ export const deleteWorkingHours = async function(req: AuthRequest, res: Response
         }
 
         await workingHoursFound.destroy();
-        return res.json({ message: 'Working hours deleted successfully'});
+        return res.json({ message: HTTP_MESSAGES.OK });
     } catch (error: any) {
         console.error('Error deleting working hours:', error);
-        return res.status(500).json({ error: 'Error deleting working hours' });
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -116,7 +120,7 @@ export const getWorkingHours = async function(req: AuthRequest, res: Response) {
         });
     } catch (error: any) {
         console.error('Error fetching working hours:', error);
-        return res.status(500).json({ error: 'Error fetching working hours'});
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -131,6 +135,6 @@ export const getWorkingHoursDetails = async function(req: AuthRequest, res: Resp
         return res.json(workingHours);
     } catch (error: any) {
         console.error('Error fetching working hours:', error);
-        return res.status(500).json({ error: 'Error fetching working hours'});
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };

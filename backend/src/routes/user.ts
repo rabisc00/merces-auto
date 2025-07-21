@@ -84,7 +84,19 @@ router.post('/login', login);
  *                 description: Set to true if user is an admin
  *     responses:
  *       200:
- *         description: User registered successfully
+ *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User created succesfully
+ *                 id:
+ *                   type: string
+ *                   format: uuid
+ *                   example: 1a2b3c4d-5678-90ab-cdef-1234567890ab
  *       409:
  *         description: Email already registered
  *       401:

@@ -47,11 +47,11 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Bus'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching bus routes
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve', authenticateToken, getBuses);
 
@@ -80,14 +80,12 @@ router.get('/retrieve', authenticateToken, getBuses);
  *               properties:
  *                 busFound:
  *                   $ref: '#/components/schemas/BusDetails'
- *       400:
- *         description: Bus with given id not found
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching bus details
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve/:id', authenticateToken, getBusDetails);
 
@@ -118,11 +116,11 @@ router.get('/retrieve/:id', authenticateToken, getBusDetails);
  *                   items:
  *                     $ref: '#/components/schemas/Bus'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       500:
- *         description: Error fetching filtered buses
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/filter', authenticateToken, searchBus);
 
@@ -151,16 +149,27 @@ router.get('/filter', authenticateToken, searchBus);
  *                 message:
  *                   type: string
  *                   example: Bus created succesfully
+ *                 id:
+ *                   type: string
+ *                   format: uuid
+ *                   example: 1a2b3c4d-5678-90ab-cdef-1234567890ab
  *       400:
- *         description: Invalid input data
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       409:
- *          description: Bus with the given number already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Bus with the given number already exists
  *       500:
- *         description: Error creating bus
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.post('/create', authenticateToken, validate(busCreateSchema), createBus);
 
@@ -187,25 +196,17 @@ router.post('/create', authenticateToken, validate(busCreateSchema), createBus);
  *             $ref: '#/components/schemas/BusUpdateInput'
  *     responses:
  *       200:
- *         description: Bus updated successfully or no changes made
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Bus updated successfully
+ *         $ref: '#/components/responses/UpdatedSuccesfully'
  *       400:
- *         description: Invalid input
+ *         $ref: '#/components/responses/InvalidInput'
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       404:
- *         description: Bus with the given id not found
+ *         $ref: '#/components/responses/EntryNotFound'
  *       500:
- *         description: Error updating bus
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.patch('/edit/:id', authenticateToken, validate(busUpdateSchema), editBus);
 
@@ -236,13 +237,13 @@ router.patch('/edit/:id', authenticateToken, validate(busUpdateSchema), editBus)
  *                   type: string
  *                   example: Bus deleted successfully
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Invalid or expired token
+ *         $ref: '#/components/responses/InvalidToken'
  *       404:
- *         description: Bus with the given ID not found
+ *         $ref: '#/components/responses/EntryNotFound'
  *       500:
- *         description: Error updating bus 
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.delete('/delete/:id', authenticateToken, deleteBus);
 

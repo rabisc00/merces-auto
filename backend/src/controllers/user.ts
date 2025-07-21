@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import  User from '../models/user';
 import bcrypt = require('bcrypt');
 import { AuthRequest } from '../types/authRequest';
+import { HTTP_MESSAGES } from '../constants/httpMessages';
 
 dotenv.config();
 
@@ -13,21 +14,24 @@ export const createUser = async(req: AuthRequest, res: Response) => {
 
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
-            return res.status(409).json({ message: 'User with the given email already registered.' });
+            return res.status(409).json({ message: HTTP_MESSAGES.CONFLICT });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await User.create({
+        const user = await User.create({
             email,
             isAdmin,
             password: hashedPassword,
         });
 
-        return res.json({ message: 'User registered successfully' });
+        return res.json({ 
+            message: 'User registered successfully',
+            id: user.id
+        });
     } catch (error) {
         console.error('Registration error: ', error);
-        res.status(500).json({ message: 'Error registering user' });
+        res.status(500).json({ message: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -37,12 +41,12 @@ export const login = async (req: Request, res: Response) => {
 
         const userFound = await User.findOne({ where: { email } });
         if (!userFound) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ message: HTTP_MESSAGES.UNAUTHORIZED });
         }
 
         const passwordMatch = await bcrypt.compare(password, userFound.password);
         if (!passwordMatch) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ message: HTTP_MESSAGES.UNAUTHORIZED });
         }
 
         const payload = { 
@@ -57,6 +61,6 @@ export const login = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.error('Login error: ', error);
-        res.status(500).json({ message: 'Invalid server error' });
+        res.status(500).json({ message: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };

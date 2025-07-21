@@ -2,6 +2,7 @@ import { Response, NextFunction } from "express";
 import * as dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { AuthRequest } from "../types/authRequest";
+import { HTTP_MESSAGES } from "../constants/httpMessages";
 
 dotenv.config();
 
@@ -10,7 +11,7 @@ export function authenticateToken(req: AuthRequest, res: Response, next: NextFun
     const token = authHeader?.split(' ')[1];
 
     if (!token) {
-        return res.status(401).json({ error: 'Access Denied' });
+        return res.status(401).json({ error: HTTP_MESSAGES.UNAUTHORIZED });
     }
 
     try {
@@ -19,6 +20,6 @@ export function authenticateToken(req: AuthRequest, res: Response, next: NextFun
         next();
     } catch (err) {
         console.error('Authentication error', err);
-        return res.status(403).json({ error: 'Invalid Token' });
+        return res.status(403).json({ error: HTTP_MESSAGES.FORBIDDEN });
     }
 }

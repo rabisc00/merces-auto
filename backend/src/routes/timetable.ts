@@ -55,8 +55,24 @@ const router = express.Router();
  *                     $ref: '#/components/schemas/Timetable'
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Access Denied
  *       403:
  *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid token
  *       500:
  *         description: Server error while fetching timetables
  *         content:
@@ -146,6 +162,10 @@ router.get('/retrieve/:id', authenticateToken, getTimetableDetails);
  *                 message:
  *                   type: string
  *                   example: Bus timetable created succesfully
+ *                 id:
+ *                   type: string
+ *                   format: uuid
+ *                   example: 1a2b3c4d-5678-90ab-cdef-1234567890ab
  *       400:
  *         description: Invalid request (e.g. departureTime is before arrivalTime)
  *         content:
@@ -158,8 +178,24 @@ router.get('/retrieve/:id', authenticateToken, getTimetableDetails);
  *                   example: departureTime must be after arrivalTime
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Access Denied
  *       403:
  *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid token
  *       500:
  *         description: Server error while creating the timetable
  *         content:
@@ -217,8 +253,24 @@ router.post('/create', authenticateToken, validate(timetableCreateSchema), creat
  *                   example: departureTime must be after arrivalTime
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Access Denied
  *       403:
  *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid token
  *       500:
  *         description: Server error while updating the timetable
  *         content:
@@ -270,8 +322,24 @@ router.patch('/edit/:id', authenticateToken, validate(timetableEditSchema), edit
  *                   example: Timetable with the given ID not found
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Access Denied
  *       403:
  *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid token
  *       500:
  *         description: Server error while deleting the timetable
  *         content:
