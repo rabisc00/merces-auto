@@ -57,7 +57,10 @@ export const login = async (req: Request, res: Response) => {
         
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
         
-        return res.json({ token });
+        return res.json({
+            token,
+            isAdmin: userFound.isAdmin
+        });
 
     } catch (error) {
         console.error('Login error: ', error);

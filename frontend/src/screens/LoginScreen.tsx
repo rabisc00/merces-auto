@@ -5,7 +5,7 @@ import axios from "axios";
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { LoginResponse } from "../types/api";
 import { useSafeArea } from "../hooks/useSafeArea";
-import { styles } from "../styles/global";
+import { globalStyles } from "../styles/global";
 import { API_BASE_URL } from "../config/api";
 
 export default function LoginScreen() {
@@ -23,12 +23,11 @@ export default function LoginScreen() {
             });
 
             login(res.data.token);
-            setIsAdmin(res.data.user.isAdmin);
+            setIsAdmin(res.data.isAdmin);
             
             passwordRef.current = '';
-
-            //navigation.navigate('Home');
         } catch (error) {
+            console.log(error);
             Alert.alert("Login Failed", "Invalid email or password");
         }
     };
@@ -36,9 +35,9 @@ export default function LoginScreen() {
     return (
         <View style={insets}>
             <Text>Email:</Text>
-            <TextInput onChangeText={(text) => emailRef.current = text} autoCapitalize="none" style={styles.input} />
+            <TextInput onChangeText={(text) => emailRef.current = text} autoCapitalize="none" style={globalStyles.input} />
             <Text>Password:</Text>
-            <TextInput onChangeText={(text) => passwordRef.current = text} secureTextEntry style={styles.input} />
+            <TextInput onChangeText={(text) => passwordRef.current = text} secureTextEntry style={globalStyles.input} />
             <Button title="Login" onPress={handleLogin} />
         </View>
     )

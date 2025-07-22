@@ -1,9 +1,9 @@
 export interface LoginResponse {
-    message: string;
     token: string;
-    user: {
-        id: number;
-        email: string;
-        isAdmin: boolean;
-    }
+    isAdmin: boolean;
 };
+
+export interface CreateResponse {
+    message: string;
+    id: string;
+}

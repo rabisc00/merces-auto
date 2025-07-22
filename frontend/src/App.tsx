@@ -1,13 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { NavigationContainer } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppNavigator from './navigation/AppNavigator';
+import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { LoadingProvider } from './context/LoadingContext';
 
 const loadFonts = async () => {
-	await Ionicons.loadFont();
-}
+	await Promise.all([
+        MaterialCommunityIcons.loadFont(),
+        Ionicons.loadFont()
+    ]);
+};
 
 export default function App() {
 	const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -17,11 +22,15 @@ export default function App() {
 	});
 
     return (
-        <AuthProvider>
-            <SafeAreaProvider>
-                <AppNavigator />
-            </SafeAreaProvider>
-        </AuthProvider>
+        <PaperProvider>
+            <LoadingProvider>
+                <AuthProvider>
+                    <SafeAreaProvider>
+                        <AppNavigator />
+                    </SafeAreaProvider>
+                </AuthProvider>
+            </LoadingProvider>
+        </PaperProvider>
     );
 };
 

@@ -45,6 +45,8 @@ const router = express.Router();
  *               properties:
  *                 token:
  *                   type: string
+ *                 isAdmin:
+ *                   type: boolean
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       500:
@@ -77,8 +79,6 @@ router.post('/login', login);
  *               password:
  *                 type: string
  *                 format: password
- *               name:
- *                 type: string
  *               isAdmin:
  *                 type: boolean
  *                 description: Set to true if user is an admin

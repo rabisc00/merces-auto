@@ -1,25 +1,30 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useAuth } from "../context/AuthContext";
-import { AddListStackParamList, AuthStackParamList, RootStackParamList, TabParamList } from '../types/navigation';
+import { TableOptionsStackParamList, AuthStackParamList, RootStackParamList, TabParamList } from '../types/navigation';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import { BottomTabNavigationOptions, createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer, RouteProp } from "@react-navigation/native";
-import AddListScreen from "../screens/AddListScreen";
-import UserRegistration from "../screens/UserRegistration";
+import TableOptionsScreen from "../screens/TableOptionsList";
+import DriverRegistration from "../screens/DriverRegistration";
 import CalendarScreen from "../screens/CalendarScreen";
 import WorkedHoursScreen from "../screens/WorkedHoursScreen";
+import BusRegistration from "../screens/BusRegistration";
+import BusRouteRegistration from "../screens/BusRouteRegistration";
+import TimetableRegistration from "../screens/TimetablerRegistration";
+import DriversList from "../screens/DriversList";
+import DriverDetailsScreen from "../screens/DriverDetails";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
-const AddListStack = createNativeStackNavigator<AddListStackParamList>();
+const TableOptionsStack = createNativeStackNavigator<TableOptionsStackParamList>();
 
 const getIconName = (routeName: string, focused: boolean): string => {
   const icons: Record<string, { active: string; inactive: string }> = {
     Home: { active: 'home', inactive: 'home-outline' },
-    AddList: { active: 'add-circle', inactive: 'add-circle-outline' },
+    TableOptions: { active: 'apps', inactive: 'apps-outline' },
     Calendar: { active: 'calendar-number', inactive: 'calendar-number-outline' },
     WorkedHours: { active: 'alarm', inactive: 'alarm-outline' }
   };
@@ -49,26 +54,66 @@ const navigatorScreenOptions = ({ route }: { route: RouteProp<TabParamList, keyo
     tabBarInactiveTintColor: '#219ebc'
 });
 
-function AddListNavigator() {
+function TableOptionsNavigator() {
     return (
-        <AddListStack.Navigator>
-            <AddListStack.Screen
-                name="AddListMain"
-                component={AddListScreen}
+        <TableOptionsStack.Navigator>
+            <TableOptionsStack.Screen
+                name="TableOptionsMain"
+                component={TableOptionsScreen}
                 options={{ 
                     headerShown: false, 
                     headerBackTitle: 'Add List'
                 }}
             />
-            <AddListStack.Screen
-                name="UserRegistration"
-                component={UserRegistration}
+            <TableOptionsStack.Screen
+                name="DriverDetails"
+                component={DriverDetailsScreen}
+                options={{
+                    headerShown: false,
+                    headerBackTitle: 'Driver Details'
+                }}
+            />
+            <TableOptionsStack.Screen
+                name="DriversList"
+                component={DriversList}
+                options={{
+                    headerShown: false,
+                    headerBackTitle: 'Drivers List'
+                }}
+            />
+            <TableOptionsStack.Screen
+                name="DriverRegistration"
+                component={DriverRegistration}
                 options={{
                     headerShown: false,
                     headerBackTitle: 'User Registration'
                 }}
             />
-        </AddListStack.Navigator>
+            <TableOptionsStack.Screen
+                name="BusRegistration"
+                component={BusRegistration}
+                 options={{
+                    headerShown: false,
+                    headerBackTitle: 'Bus Registration'
+                }}
+            />
+            <TableOptionsStack.Screen
+                name="BusRouteRegistration"
+                component={BusRouteRegistration}
+                options={{
+                    headerShown: false,
+                    headerBackTitle: 'Bus Registration'
+                }}
+            />
+            <TableOptionsStack.Screen
+                name="TimetableRegistration"
+                component={TimetableRegistration}
+                options={{
+                    headerShown: false,
+                    headerBackTitle: 'Bus Registration'
+                }}
+            />
+        </TableOptionsStack.Navigator>
     );
 }
 
@@ -85,9 +130,9 @@ function MainTabs() {
                 headerShown: false
             }} />
             <Tab.Screen 
-                name="AddList" 
+                name="TableOptions" 
                 options={{ headerShown: false }}
-                component={AddListNavigator} 
+                component={TableOptionsNavigator} 
             />
         </Tab.Navigator>
     );

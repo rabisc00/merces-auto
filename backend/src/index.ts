@@ -15,9 +15,16 @@ import tripRoutes from './routes/trip';
 import filterRoutes from './routes/filter';
 import { sequelize } from './config/sequelize';
 import { swaggerOptions } from './docs/swaggerOptions';
+import fs from 'fs';
+import https from 'https';
 
 const app = express();
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+const sslOptions = {
+  key: fs.readFileSync(path.join(__dirname, '../certs/key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, '../certs/cert.pem')),
+};
 
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use(bodyParser.json());
@@ -46,9 +53,14 @@ async function start() {
         await sequelize.sync();
         console.log('Tables synced with models');
         
+        // https.createServer(sslOptions, app).listen(3000, () => {
+        //     console.log('Server started on port 3000');
+        //     console.log('Swagger docs at https://localhost:3000/api-docs');
+        // });
+
         app.listen(3000, () => {
             console.log('Server started on port 3000');
-            console.log('Swagger docs at http://localhost:3000/api-docs');
+            console.log('Swagger docs at https://localhost:3000/api-docs');
         })
     } catch (error) {
         console.log(error);
