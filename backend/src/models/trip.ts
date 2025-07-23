@@ -11,9 +11,9 @@ import {
   BelongsTo,
   HasOne,
 } from 'sequelize-typescript';
-import Driver from './driver';
 import Bus from './bus';
 import Timetable from './timetable';
+import User from './user';
 
 @Table({
   tableName: 'trip',
@@ -42,12 +42,12 @@ export default class Trip extends Model {
   @Column(DataType.DATE)
   updatedAt!: Date;
 
-  @ForeignKey(() => Driver)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  driverId!: string;
+  userId!: string;
 
   @ForeignKey(() => Bus)
   @Column({
@@ -66,8 +66,8 @@ export default class Trip extends Model {
   @BelongsTo(() => Bus)
   bus!: Bus;
 
-  @BelongsTo(() => Driver)
-  driver!: Driver;
+  @BelongsTo(() => User)
+  user!: User;
 
   @BelongsTo(() => Timetable)
   timetable: Timetable;

@@ -3,7 +3,6 @@ import dayjs from '../utils/dayjs';
 import { AuthRequest } from "../types/authRequest";
 import Timetable from "../models/timetable";
 import DayOfTheWeek from "../models/dayOfTheWeek";
-import { SQL_DATE_FORMAT } from "../constants/date";
 import BusRoute from "../models/busRoute";
 import { HTTP_MESSAGES } from "../constants/httpMessages";
 

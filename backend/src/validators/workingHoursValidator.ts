@@ -3,7 +3,7 @@ import { isValidDate } from '../utils/dateUtils';
 import { UUID_REGEX } from '../constants/id';
 
 export const workingHoursCreateSchema = z.object({
-    driverId: z.string().regex(UUID_REGEX, {
+    userId: z.string().regex(UUID_REGEX, {
         error: 'Invalid UUID format'
     }),
     startTime: z.string().refine(isValidDate, {

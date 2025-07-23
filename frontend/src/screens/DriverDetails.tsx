@@ -30,7 +30,7 @@ export default function DriverDetailsScreen() {
     const route = useRoute<DriverDetailsRouteProp>();
     const { driverId } = route.params;
 
-    const [checked, setChecked] = useState(true);
+    const [checked, setChecked] = useState<boolean | null>(null);
     const [picture, setPicture] = useState<null | {
         uri?: String;
         fileName?: String;
@@ -56,6 +56,7 @@ export default function DriverDetailsScreen() {
 
                 setDriver(response.data);
                 setOriginalDriver(response.data);
+                setChecked(response.data.active);
             } catch (error) {
                 console.error('Failed to fetch driver:', error);
             } finally {
@@ -70,9 +71,11 @@ export default function DriverDetailsScreen() {
         if (!driver || !originalDriver) return false;
         return (
             driver.name !== originalDriver.name ||
-            driver.documentNumber !== originalDriver.documentNumber
+            driver.documentNumber !== originalDriver.documentNumber ||
+            driver.active !== checked ||
+            picture !== null
         );
-    }, [driver, originalDriver]);
+    }, [driver, originalDriver, picture, checked]);
 
     const pickImage = async () => {
         try {
@@ -138,7 +141,7 @@ export default function DriverDetailsScreen() {
 
             formData.append('active', checked);
 
-            const response = await axios.patch(`${API_BASE_URL}/drivers/update/${driverId}`, formData, {
+            const response = await axios.patch(`${API_BASE_URL}/drivers/edit/${driverId}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${userToken}`
@@ -167,16 +170,28 @@ export default function DriverDetailsScreen() {
                     title="Pick an image"
                     onPress={() => pickImage()}
                 />
-                <TextInput 
-                    value={driver.name}
-                    style={driverDetailsStyles.textInput}
-                    onChangeText={(text) => setDriver((prev) => prev ? { ...prev, name: text } : prev)}
-                />
-                <TextInput 
-                    value={driver.documentNumber}
-                    style={driverDetailsStyles.textInput}
-                    onChangeText={(text) => setDriver((prev) => prev ? { ...prev, documentNumber: text } : prev)}
-                />
+                {
+                    picture !== null &&
+                    <Text style={globalStyles.timestampText}>Image picked successfully</Text>
+                }
+                <View style={globalStyles.textAndInput}>
+                    <Text style={{marginRight: 8}}>Name:</Text>
+                    <TextInput 
+                        value={driver.name}
+                        style={driverDetailsStyles.textInput}
+                        onChangeText={(text) => setDriver((prev) => prev ? { ...prev, name: text } : prev)}
+                    />
+                </View>
+                
+                <View style={globalStyles.textAndInput}>
+                    <Text style={{marginRight: 8}}>Document Number:</Text>
+                    <TextInput 
+                        value={driver.documentNumber}
+                        style={driverDetailsStyles.textInput}
+                        onChangeText={(text) => setDriver((prev) => prev ? { ...prev, documentNumber: text } : prev)}
+                    />
+                </View>
+                
                 <Checkbox.Item
                     label="Is Active?"
                     status={checked ? 'checked' : 'unchecked'}
@@ -204,7 +219,7 @@ const driverDetailsStyles = StyleSheet.create({
         height: 180,
         borderRadius: 100,
         backgroundColor: '#ccc',
-        marginBottom: 20
+        marginBottom: 0
     },
     container: {
         flex: 1,

@@ -3,7 +3,6 @@ import { Response } from "express";
 import { Op } from 'sequelize';
 import Bus from "../models/bus";
 import BusRoute from "../models/busRoute";
-import Driver from "../models/driver";
 import User from "../models/user";
 import { HTTP_MESSAGES } from "../constants/httpMessages";
 
@@ -38,12 +37,13 @@ export const searchInfo = async function(req: AuthRequest, res: Response) {
             }
         });
 
-        const driverResults = await Driver.findAll({
-            attributes: ['id', 'documentNumber', 'name', 'picture', 'active'],
+        const userResults = await User.findAll({
+            attributes: ['id', 'email', 'documentNumber', 'name', 'picture', 'active'],
             where: {
                 [Op.or]: [
                     { documentNumber: { [Op.like]: qLike } },
-                    { name: { [Op.like]: qLike } }
+                    { name: { [Op.like]: qLike } },
+                    { email: { [Op.like]: qLike } }
                 ]
             }
         });
@@ -51,7 +51,7 @@ export const searchInfo = async function(req: AuthRequest, res: Response) {
         return res.json({
             buses: busResults,
             routes: routeResults,
-            drivers: driverResults
+            users: userResults
         });
     } catch (error: any) {
         console.log('Search error:', error);

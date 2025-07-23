@@ -5,9 +5,11 @@ import {
   DataType,
   PrimaryKey,
   Default,
-  HasOne
+  HasOne,
+  HasMany
 } from 'sequelize-typescript';
-import Driver from './driver';
+import Trip from './trip';
+import WorkingHours from './workingHours';
 
 @Table({
   tableName: 'users',
@@ -32,9 +34,29 @@ export default class User extends Model<User> {
   })
   password!: string;
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
+  name!: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    unique: true,
+  })
+  documentNumber!: string;
+
+  @Column(DataType.STRING)
+  picture?: string;
+
   @Default(false)
   @Column(DataType.BOOLEAN)
   isAdmin!: boolean;
+
+  @Default(true)
+  @Column(DataType.BOOLEAN)
+  active!: boolean;
   
   @Column(DataType.DATE)
   createdAt!: Date;
@@ -42,8 +64,9 @@ export default class User extends Model<User> {
   @Column(DataType.DATE)
   updatedAt!: Date;
 
-  @HasOne(() => Driver, {
-    onDelete: 'CASCADE'
-  })
-  driver?: Driver;
+  @HasMany(() => Trip)
+  trips!: Trip[];
+
+  @HasMany(() => WorkingHours)
+  workingHours: WorkingHours[];
 }

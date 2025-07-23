@@ -35,14 +35,6 @@ export default function TableOptionsScreen() {
             onPress: () => {
                 navigation.navigate('BusRouteRegistration');
             }
-        },
-        {
-            id: '4',
-            title: 'Timetables',
-            iconName: 'alarm',
-            onPress: () => {
-                navigation.navigate('TimetableRegistration');
-            }
         }
     ];
 

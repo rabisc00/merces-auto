@@ -9,8 +9,8 @@ import {
   ForeignKey,
   Default,
 } from 'sequelize-typescript';
-import Driver from './driver';
 import { DataTypes } from 'sequelize';
+import User from './user';
 
 @Table({
   tableName: 'working_hours',
@@ -48,10 +48,10 @@ export default class WorkingHours extends Model {
   @Column(DataType.DATE)
   updatedAt!: Date;
 
-  @ForeignKey(() => Driver)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  driverId!: string;
+  userId!: string;
 }

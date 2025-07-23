@@ -4,7 +4,6 @@ import Bus from '../models/bus';
 import BusRoute from '../models/busRoute';
 import Timetable from '../models/timetable';
 import DayOfTheWeek from '../models/dayOfTheWeek';
-import Driver from '../models/driver';
 import TimetableDay from '../models/timetableDay';
 import User from '../models/user';
 import WorkingHours from '../models/workingHours';
@@ -22,6 +21,6 @@ export const sequelize = new Sequelize(
         port: parseInt(process.env.DB_PORT),
         logging: false,
         timezone: '+01:00',
-        models: [Bus, BusRoute, Timetable, DayOfTheWeek, Driver, TimetableDay, Trip, User, WorkingHours]
+        models: [Bus, BusRoute, Timetable, DayOfTheWeek, TimetableDay, Trip, User, WorkingHours]
     }
 );

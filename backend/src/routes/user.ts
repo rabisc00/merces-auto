@@ -1,8 +1,9 @@
 import * as express from 'express';
-import { userCreateSchema } from '../validators/userValidator';
+import { userCreateSchema, userEditSchema } from '../validators/userValidator';
 import { validate } from '../middleware/validate';
-import { createUser, login } from '../controllers/user';
+import { createUser, deleteUser, editUser, getUserDetails, getUsers, login, searchUser } from '../controllers/user';
 import { authenticateToken } from '../middleware/auth';
+import { uploadPicture } from '../middleware/upload';
 
 /**
 * @swagger
@@ -12,6 +13,115 @@ import { authenticateToken } from '../middleware/auth';
 */
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * /users/retrieve:
+ *   get:
+ *     summary: Retrieve a paginated list of users
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: string
+ *           default: 1
+ *         description: Page Number
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 currentPage:
+ *                   type: integer
+ *                 totalPages:
+ *                   type: integer
+ *                 totalCount:
+ *                   type: integer
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/User'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/InvalidToken'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.get('/retrieve', authenticateToken, getUsers);
+
+/**
+ * @swagger
+ * /users/retrieve/{id}:
+ *   get:
+ *     summary: Retrieve the details of a user by ID
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: Details of a user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/User'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/InvalidToken'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.get('/retrieve/:id', authenticateToken, getUserDetails);
+
+/**
+ * @swagger
+ * /users/filter:
+ *   get:
+ *     summary: A list of filtered bus users
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         schema:
+ *           type: string
+ *         description: Query string for filtering users
+ *     responses:
+ *       200:
+ *         description: A list of filtered users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 routeResults:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/User'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/InvalidToken'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.get('/filter', authenticateToken, searchUser);
 
 /**
  * @swagger
@@ -105,5 +215,95 @@ router.post('/login', login);
  *         $ref: '#/components/responses/InternalServerError'
  */
 router.post('/create', authenticateToken, validate(userCreateSchema), createUser);
+
+/**
+ * @swagger
+ * /users/edit/{id}:
+ *   patch:
+ *     summary: Edit an existing user
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the user to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               documentNumber:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               active:
+ *                 type: boolean
+ *               picture:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: User updated successfully or no changes made
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User updated successfully
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/InvalidToken'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.patch('/edit/:id', authenticateToken, uploadPicture.single('picture'), validate(userEditSchema), editUser);
+
+/**
+ * @swagger
+ * /users/delete/{id}:
+ *   delete:
+ *     summary: Delete an existing user
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the user to delete
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User deleted successfully
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/InvalidToken'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.delete('/delete/:id', authenticateToken, deleteUser);
 
 export default router;

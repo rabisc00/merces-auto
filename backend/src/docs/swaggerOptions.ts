@@ -170,7 +170,7 @@ export const swaggerOptions = {
             destination: { type: 'string' }
           }
         },
-        Driver: {
+        User: {
           type: 'object',
           properties: {
             id: {
@@ -286,7 +286,7 @@ export const swaggerOptions = {
             destination: { type: 'string'}
           }
         },
-        DriverDetails: {
+        UserDetails: {
             type: 'object',
             properties: {
               id: {
@@ -294,6 +294,7 @@ export const swaggerOptions = {
                 format: 'uuid'
               },
               name: { type: 'string' },
+              email: { type: 'string' },
               documentNumber: { type: 'string' },
               picture: { type: 'string' },
               active: { type: 'boolean' },
@@ -350,12 +351,14 @@ export const swaggerOptions = {
                 manufacturingYear: { type: 'integer' }
               }
             },
-            driver: {
+            users: {
               type: 'object',
               properties: {
+                email: { type: 'string' },
                 documentNumber: { type: 'string' },
                 name: { type: 'string' },
-                picture: { type: 'string' }
+                picture: { type: 'string' },
+                active: { type: 'boolean' }
               }
             },
             timetable: {
@@ -444,25 +447,30 @@ export const swaggerOptions = {
             }
           }
         },
-        DriverInput: {
+        UserInput: {
           type: 'object',
-          required: ['userId', 'name', 'documentNumber'],
+          required: ['email', 'password', 'name', 'documentNumber', 'active', 'isAdmin'],
           properties: {
-            userId: {
+            email: { 
               type: 'string',
-              format: 'uuid'
+              format: 'email'
+            },
+            password: {
+              type: 'string',
+              format: 'password'
             },
             documentNumber: { type: 'string' },
-            name: { type: 'string' }
+            name: { type: 'string' },
+            isAdmin: { type: 'boolean' }
           }
         },
         TripInput: {
           type: 'object',
-          required: ['numberOfPassengers', 'driverId', 'busId', 'timetableId'],
+          required: ['numberOfPassengers', 'userId', 'busId', 'timetableId'],
           properties: {
             numberOfPassengers: { type: 'integer' },
             observations: { type: 'string' },
-            driverId: { 
+            userId: { 
               type: 'string',
               format: 'uuid'
             },
@@ -476,20 +484,6 @@ export const swaggerOptions = {
             }
           }
         },
-        UserInput: {
-          type: 'object',
-          properties: {
-            email: { 
-              type: 'string',
-              format: 'email'
-            },
-            password: {
-              type: 'string',
-              format: 'password'
-            },
-            isAdmin: { type: 'boolean' }
-          }
-        },
         WorkingHoursInput: {
           type: 'object',
           properties: {
@@ -501,7 +495,7 @@ export const swaggerOptions = {
               type: 'string',
               format: 'date-time'
             },
-            driverId: {
+            userId: {
               type: 'string',
               format: 'uuid'
             }
@@ -548,7 +542,7 @@ export const swaggerOptions = {
           properties: {
             numberOfPassengers: { type: 'integer' },
             observations: { type: 'string' },
-            driverId: { 
+            userId: { 
               type: 'string',
               format: 'uuid'
             },

@@ -23,7 +23,6 @@ export type TableOptionsStackParamList = {
   DriverRegistration: undefined;
   BusRegistration: undefined;
   BusRouteRegistration: undefined;
-  TimetableRegistration: undefined;
 }
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Main'>;

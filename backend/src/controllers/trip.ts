@@ -4,7 +4,6 @@ import Trip from "../models/trip";
 import Timetable from "../models/timetable";
 import BusRoute from "../models/busRoute";
 import Bus from "../models/bus";
-import Driver from "../models/driver";
 import User from "../models/user";
 import { HTTP_MESSAGES } from "../constants/httpMessages";
 
@@ -13,7 +12,7 @@ export const createTrip = async function (req: AuthRequest, res: Response) {
         const { 
             numberOfPassengers, 
             observations, 
-            driverId, 
+            userId, 
             busId, 
             timetableId 
         } = req.body;
@@ -21,7 +20,7 @@ export const createTrip = async function (req: AuthRequest, res: Response) {
         const trip = await Trip.create({
             numberOfPassengers,
             observations,
-            driverId,
+            userId,
             busId,
             timetableId
         });
@@ -40,7 +39,7 @@ export const editTrip = async function (req: AuthRequest, res: Response) {
         const { 
             numberOfPassengers, 
             observations, 
-            driverId, 
+            userId, 
             busId,
             timetableId
         } = req.body;
@@ -63,13 +62,13 @@ export const editTrip = async function (req: AuthRequest, res: Response) {
             changed = true;
         }
 
-        if (driverId && tripFound.driverId !== driverId) {
-            const driverFound = await Driver.findByPk(driverId);
-            if (!driverFound) {
+        if (userId && tripFound.userId !== userId) {
+            const userFound = await User.findByPk(userId);
+            if (!userFound) {
                 return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
             }
 
-            await tripFound.$set('driver', driverFound);
+            await tripFound.$set('user', userFound);
             changed = true;
         }
 
@@ -122,17 +121,17 @@ export const deleteTrip = async function(req: AuthRequest, res: Response) {
     }
 };
 
-export const getTripsByDriver = async function(req: AuthRequest, res: Response) {
+export const getTripsByUser = async function(req: AuthRequest, res: Response) {
     const page = parseInt(req.query.page as string) || 1;
     const offset = (page - 1) * 10;
     const limit = 10;
-    const driverId = req.params.driverId;
+    const userId = req.params.userId;
 
     try {
         const { count, rows } = await Trip.findAndCountAll({ 
             offset,
             limit,
-            where: { driverId },
+            where: { userId },
             attributes: ['id', 'numberOfPassengers'],
             include: [{
                 model: Timetable,
@@ -151,7 +150,7 @@ export const getTripsByDriver = async function(req: AuthRequest, res: Response) 
             trips: rows
         });
     } catch (error: any) {
-        console.error('Error fetching trips by driver:', error);
+        console.error('Error fetching trips by user:', error);
         return res.status(500).json({ error: HTTP_MESSAGES.OK });
     }
 };
@@ -200,8 +199,8 @@ export const getTripDetails = async function(req: AuthRequest, res: Response) {
                 model: Bus,
                 attributes: ['busNumber', 'model', 'capacity', 'manufacturingYear']
             }, {
-                model: Driver,
-                attributes: ['documentNumber', 'name', 'picture']
+                model: User,
+                attributes: ['email', 'documentNumber', 'name', 'picture', 'active']
             }, {
                 model: Timetable,
                 attributes: ['arrivalTime', 'departureTime'],

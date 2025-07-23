@@ -6,7 +6,6 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/user';
 import tokenRoutes from './routes/token';
-import driverRoutes from './routes/driver';
 import busRoutes from './routes/bus';
 import busRouteRoutes from './routes/busRoute';
 import timetableRoutes from './routes/timetable';
@@ -17,6 +16,7 @@ import { sequelize } from './config/sequelize';
 import { swaggerOptions } from './docs/swaggerOptions';
 import fs from 'fs';
 import https from 'https';
+import DayOfTheWeek from './models/dayOfTheWeek';
 
 const app = express();
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -37,7 +37,6 @@ app.get('/api-docs-json', (req, res) => {
 
 app.use(tokenRoutes);
 app.use('/users', userRoutes);
-app.use('/drivers', driverRoutes);
 app.use('/buses', busRoutes);
 app.use('/busroutes', busRouteRoutes);
 app.use('/timetables', timetableRoutes);
@@ -50,7 +49,7 @@ async function start() {
         await sequelize.authenticate();
         console.log('Connected to MySQL');
 
-        await sequelize.sync();
+        await sequelize.sync({ alter: true })
         console.log('Tables synced with models');
         
         // https.createServer(sslOptions, app).listen(3000, () => {

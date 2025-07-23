@@ -8,7 +8,7 @@ const router = express.Router();
  * @swagger
  * /filter:
  *   get:
- *     summary: Search for buses, routes, and drivers
+ *     summary: Search for buses, routes, and users
  *     tags: [Search]
  *     security:
  *       - bearerAuth: []
@@ -21,7 +21,7 @@ const router = express.Router();
  *         description: Search query string
  *     responses:
  *       200:
- *         description: Search results for buses, routes, and drivers
+ *         description: Search results for buses, routes, and users
  *         content:
  *           application/json:
  *             schema:
@@ -35,10 +35,10 @@ const router = express.Router();
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/BusRoutes'
- *                 drivers:
+ *                 users:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Driver'
+ *                     $ref: '#/components/schemas/User'
  *       400:
  *         $ref: '#/components/responses/InvalidInput'
  *       401:

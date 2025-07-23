@@ -2,7 +2,7 @@ import * as express from 'express';
 import { authenticateToken } from '../middleware/auth';
 import { tripCreateSchema, tripEditSchema } from '../validators/tripValidator';
 import { validate } from '../middleware/validate';
-import { createTrip, deleteTrip, editTrip, getTripDetails, getTripsByBus, getTripsByDriver } from '../controllers/trip';
+import { createTrip, deleteTrip, editTrip, getTripDetails, getTripsByBus, getTripsByUser } from '../controllers/trip';
 
 /**
 * @swagger
@@ -83,19 +83,19 @@ router.get('/retrieve/bybus/:busId', authenticateToken, getTripsByBus);
 
 /**
  * @swagger
- * /trips/retrieve/bydriver/{driverId}:
+ * /trips/retrieve/byuser/{userId}:
  *   get:
- *     summary: Retrieve the details of a trip by a related driver ID
+ *     summary: Retrieve the details of a trip by a related user ID
  *     tags: [Trips]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: driverId
+ *         name: userId
  *         required: true
  *         schema:
  *           type: string
- *         description: Driver ID
+ *         description: User ID
  *     responses:
  *       200:
  *         description: Details of the trip
@@ -113,7 +113,7 @@ router.get('/retrieve/bybus/:busId', authenticateToken, getTripsByBus);
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.get('/retrieve/bydriver/:driverId', authenticateToken, getTripsByDriver);
+router.get('/retrieve/byuser/:userId', authenticateToken, getTripsByUser);
 
 /**
  * @swagger

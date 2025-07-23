@@ -48,22 +48,22 @@ router.get('/retrieve/:id', authenticateToken, getWorkingHoursDetails);
 
 /**
  * @swagger
- * /workinghours/retrieve/bydriver/{driverId}:
+ * /workinghours/retrieve/byuser/{userId}:
  *   get:
- *     summary: Retrieve the details of a working hours entry a driver's ID
+ *     summary: Retrieve the details of a working hours entry a user's ID
  *     tags: [Working Hours]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: driverId
+ *         name: userId
  *         required: true
  *         schema:
  *           type: string
- *         description: Driver ID
+ *         description: User ID
  *     responses:
  *       200:
- *         description: A driver's working hours
+ *         description: A user's working hours
  *         content:
  *           application/json:
  *             schema:
@@ -77,7 +77,7 @@ router.get('/retrieve/:id', authenticateToken, getWorkingHoursDetails);
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.get('/retrieve/bydriver/:driverId', authenticateToken, getWorkingHours);
+router.get('/retrieve/byuser/:userId', authenticateToken, getWorkingHours);
 
 /**
  * @swagger

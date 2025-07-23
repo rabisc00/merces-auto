@@ -12,7 +12,6 @@ import CalendarScreen from "../screens/CalendarScreen";
 import WorkedHoursScreen from "../screens/WorkedHoursScreen";
 import BusRegistration from "../screens/BusRegistration";
 import BusRouteRegistration from "../screens/BusRouteRegistration";
-import TimetableRegistration from "../screens/TimetablerRegistration";
 import DriversList from "../screens/DriversList";
 import DriverDetailsScreen from "../screens/DriverDetails";
 
@@ -100,14 +99,6 @@ function TableOptionsNavigator() {
             <TableOptionsStack.Screen
                 name="BusRouteRegistration"
                 component={BusRouteRegistration}
-                options={{
-                    headerShown: false,
-                    headerBackTitle: 'Bus Registration'
-                }}
-            />
-            <TableOptionsStack.Screen
-                name="TimetableRegistration"
-                component={TimetableRegistration}
                 options={{
                     headerShown: false,
                     headerBackTitle: 'Bus Registration'

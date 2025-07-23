@@ -3,11 +3,18 @@ import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { globalStyles } from '../styles/global';
 
+type PaginatedResponse<T> = {
+    data: T[];
+    totalPages: number;
+    currentPage: number;
+}
+
 type GenericCardListProps<T> = {
-    fetchData: (page: number) => Promise<T[]>;
+    fetchData: (page: number) => Promise<PaginatedResponse<T>>;
     renderItem: (item: T) => React.ReactElement;
     keyExtractor: (item: T) => string;
     navigateAdd: () => void;
+    refreshKey: number;
     addIconName: string;
     addButtonText: string;
     pageSize?: number;
@@ -20,28 +27,47 @@ export function GenericCardList<T>({
     navigateAdd,
     addIconName,
     addButtonText,
+    refreshKey,
     pageSize = 10
 }: GenericCardListProps<T>) {
     const [items, setItems] = useState<T[]>([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    const [totalPages, setTotalPages] = useState<number | null>(null);
 
     const loadMore = async () => {
         if (loading || !hasMore) return;
         setLoading(true);
 
-        const newItems = await fetchData(page);
+        try {
+            const res = await fetchData(page);
 
-        setItems((prev) => [...prev, ...newItems]);
-        setPage((prev) => prev + 1);
-        setHasMore(newItems.length >= pageSize);
-        setLoading(false);
+            setItems((prev) => [...prev, ...res.data]);
+            setPage(res.currentPage + 1);
+            setTotalPages(res.totalPages);
+            setHasMore(res.currentPage < res.totalPages);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
-        loadMore();
-    }, []);
+        const refreshItems = async () => {
+            setLoading(true);
+            try {
+                const res = await fetchData(1);
+                setItems(res.data);
+                setPage(2);
+                setTotalPages(res.totalPages);
+                setHasMore(res.currentPage < res.totalPages);
+            } finally {
+                setLoading(false);
+            }   
+        };
+
+        refreshItems();
+    }, [refreshKey]);
 
     return (
         <View>

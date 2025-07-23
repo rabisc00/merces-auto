@@ -12,7 +12,7 @@ const uploadDir = path.join(__dirname, '..', '..', 'uploads', 'signatures');
 
 export const createWorkingHours = async function(req: AuthRequest, res: Response) {
     try {
-        const { startTime, endTime, driverId} = req.body;
+        const { startTime, endTime, userId } = req.body;
 
         const hash = crypto.createHash('sha256').update(req.file.buffer).digest('hex');
         const ext = path.extname(req.file.originalname);
@@ -36,7 +36,7 @@ export const createWorkingHours = async function(req: AuthRequest, res: Response
         }
 
         const workingHours = await WorkingHours.create({
-            driverId,
+            userId,
             startTime: dayjsStartTime.toDate(),
             endTime: dayjsEndTime.toDate(),
             signature: relativePath
@@ -115,7 +115,7 @@ export const deleteWorkingHours = async function(req: AuthRequest, res: Response
 
 export const getWorkingHours = async function(req: AuthRequest, res: Response) {
     try {
-        const driverId = req.params.driverId;
+        const userId = req.params.userId;
         const page = parseInt(req.query.page as string) || 1;
         const offset = (page - 1) * 10;
         const limit = 10;
@@ -124,7 +124,7 @@ export const getWorkingHours = async function(req: AuthRequest, res: Response) {
             offset,
             limit,
             attributes: ['id', 'startTime', 'endTime'],
-            where: { driverId },
+            where: { userId },
         });
         
         return res.json({

@@ -8,7 +8,7 @@ import { API_BASE_URL } from "../../config/api";
 import { useAuth } from "../../context/AuthContext";
 import { useLoading } from "../../context/LoadingContext";
 import CardActionButtons from "../CardActionButtons";
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 
 type DriverCardProps = {
     driverId: string;
@@ -52,6 +52,11 @@ export function DriverCard({ driverId, documentNumber, name, picture, active}: D
             deleteAction={deleteAction}
         >
             <View style={driverCardStyles.cardView}>
+                <Image 
+                    source={{ uri: `${API_BASE_URL}/${picture}` }} 
+                    style={driverCardStyles.cardImage}
+                    resizeMode="cover"
+                />
                 <View>
                     <Text style={{ fontWeight: 'bold' }}>{name}</Text>
                     <Text>{documentNumber}</Text>
@@ -69,6 +74,13 @@ const driverCardStyles = StyleSheet.create({
     cardView: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    cardImage: {
+        width: 50,
+        height: 50,
+        borderRadius: 100,
+        backgroundColor: '#ccc',
     }
 })

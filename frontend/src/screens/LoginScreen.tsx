@@ -28,7 +28,7 @@ export default function LoginScreen() {
             passwordRef.current = '';
         } catch (error) {
             console.log(error);
-            Alert.alert("Login Failed", "Invalid email or password");
+            Alert.alert("Login Failed", "Access Denied");
         }
     };
 

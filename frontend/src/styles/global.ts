@@ -48,5 +48,12 @@ export const globalStyles = StyleSheet.create({
     checkboxItem: {
         paddingVertical: 5,
         paddingHorizontal: 10
+    },
+    textAndInput: {
+        marginVertical: 6,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 5
     }
 });
