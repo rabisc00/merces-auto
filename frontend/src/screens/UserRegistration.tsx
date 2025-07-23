@@ -15,8 +15,7 @@ export default function DriverRegistration() {
     const { userToken } = useAuth();
     const { showLoading, hideLoading } = useLoading();
 
-    const [isDriver, setIsDriver] = useState(true);
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
     const emailRef = useRef('');
     const passwordRef = useRef('');
     const nameRef = useRef('');
@@ -31,26 +30,14 @@ export default function DriverRegistration() {
             const res = await axios.post<CreateResponse>(`${API_BASE_URL}/users/create`, {
                 email: emailRef.current,
                 password: passwordRef.current,
+                name: nameRef.current,
+                documentNumber: documentNumberRef.current,
                 isAdmin: isAdmin
             }, {
                 headers: {
                     Authorization: `Bearer ${userToken}`
                 }
             });
-
-            if (isDriver) {
-                await axios.post<CreateResponse>(`${API_BASE_URL}/drivers/create`, {
-                    userId: res.data.id,
-                    documentNumber: documentNumberRef.current,
-                    name: nameRef.current
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${userToken}`
-                    }
-                });
-
-                console.log("Driver res:", res);
-            }
 
             navigation.goBack();
         } catch (error) {
@@ -61,39 +48,8 @@ export default function DriverRegistration() {
         }
     }
 
-    const toggleDriver = () => {
-        if (isDriver && !isAdmin) {
-            Alert.alert('Validation', 'At least one role must be selected.');
-            return;
-        }
-        setIsDriver(!isDriver);
-    };
-
-    const toggleAdmin = () => {
-        if (isAdmin && !isDriver) {
-        Alert.alert('Validation', 'At least one role must be selected.');
-        return;
-        }
-        setIsAdmin(!isAdmin);
-    };
-
     return (
         <View style={insets}>
-            <View style={styles.checkboxRow}>
-                <Checkbox.Item
-                    label="Is Driver?"
-                    status={isDriver ? 'checked' : 'unchecked'}
-                    onPress={toggleDriver}
-                    style={globalStyles.checkboxItem}
-                />
-                <Checkbox.Item
-                    label="Is Admin?"
-                    status={isAdmin ? 'checked' : 'unchecked'}
-                    onPress={toggleAdmin}
-                    style={globalStyles.checkboxItem}
-                />
-            </View>
-            
             <TextInput
                 placeholder="Email"
                 autoCapitalize="none"
@@ -106,21 +62,22 @@ export default function DriverRegistration() {
                 onChangeText={(text) => (passwordRef.current = text)}
                 style={globalStyles.input}
             />
-
-            {isDriver && (
-                <>
-                <TextInput
-                    placeholder="Name"
-                    onChangeText={(text) => (nameRef.current = text)}
-                    style={globalStyles.input}
-                />
-                <TextInput
-                    placeholder="Document Number"
-                    onChangeText={(text) => (documentNumberRef.current = text)}
-                    style={globalStyles.input}
-                />
-                </>
-            )}
+            <TextInput
+                placeholder="Name"
+                onChangeText={(text) => (nameRef.current = text)}
+                style={globalStyles.input}
+            />
+            <TextInput
+                placeholder="Document Number"
+                onChangeText={(text) => (documentNumberRef.current = text)}
+                style={globalStyles.input}
+            />
+            <Checkbox.Item
+                label="Is Admin?"
+                onPress={() => setIsAdmin(!isAdmin)}
+                status={isAdmin ? 'checked' : 'unchecked'}
+                style={globalStyles.checkboxItem}
+            />
 
             <Button title="Register" onPress={registerUser} />
         </View>

@@ -14,13 +14,14 @@ export type AuthStackParamList = {
 export type RootStackParamList = {
   Auth: undefined;
   Main: undefined;
+  SearchOverlay: undefined;
 };
 
 export type TableOptionsStackParamList = {
   TableOptionsMain: undefined;
-  DriversList: undefined;
-  DriverDetails: { driverId: string };
-  DriverRegistration: undefined;
+  UsersList: undefined;
+  UserDetails: { userId: string };
+  UserRegistration: undefined;
   BusRegistration: undefined;
   BusRouteRegistration: undefined;
 }

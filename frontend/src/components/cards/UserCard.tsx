@@ -1,60 +1,45 @@
 import BaseCard from "../BaseCard";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TableOptionsStackParamList } from "../../types/navigation";
 import { confirm } from "../../utils/confirm";
-import axios from "axios";
 import { API_BASE_URL } from "../../config/api";
 import { useAuth } from "../../context/AuthContext";
 import { useLoading } from "../../context/LoadingContext";
 import CardActionButtons from "../CardActionButtons";
 import { Image, StyleSheet, Text, View } from "react-native";
+import { deleteUser } from "../../services/userService";
+import { TableOptionsNavigationProp } from "../../types/navigation";
+import { User } from "../../types/user";
 
-type DriverCardProps = {
-    driverId: string;
-    documentNumber: string;
-    name: string;
-    picture: string;
-    active: boolean;
-};
-
-export function DriverCard({ driverId, documentNumber, name, picture, active}: DriverCardProps) {
-    const navigation = useNavigation<NativeStackNavigationProp<TableOptionsStackParamList>>();
+export function UserCard({ id, documentNumber, name, picture, active}: User) {
+    const navigation = useNavigation<TableOptionsNavigationProp>();
     const { userToken } = useAuth();
     const { showLoading, hideLoading } = useLoading();
 
     const deleteAction = () => {
-        const deleteDriver = async () => {
-            try {
-                showLoading();
-                const response = await axios.delete(`${API_BASE_URL}/drivers/delete/${driverId}`, {
-                    headers: {
-                        Authorization: `Bearer ${userToken}`
-                    }
-                });
-                hideLoading();
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        confirm('Are you sure you want to delete this driver?', deleteDriver)
+        if (!userToken) {
+            console.warn('No token available');
+            return;
+        }
+        confirm('Are you sure you want to delete this user?', () => {
+            deleteUser(id, userToken, showLoading, hideLoading);
+        })
     };
 
     const detailsAction = () => {
-        navigation.navigate('DriverDetails', { driverId });
+        navigation.navigate('UserDetails', { userId: id });
     };
     
     return (
         <BaseCard 
-            key={driverId} 
+            key={id} 
             detailsAction={detailsAction}
             deleteAction={deleteAction}
         >
-            <View style={driverCardStyles.cardView}>
+            <View style={userCardStyles.cardView}>
                 <Image 
                     source={{ uri: `${API_BASE_URL}/${picture}` }} 
-                    style={driverCardStyles.cardImage}
+                    style={userCardStyles.cardImage}
                     resizeMode="cover"
                 />
                 <View>
@@ -70,7 +55,7 @@ export function DriverCard({ driverId, documentNumber, name, picture, active}: D
     );
 }
 
-const driverCardStyles = StyleSheet.create({
+const userCardStyles = StyleSheet.create({
     cardView: {
         display: 'flex',
         flexDirection: 'row',

@@ -19,5 +19,5 @@ export const userCreateSchema = z.object({
 export const userEditSchema = z.object({
     documentNumber: z.string().optional(),
     name: z.string().optional(),
-    active: z.boolean().optional()
+    active: z.string().optional()
 });

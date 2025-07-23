@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import axios from "axios";
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { LoginResponse } from "../types/api";

@@ -3,6 +3,8 @@ import { StyleSheet } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import { useTypedNavigation } from "../hooks/useTypeNavigation";
 import { useSafeArea } from "../hooks/useSafeArea";
+import HeaderWithSearch from "../components/HeaderWithSearch";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
     const { logout, isAdmin } = useAuth();
@@ -15,10 +17,11 @@ export default function HomeScreen() {
     }
 
     return (
-        <View style={insets}>
+        <SafeAreaView style={{ flex:1, backgroundColor: '#fff' }}>
+            <HeaderWithSearch />
             <Text>{isAdmin ? 'Teste Admin' : 'Teste User'}</Text>
             <Button title="Logout" onPress={doLogout} />
-        </View>
+        </SafeAreaView>
     )
 };
 

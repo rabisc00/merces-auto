@@ -14,10 +14,10 @@ export default function TableOptionsScreen() {
     const buttons = [
         {
             id: '1',
-            title: 'Drivers',
+            title: 'Users',
             iconName: 'person',
             onPress: () => {
-                navigation.navigate('DriversList');
+                navigation.navigate('UsersList');
             }
         },
         {
