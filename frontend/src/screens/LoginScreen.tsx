@@ -1,18 +1,16 @@
 import { useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Button, Text, TextInput, View } from "react-native";
 import { LoginResponse } from "../types/api";
-import { useSafeArea } from "../hooks/useSafeArea";
 import { globalStyles } from "../styles/global";
 import { API_BASE_URL } from "../config/api";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function LoginScreen() {
     const { login, setIsAdmin } = useAuth();
     const emailRef = useRef<string>('');
     const passwordRef = useRef<string>('');
-
-    const insets = useSafeArea();
 
     const handleLogin = async () => {
         try {
@@ -32,12 +30,14 @@ export default function LoginScreen() {
     };
 
     return (
-        <View style={insets}>
-            <Text>Email:</Text>
-            <TextInput onChangeText={(text) => emailRef.current = text} autoCapitalize="none" style={globalStyles.input} />
-            <Text>Password:</Text>
-            <TextInput onChangeText={(text) => passwordRef.current = text} secureTextEntry style={globalStyles.input} />
+        <SafeAreaView style={globalStyles.safeAreaContainer}>
+            <View style={globalStyles.mainContainer}>
+                <Text>Email:</Text>
+                <TextInput onChangeText={(text) => emailRef.current = text} autoCapitalize="none" style={globalStyles.input} />
+                <Text>Password:</Text>
+                <TextInput onChangeText={(text) => passwordRef.current = text} secureTextEntry style={globalStyles.input} />
+            </View>
             <Button title="Login" onPress={handleLogin} />
-        </View>
+        </SafeAreaView>
     )
 };

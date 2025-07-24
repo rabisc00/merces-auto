@@ -1,14 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { Alert, Button, StyleSheet, TextInput, View } from 'react-native';
+import { Button, StyleSheet, TextInput, View } from 'react-native';
 import { Checkbox } from 'react-native-paper';
-import axios from 'axios';
 import { globalStyles } from '../styles/global';
-import { useSafeArea } from '../hooks/useSafeArea';
-import { CreateResponse } from '../types/api';
-import { API_BASE_URL } from '../config/api';
 import { useNavigation } from '@react-navigation/native';
 import { useLoading } from '../context/LoadingContext';
 import { useAuth } from '../context/AuthContext';
+import { registerUser } from '../services/userService';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { UserCreate } from '../types/user';
 
 export default function UserRegistrationScreen() {
     const navigation = useNavigation();
@@ -16,71 +15,59 @@ export default function UserRegistrationScreen() {
     const { showLoading, hideLoading } = useLoading();
 
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
-    const emailRef = useRef('');
-    const passwordRef = useRef('');
-    const nameRef = useRef('');
-    const documentNumberRef = useRef('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [documentNumber, setDocumentNumber] = useState('');
 
-    const insets = useSafeArea();
+    const callRegisterUser = async () => {
+        const user: UserCreate = {
+            email,
+            password,
+            name,
+            documentNumber,
+            isAdmin
+        };
 
-    const registerUser = async () => {
-        try {
-            showLoading();
-
-            const res = await axios.post<CreateResponse>(`${API_BASE_URL}/users/create`, {
-                email: emailRef.current,
-                password: passwordRef.current,
-                name: nameRef.current,
-                documentNumber: documentNumberRef.current,
-                isAdmin: isAdmin
-            }, {
-                headers: {
-                    Authorization: `Bearer ${userToken}`
-                }
-            });
-
-            navigation.goBack();
-        } catch (error) {
-            console.error(error);
-            Alert.alert("Registration failed", "Invalid input data");
-        } finally {
-            hideLoading();
-        }
+        await registerUser(user, userToken, showLoading, hideLoading);
+        navigation.goBack();
     }
 
     return (
-        <View style={insets}>
-            <TextInput
-                placeholder="Email"
-                autoCapitalize="none"
-                onChangeText={(text) => (emailRef.current = text)}
-                style={globalStyles.input}
-            />
-            <TextInput
-                placeholder="Password"
-                secureTextEntry
-                onChangeText={(text) => (passwordRef.current = text)}
-                style={globalStyles.input}
-            />
-            <TextInput
-                placeholder="Name"
-                onChangeText={(text) => (nameRef.current = text)}
-                style={globalStyles.input}
-            />
-            <TextInput
-                placeholder="Document Number"
-                onChangeText={(text) => (documentNumberRef.current = text)}
-                style={globalStyles.input}
-            />
-            <Checkbox.Item
-                label="Is Admin?"
-                onPress={() => setIsAdmin(!isAdmin)}
-                status={isAdmin ? 'checked' : 'unchecked'}
-                style={globalStyles.checkboxItem}
-            />
+        <SafeAreaView style={globalStyles.safeAreaContainer}>
+            <View style={globalStyles.mainContainer}>
+                <TextInput
+                    placeholder="Email"
+                    autoCapitalize="none"
+                    onChangeText={setEmail}
+                    style={globalStyles.input}
+                />
+                <TextInput
+                    placeholder="Password"
+                    secureTextEntry
+                    onChangeText={setPassword}
+                    style={globalStyles.input}
+                />
+                <TextInput
+                    placeholder="Name"
+                    onChangeText={setName}
+                    style={globalStyles.input}
+                />
+                <TextInput
+                    placeholder="Document Number"
+                    onChangeText={setDocumentNumber}
+                    style={globalStyles.input}
+                />
+                <Checkbox.Item
+                    label="Is Admin?"
+                    onPress={() => setIsAdmin(!isAdmin)}
+                    status={isAdmin ? 'checked' : 'unchecked'}
+                    style={globalStyles.checkboxItem}
+                />
 
-            <Button title="Register" onPress={registerUser} />
-        </View>
+                <Button title="Register" onPress={callRegisterUser} />
+            </View>
+        </SafeAreaView>
     );
 }
 

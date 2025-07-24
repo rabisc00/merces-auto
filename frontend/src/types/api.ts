@@ -1,6 +1,6 @@
 import { Bus } from "./bus";
 import { BusRoute } from "./busRoute";
-import { User } from "./user";
+import { UserDetails } from "./user";
 
 export interface LoginResponse {
     token: string;
@@ -15,5 +15,12 @@ export interface CreateResponse {
 export type SearchResponse = {
     buses: Bus[],
     busRoutes: BusRoute[],
-    users: User[]
+    users: UserDetails[]
+};
+
+export type ListResponse<T> = {
+    currentPage: number,
+    totalPages: number,
+    totalCount: number,
+    records: T[]
 };

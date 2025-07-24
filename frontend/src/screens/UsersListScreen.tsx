@@ -9,14 +9,7 @@ import { fetchUsers } from "../services/userService";
 import HeaderWithSearch from "../components/HeaderWithSearch";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../styles/global";
-
-type User = {
-    id: string;
-    documentNumber: string;
-    name: string;
-    picture: string;
-    active: boolean;
-}
+import { User } from "../types/user";
 
 export default function UsersListScreen() {
     const { userToken } = useAuth();
@@ -43,6 +36,7 @@ export default function UsersListScreen() {
                             name={user.name}
                             picture={user.picture}
                             active={user.active}
+                            isAdmin={user.isAdmin}
                         />)
                     }
                     keyExtractor={(user) => user.id}

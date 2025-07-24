@@ -2,15 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { globalStyles } from '../styles/global';
-
-type PaginatedResponse<T> = {
-    data: T[];
-    totalPages: number;
-    currentPage: number;
-}
+import { ListResponse } from '../types/api';
 
 type GenericCardListProps<T> = {
-    fetchData: (page: number) => Promise<PaginatedResponse<T>>;
+    fetchData: (page: number) => Promise<ListResponse<T>>;
     renderItem: (item: T) => React.ReactElement;
     keyExtractor: (item: T) => string;
     navigateAdd: () => void;
@@ -43,7 +38,7 @@ export function GenericCardList<T>({
         try {
             const res = await fetchData(page);
 
-            setItems((prev) => [...prev, ...res.data]);
+            setItems((prev) => [...prev, ...res.records]);
             setPage(res.currentPage + 1);
             setTotalPages(res.totalPages);
             setHasMore(res.currentPage < res.totalPages);
@@ -57,7 +52,7 @@ export function GenericCardList<T>({
             setLoading(true);
             try {
                 const res = await fetchData(1);
-                setItems(res.data);
+                setItems(res.records);
                 setPage(2);
                 setTotalPages(res.totalPages);
                 setHasMore(res.currentPage < res.totalPages);

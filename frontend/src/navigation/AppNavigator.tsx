@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import MainTabs from "./MainTabs";
 import AuthScreens from "./AuthScreens";
 import SearchOverlayScreen from "../screens/SearchOverlayScreen";
+import UserDetailsScreen from "../screens/UserDetailsScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -25,6 +26,11 @@ export default function AppNavigator() {
                             name="SearchOverlay"
                             component={SearchOverlayScreen}
                             options={{ presentation: 'modal', headerShown: false}}
+                        />
+                        <Stack.Screen 
+                            name="UserDetails" 
+                            component={UserDetailsScreen}
+                            options={{ headerShown: false }}
                         />
                     </>
                     

@@ -7,6 +7,8 @@ import { useAuth } from "../context/AuthContext";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { UserCard } from "../components/cards/UserCard";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { globalStyles } from "../styles/global";
 
 export default function SearchOverlayScreen() {
     const { userToken } = useAuth();
@@ -26,34 +28,37 @@ export default function SearchOverlayScreen() {
     }
 
     return (
-        <View style={overlayStyles.container}>
-            <TextInput
-                autoFocus
-                value={query}
-                onChangeText={onSearch}
-                placeholder="Search something..."
-            />
-            <Text style={overlayStyles.listTitle}>Bus Routes</Text>
-            <Text style={overlayStyles.listTitle}>Buses</Text>
-            <Text style={overlayStyles.listTitle}>Users</Text>
-            {
-                results?.users?.length ?
-                <FlatList
-                    data={results?.users}
-                    keyExtractor={(item, _) => item.id}
-                    renderItem={({ item }) => (
-                        <UserCard
-                            id={item.id}
-                            documentNumber={item.documentNumber}
-                            name={item.name}
-                            picture={item.picture}
-                            active={item.active}
-                        />
-                    )}
-                /> :
-                <Text>Not Found</Text>
-            }
-        </View>
+        <SafeAreaView style={globalStyles.safeAreaContainer}>
+            <View style={globalStyles.mainContainer}>
+                <TextInput
+                    autoFocus
+                    value={query}
+                    onChangeText={onSearch}
+                    placeholder="Search something..."
+                />
+                <Text style={overlayStyles.listTitle}>Bus Routes</Text>
+                <Text style={overlayStyles.listTitle}>Buses</Text>
+                <Text style={overlayStyles.listTitle}>Users</Text>
+                {
+                    results?.users?.length ?
+                    <FlatList
+                        data={results?.users}
+                        keyExtractor={(item, _) => item.id}
+                        renderItem={({ item }) => (
+                            <UserCard
+                                id={item.id}
+                                documentNumber={item.documentNumber}
+                                name={item.name}
+                                picture={item.picture}
+                                active={item.active}
+                                isAdmin={item.isAdmin}
+                            />
+                        )}
+                    /> :
+                    <Text>Not Found</Text>
+                }
+            </View>
+        </SafeAreaView>
     )
 }
 

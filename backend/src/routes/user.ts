@@ -78,7 +78,7 @@ router.get('/retrieve', authenticateToken, getUsers);
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/UserDetails'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:

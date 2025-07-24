@@ -15,6 +15,7 @@ export type RootStackParamList = {
   Auth: undefined;
   Main: undefined;
   SearchOverlay: undefined;
+  UserDetails: { userId: string };
 };
 
 export type UsersStackParamList = {

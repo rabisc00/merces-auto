@@ -1,25 +1,91 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
-import { User } from "../types/user";
+import { User, UserCreate, UserDetails, UserUpdate } from "../types/user";
 import { UsersOptionsNavigationProp } from "../types/navigation";
 import { ImageProps } from "../types/image";
+import { CreateResponse, ListResponse } from "../types/api";
+import { Alert } from "react-native";
 
-export const fetchUsers = async (page: number, userToken: string | null) => {
-    const res = await axios.get(`${API_BASE_URL}/users/retrieve?page=${page}`, {
-        headers: {
-            Authorization: `Bearer ${userToken}`
-        }
-    });
+export const fetchUsers = async (page: number, userToken: string | null): Promise<ListResponse<User>> => {
+    try {
+        const res = await axios.get<ListResponse<User>>(`${API_BASE_URL}/users/retrieve?page=${page}`, {
+            headers: {
+                Authorization: `Bearer ${userToken}`
+            }
+        });
 
-    return {
-        data: res.data.records,
-        totalPages: res.data.totalPages,
-        currentPage: res.data.currentPage
-    };
+        return res.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+
+        return {
+            currentPage: page,
+            totalPages: 1,
+            totalCount: 0,
+            records: []
+        };
+    }
 };
 
+export const getUserDetails = async (
+    userId: string, 
+    userToken: string | null,
+    showLoading: () => void,
+    hideLoading: () => void
+): Promise<UserDetails> => {
+    try {
+        showLoading();
+        const response = await axios.get<UserDetails>(`${API_BASE_URL}/users/retrieve/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${userToken}`
+            }
+        });
+
+        return response.data;
+    } catch(error) {
+        console.error('Error fetching users:', error);
+        throw error;
+    } finally {
+        hideLoading();
+    }
+};
+
+export const registerUser = async (
+    user: UserCreate,
+    userToken: string | null,
+    showLoading: () => void,
+    hideLoading: () => void
+) => {
+    try {
+        showLoading();
+
+        if (!userToken) {
+            Alert.alert(ALERT_MESSAGES.INVALID_TOKEN.title, ALERT_MESSAGES.INVALID_TOKEN.message);
+            return;
+        }
+
+        const res = await axios.post<CreateResponse>(`${API_BASE_URL}/users/create`, {
+            email: user.email,
+            password: user.password,
+            name: user.name,
+            documentNumber: user.documentNumber,
+            isAdmin: user.isAdmin
+        }, {
+            headers: {
+                Authorization: `Bearer ${userToken}`
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        Alert.alert("Registration failed", "Invalid input data");
+    } finally {
+        hideLoading();
+    }
+};
+
+
 export const saveChanges = async (
-    user: User, 
+    user: UserUpdate, 
     image: ImageProps | null,
     userToken: string | null,
     showLoading: () => void,
@@ -28,6 +94,11 @@ export const saveChanges = async (
 ) => {
     try {
         showLoading();
+
+        if (!userToken) {
+            Alert.alert(ALERT_MESSAGES.INVALID_TOKEN.title, ALERT_MESSAGES.INVALID_TOKEN.message);
+            return;
+        }
 
         const formData = new FormData();
         if (image?.uri) {
@@ -64,19 +135,34 @@ export const saveChanges = async (
 };
 
 export const deleteUser = async (
-    userId: string,
-    userToken: string,
+    userId: string | undefined,
+    userToken: string | undefined,
     showLoading: () => void,
     hideLoading: () => void
 ) => {
     try {
         showLoading();
+
+        if (!userId) {
+            Alert.alert(ALERT_MESSAGES.INVALID_ID.title, ALERT_MESSAGES.INVALID_ID.message);
+            return;
+        }
+
+        if (!userToken) {
+            Alert.alert(ALERT_MESSAGES.INVALID_TOKEN.title, ALERT_MESSAGES.INVALID_TOKEN.message);
+            return;
+        }
+
         await axios.delete(`${API_BASE_URL}/users/delete/${userId}`, {
             headers: {
                 Authorization: `Bearer ${userToken}`
             }
         });
-    } catch (error) {
+    } catch (error: any) {
+        if (error.response.status === 403) {
+            Alert.alert("Deletion failed", "You can't delete an admin.");
+        }
+        
         console.log(error);
     } finally {
         hideLoading()

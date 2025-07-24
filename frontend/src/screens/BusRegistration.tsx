@@ -1,17 +1,13 @@
 import { Text, View } from "react-native";
-import { StyleSheet } from "react-native";
-import { useSafeArea } from "../hooks/useSafeArea";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { globalStyles } from "../styles/global";
 
 export default function BusRegistration() {
-    const insets = useSafeArea();
-
     return (
-        <View style={insets}>
-            <Text>Bus Registration Page</Text>
-        </View>
+        <SafeAreaView style={globalStyles.safeAreaContainer}>
+            <View style={globalStyles.mainContainer}>
+                <Text>Bus Registration Page</Text>
+            </View>
+        </SafeAreaView>
     )
-};
-
-const styles = StyleSheet.create({
-    text: { fontSize: 100 }
-});
+}
