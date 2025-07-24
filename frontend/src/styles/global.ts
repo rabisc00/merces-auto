@@ -55,5 +55,13 @@ export const globalStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 5
+    },
+    safeAreaContainer: {
+        flex: 1,
+        backgroundColor: '#fff'
+    },
+    mainContainer: {
+        paddingHorizontal: 16,
+        paddingVertical: 16
     }
 });

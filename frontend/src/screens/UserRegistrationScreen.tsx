@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useLoading } from '../context/LoadingContext';
 import { useAuth } from '../context/AuthContext';
 
-export default function DriverRegistration() {
+export default function UserRegistrationScreen() {
     const navigation = useNavigation();
     const { userToken } = useAuth();
     const { showLoading, hideLoading } = useLoading();

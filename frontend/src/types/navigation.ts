@@ -1,10 +1,10 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export type TabParamList = {
-    Home: undefined;
-    TableOptions: undefined;
+    BusRoutes: undefined;
     WorkedHours: undefined;
-    Calendar: undefined;
+    Buses: undefined;
+    Users: undefined;
 };
 
 export type AuthStackParamList = {
@@ -17,14 +17,11 @@ export type RootStackParamList = {
   SearchOverlay: undefined;
 };
 
-export type TableOptionsStackParamList = {
-  TableOptionsMain: undefined;
+export type UsersStackParamList = {
   UsersList: undefined;
-  UserDetails: { userId: string };
   UserRegistration: undefined;
-  BusRegistration: undefined;
-  BusRouteRegistration: undefined;
+  UserDetails: { userId: string };
 }
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Main'>;
-export type TableOptionsNavigationProp = NativeStackNavigationProp<TableOptionsStackParamList, 'TableOptionsMain'>;
+export type UsersOptionsNavigationProp = NativeStackNavigationProp<UsersStackParamList, 'UsersList'>;

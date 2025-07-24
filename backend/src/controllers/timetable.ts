@@ -154,7 +154,7 @@ export const getTimetablesByRouteId = async function (req: AuthRequest, res: Res
             currentPage: page,
             totalPages: Math.ceil(count / limit),
             totalCount: count,
-            timetables: rows
+            records: rows
         });
     } catch (error: any) {
         console.error('Error fetching timetables:', error);

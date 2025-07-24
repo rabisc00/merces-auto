@@ -42,7 +42,7 @@ const router = express.Router();
  *                   type: integer
  *                 totalCount:
  *                   type: integer
- *                 buses:
+ *                 records:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Bus'

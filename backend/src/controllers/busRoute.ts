@@ -117,7 +117,7 @@ export const getBusRoutes = async function(req: AuthRequest, res: Response) {
             currentPage: page,
             totalPages: Math.ceil(count / limit),
             totalCount: count,
-            busRoutes: rows
+            records: rows
         });
     } catch (error: any) {
         console.error('Error fetching bus routes:', error);

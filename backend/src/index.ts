@@ -49,7 +49,7 @@ async function start() {
         await sequelize.authenticate();
         console.log('Connected to MySQL');
 
-        await sequelize.sync({ alter: true })
+        await sequelize.sync()
         console.log('Tables synced with models');
         
         // https.createServer(sslOptions, app).listen(3000, () => {

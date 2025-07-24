@@ -109,7 +109,7 @@ export const getBuses = async function(req: AuthRequest, res: Response) {
             currentPage: page,
             totalPages: Math.ceil(count / limit),
             totalCount: count,
-            buses: rows
+            records: rows
         });
     } catch (error) {
         console.error('Error fetching buses:', error);

@@ -61,15 +61,30 @@ router.get('/retrieve/:id', authenticateToken, getWorkingHoursDetails);
  *         schema:
  *           type: string
  *         description: User ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: string
+ *           default: 1
+ *         description: Page Number
  *     responses:
  *       200:
  *         description: A user's working hours
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                  $ref: '#/components/schemas/WorkingHours'
+ *               type: object
+ *               properties:
+ *                 currentPage:
+ *                   type: integer
+ *                 totalPages:
+ *                   type: integer
+ *                 totalCount:
+ *                   type: integer
+ *                 records:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/WorkingHours'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:

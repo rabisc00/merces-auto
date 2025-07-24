@@ -1,5 +1,4 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { TableOptionsNavigationProp, TableOptionsStackParamList } from "../types/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useLoading } from "../context/LoadingContext";
 import axios from "axios";
@@ -14,12 +13,13 @@ import { User } from "../types/user";
 import { pickImage } from "../services/imageService";
 import { saveChanges } from "../services/userService";
 import { ImageProps } from "../types/image";
+import { UsersOptionsNavigationProp, UsersStackParamList } from "../types/navigation";
 
-type UserDetailsRouteProp = RouteProp<TableOptionsStackParamList, 'UserDetails'>;
+type UserDetailsRouteProp = RouteProp<UsersStackParamList, 'UserDetails'>;
 
 export default function UserDetailsScreen() {
     const { userToken } = useAuth();
-    const navigation = useNavigation<TableOptionsNavigationProp>();
+    const navigation = useNavigation<UsersOptionsNavigationProp>();
     const route = useRoute<UserDetailsRouteProp>();
 
     const { userId } = route.params;
@@ -44,7 +44,7 @@ export default function UserDetailsScreen() {
                 setUser(response.data);
                 setOriginalUser(response.data);
             } catch (error) {
-                console.error('Failed to fetch driver:', error);
+                console.error('Failed to fetch user:', error);
             } finally {
                 hideLoading();
             }

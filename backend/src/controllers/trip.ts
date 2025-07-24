@@ -147,7 +147,7 @@ export const getTripsByUser = async function(req: AuthRequest, res: Response) {
             currentPage: page,
             totalPages: Math.ceil(count / limit),
             totalCount: count,
-            trips: rows
+            records: rows
         });
     } catch (error: any) {
         console.error('Error fetching trips by user:', error);
@@ -172,7 +172,7 @@ export const getTripsByBus = async function(req: AuthRequest, res: Response) {
                 attributes: ['arrivalTime', 'departureTime'],
                 include: [{
                     model: BusRoute,
-                    attributes: ['origin', 'destination']
+                    attributes: ['lineNumber', 'origin', 'destination']
                 }]
             }]
         });
@@ -181,7 +181,7 @@ export const getTripsByBus = async function(req: AuthRequest, res: Response) {
             currentPage: page,
             totalPages: Math.ceil(count / limit),
             totalCount: count,
-            trips: rows
+            records: rows
         });
     } catch (error: any) {
         console.error('Error fetching trips by bus:', error);

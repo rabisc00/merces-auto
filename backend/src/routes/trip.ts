@@ -62,6 +62,12 @@ router.get('/retrieve/:id', authenticateToken, getTripDetails);
  *         schema:
  *           type: string
  *         description: Bus ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: string
+ *           default: 1
+ *         description: Page Number
  *     responses:
  *       200:
  *         description: Details of the trip
@@ -70,8 +76,16 @@ router.get('/retrieve/:id', authenticateToken, getTripDetails);
  *             schema:
  *               type: object
  *               properties:
- *                 busRouteFound:
- *                   $ref: '#/components/schemas/TripDetails'
+ *                 currentPage:
+ *                   type: integer
+ *                 totalPages:
+ *                   type: integer
+ *                 totalCount:
+ *                   type: integer
+ *                 records:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Trip'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
@@ -96,6 +110,12 @@ router.get('/retrieve/bybus/:busId', authenticateToken, getTripsByBus);
  *         schema:
  *           type: string
  *         description: User ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: string
+ *           default: 1
+ *         description: Page Number
  *     responses:
  *       200:
  *         description: Details of the trip
@@ -104,8 +124,16 @@ router.get('/retrieve/bybus/:busId', authenticateToken, getTripsByBus);
  *             schema:
  *               type: object
  *               properties:
- *                 busRouteFound:
- *                   $ref: '#/components/schemas/TripDetails'
+ *                 currentPage:
+ *                   type: integer
+ *                 totalPages:
+ *                   type: integer
+ *                 totalCount:
+ *                   type: integer
+ *                 records:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Trip'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:

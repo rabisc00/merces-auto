@@ -1,8 +1,22 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 import { User } from "../types/user";
-import { TableOptionsNavigationProp } from "../types/navigation";
+import { UsersOptionsNavigationProp } from "../types/navigation";
 import { ImageProps } from "../types/image";
+
+export const fetchUsers = async (page: number, userToken: string | null) => {
+    const res = await axios.get(`${API_BASE_URL}/users/retrieve?page=${page}`, {
+        headers: {
+            Authorization: `Bearer ${userToken}`
+        }
+    });
+
+    return {
+        data: res.data.records,
+        totalPages: res.data.totalPages,
+        currentPage: res.data.currentPage
+    };
+};
 
 export const saveChanges = async (
     user: User, 
@@ -10,7 +24,7 @@ export const saveChanges = async (
     userToken: string | null,
     showLoading: () => void,
     hideLoading: () => void,
-    navigation: TableOptionsNavigationProp
+    navigation: UsersOptionsNavigationProp
 ) => {
     try {
         showLoading();

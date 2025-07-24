@@ -2,19 +2,20 @@ import { RouteProp } from "@react-navigation/native";
 import { TabParamList } from "../types/navigation";
 import { BottomTabNavigationOptions, createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import HomeScreen from "../screens/HomeScreen";
-import CalendarScreen from "../screens/CalendarScreen";
 import WorkedHoursScreen from "../screens/WorkedHoursScreen";
-import TableOptionsNavigator from "./TableOptionsNavigator";
+import BusRouteRegistration from "../screens/BusRouteRegistration";
+import BusRegistration from "../screens/BusRegistration";
+import UsersListScreen from "../screens/UsersListScreen";
+import UsersStackNavigator from "./UserNavigator";
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const getIconName = (routeName: string, focused: boolean): string => {
   const icons: Record<string, { active: string; inactive: string }> = {
-    Home: { active: 'home', inactive: 'home-outline' },
-    TableOptions: { active: 'apps', inactive: 'apps-outline' },
-    Calendar: { active: 'calendar-number', inactive: 'calendar-number-outline' },
-    WorkedHours: { active: 'alarm', inactive: 'alarm-outline' }
+    BusRoutes: { active: 'trail-sign', inactive: 'trail-sign-outline' },
+    WorkedHours: { active: 'alarm', inactive: 'alarm-outline' },
+    Buses: { active: 'bus', inactive: 'bus-outline' },
+    Users: { active: 'person', inactive: 'person-outline' }
   };
   
   const icon = icons[routeName];
@@ -45,20 +46,18 @@ const navigatorScreenOptions = ({ route }: { route: RouteProp<TabParamList, keyo
 export default function MainTabs() {
     return (
         <Tab.Navigator screenOptions={navigatorScreenOptions}>
-            <Tab.Screen name="Home" component={HomeScreen} options={{
-                headerShown: false
-            }} />
-            <Tab.Screen name="Calendar" component={CalendarScreen} options={{
+            <Tab.Screen name="BusRoutes" component={BusRouteRegistration} options={{
                 headerShown: false
             }} />
             <Tab.Screen name="WorkedHours" component={WorkedHoursScreen} options={{
                 headerShown: false
             }} />
-            <Tab.Screen 
-                name="TableOptions" 
-                options={{ headerShown: false }}
-                component={TableOptionsNavigator} 
-            />
+            <Tab.Screen name="Buses" component={BusRegistration} options={{
+                headerShown: false
+            }} />
+            <Tab.Screen name="Users" component={UsersStackNavigator} options={{
+                headerShown: false
+            }} />
         </Tab.Navigator>
     );
-}
+};

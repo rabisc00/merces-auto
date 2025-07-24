@@ -43,7 +43,7 @@ const router = express.Router();
  *                   type: integer
  *                 totalCount:
  *                   type: integer
- *                 users:
+ *                 records:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/User'

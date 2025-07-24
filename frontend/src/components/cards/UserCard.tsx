@@ -8,11 +8,11 @@ import { useLoading } from "../../context/LoadingContext";
 import CardActionButtons from "../CardActionButtons";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { deleteUser } from "../../services/userService";
-import { TableOptionsNavigationProp } from "../../types/navigation";
+import { UsersOptionsNavigationProp } from "../../types/navigation";
 import { User } from "../../types/user";
 
 export function UserCard({ id, documentNumber, name, picture, active}: User) {
-    const navigation = useNavigation<TableOptionsNavigationProp>();
+    const navigation = useNavigation<UsersOptionsNavigationProp>();
     const { userToken } = useAuth();
     const { showLoading, hideLoading } = useLoading();
 
