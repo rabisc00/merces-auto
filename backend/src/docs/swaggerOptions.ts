@@ -114,7 +114,7 @@ export const swaggerOptions = {
                 properties: {
                   error: {
                     type: 'string',
-                    example: 'Resource not foundd'
+                    example: 'Resource not found'
                   }
                 }
               }

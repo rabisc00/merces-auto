@@ -5,6 +5,7 @@ import { UsersOptionsNavigationProp } from "../types/navigation";
 import { ImageProps } from "../types/image";
 import { CreateResponse, ListResponse, LoginResponse } from "../types/api";
 import { Alert } from "react-native";
+import showError from "../utils/errors";
 
 export const fetchUsers = async (page: number, userToken: string | null): Promise<ListResponse<User>> => {
     try {
@@ -15,8 +16,8 @@ export const fetchUsers = async (page: number, userToken: string | null): Promis
         });
 
         return res.data;
-    } catch (error) {
-        console.error('Error fetching users:', error);
+    } catch (error: any) {
+        showError(error.response?.status);
 
         return {
             currentPage: page,
@@ -30,11 +31,8 @@ export const fetchUsers = async (page: number, userToken: string | null): Promis
 export const getUserDetails = async (
     userId: string, 
     userToken: string | null,
-    showLoading: () => void,
-    hideLoading: () => void
 ): Promise<UserDetails> => {
     try {
-        showLoading();
         const response = await axios.get<UserDetails>(`${API_BASE_URL}/users/retrieve/${userId}`, {
             headers: {
                 Authorization: `Bearer ${userToken}`
@@ -42,28 +40,17 @@ export const getUserDetails = async (
         });
 
         return response.data;
-    } catch(error) {
-        console.error('Error fetching users:', error);
+    } catch (error: any) {
+        showError(error.status);
         throw error;
-    } finally {
-        hideLoading();
     }
 };
 
 export const registerUser = async (
     user: UserCreate,
-    userToken: string | null,
-    showLoading: () => void,
-    hideLoading: () => void
-) => {
+    userToken: string | null
+): Promise<boolean> => {
     try {
-        showLoading();
-
-        if (!userToken) {
-            Alert.alert(ALERT_MESSAGES.INVALID_TOKEN.title, ALERT_MESSAGES.INVALID_TOKEN.message);
-            return;
-        }
-
         const res = await axios.post<CreateResponse>(`${API_BASE_URL}/users/create`, {
             email: user.email,
             password: user.password,
@@ -75,11 +62,12 @@ export const registerUser = async (
                 Authorization: `Bearer ${userToken}`
             }
         });
+
+        return true;
     } catch (error: any) {
-        console.error(error.status);
-        Alert.alert("Registration failed", "Invalid input data");
-    } finally {
-        hideLoading();
+        console.log(error.response?.status);
+        showError(error.response?.status);
+        return false;
     }
 };
 
@@ -88,18 +76,9 @@ export const saveChanges = async (
     user: UserUpdate, 
     image: ImageProps | null,
     userToken: string | null,
-    showLoading: () => void,
-    hideLoading: () => void,
     navigation: UsersOptionsNavigationProp
 ) => {
     try {
-        showLoading();
-
-        if (!userToken) {
-            Alert.alert(ALERT_MESSAGES.INVALID_TOKEN.title, ALERT_MESSAGES.INVALID_TOKEN.message);
-            return;
-        }
-
         const formData = new FormData();
         if (image?.uri) {
             formData.append('picture', {
@@ -127,22 +106,16 @@ export const saveChanges = async (
         });
 
         navigation.goBack();
-    } catch (error) {
-        console.error("Error updating user:", error);
-    } finally {
-        hideLoading();
+    } catch (error: any) {
+        showError(error.response?.status);
     }
 };
 
 export const deleteUser = async (
     userId: string | undefined,
     userToken: string | undefined,
-    showLoading: () => void,
-    hideLoading: () => void
 ) => {
     try {
-        showLoading();
-
         if (!userId) {
             Alert.alert(ALERT_MESSAGES.INVALID_ID.title, ALERT_MESSAGES.INVALID_ID.message);
             return;
@@ -159,34 +132,22 @@ export const deleteUser = async (
             }
         });
     } catch (error: any) {
-        if (error.response.status === 403) {
-            Alert.alert("Deletion failed", "You can't delete an admin.");
-        }
-        
-        console.log(error);
-    } finally {
-        hideLoading()
+        showError(error.response?.status);
     }
 };
 
 export const userLogin = async (
     email: string,
-    password: string,
-    login: (userToken: string) => void,
-    setIsAdmin: (isAdmin: boolean) => void
-) => {
+    password: string
+): Promise<LoginResponse | undefined> => {
     try {
         const res = await axios.post<LoginResponse>(`${API_BASE_URL}/users/login`, { 
             email,
             password
         });
 
-        login(res.data.token);
-        setIsAdmin(res.data.isAdmin);
-
-        return true;
-    } catch (error) {
-        console.log(error);
-        Alert.alert("Login Failed", "Access Denied");
+        return res.data;
+    } catch (error: any) {
+        showError(error.response?.status);
     }
 }

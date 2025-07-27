@@ -1,9 +1,30 @@
 import { Alert } from "react-native";
 
 export default function showError(status: number) {
-    if (status === 401) {
-        Alert.alert('Access denied', 'Access token is missing or invalid');
+    let title; let message;
+
+    if (status === 400) {
+        title = 'Invalid inputs';
+        message = 'Correct the inputs given'
+    } else if (status === 401) {
+        title = 'Unauthorized';
+        message = 'Access token is missing or invalid';
     } else if (status === 403) {
-        Alert.alert()
+        title = 'Forbidden';
+        message = 'You\'re not allowed to access this resource';
+    } else if (status === 404) {
+        title = 'Not Found';
+        message = 'Resource not found';
+    } else if (status === 409) {
+        title = 'Conflic';
+        message = 'Resource already exists';
+    } else if (status === 500) {
+        title = 'Internal server error';
+        message = 'An unexpected error ocurred. Please try again later.';
+    } else {
+        title = 'Unknown error';
+        message = 'Something went wrong';
     }
+
+    Alert.alert(title, message);
 }

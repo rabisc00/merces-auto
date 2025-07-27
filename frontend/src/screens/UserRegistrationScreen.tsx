@@ -20,8 +20,36 @@ export default function UserRegistrationScreen() {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [documentNumber, setDocumentNumber] = useState('');
+    const [errors, setErrors] = useState<{ 
+        email?: string;
+        password?: string;
+        documentNumber?: string;
+        name?: string
+    }>({});
 
     const callRegisterUser = async () => {
+        showLoading();
+
+        // const parseResult = userSchema.safeParse({ 
+        //     email,
+        //     password,
+        //     documentNumber,
+        //     name
+        // });
+
+        // if (!parseResult.success) {
+        //     const fieldErrors: typeof errors = {};
+        //     parseResult.error.issues.forEach(err => {
+        //         const field = err.path[0] as keyof typeof errors;
+        //         fieldErrors[field] = err.message;
+        //     })
+
+        //     setErrors(fieldErrors);
+        //     return;
+        // } else {
+        //     setErrors({});
+        // }
+
         const user: UserCreate = {
             email,
             password,
@@ -30,8 +58,11 @@ export default function UserRegistrationScreen() {
             isAdmin
         };
 
-        await registerUser(user, userToken, showLoading, hideLoading);
-        navigation.goBack();
+        const registrationValid = await registerUser(user, userToken);
+        if (registrationValid) {
+            navigation.goBack();
+        }
+        hideLoading();
     }
 
     return (
@@ -39,24 +70,28 @@ export default function UserRegistrationScreen() {
             <View style={globalStyles.mainContainer}>
                 <InputField
                     label="Name"
+                    errorMessage={errors.name}
                     required={true}
                     value={name}
                     onChangeText={(text) => setName(text)}
                 />
                 <InputField
                     label="Document Number"
+                    errorMessage={errors.documentNumber}
                     required={true}
                     value={documentNumber}
                     onChangeText={(text) => setDocumentNumber(text)}
                 />
                 <InputField
                     label="Email"
+                    errorMessage={errors.email}
                     required={true}
                     value={email}
                     onChangeText={(text) => setEmail(text)}
                 />
                 <InputField
                     label="Password"
+                    errorMessage={errors.password}
                     password={true}
                     required={true}
                     value={password}

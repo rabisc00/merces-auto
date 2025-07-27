@@ -1,10 +1,7 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
-import { Alert, Button, Text, TextInput, View } from "react-native";
-import { LoginResponse } from "../types/api";
+import { Button, View } from "react-native";
 import { globalStyles } from "../styles/global";
-import { API_BASE_URL } from "../config/api";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { userLogin } from "../services/userService";
 import InputField from "../components/InputField";
@@ -13,6 +10,14 @@ export default function LoginScreen() {
     const { login, setIsAdmin } = useAuth();
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+
+    const loginWrapper = async () => {
+        const data = await userLogin(email, password);
+        if (data) {
+            login(data.token);
+            setIsAdmin(data.isAdmin);
+        }
+    };
 
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
@@ -31,7 +36,7 @@ export default function LoginScreen() {
                     onChangeText={(text) => setPassword(text)}
                 />
 
-                <Button title="Login" onPress={() => userLogin(email, password, login, setIsAdmin)} />
+                <Button title="Login" onPress={loginWrapper} />
             </View>
         </SafeAreaView>
     )
