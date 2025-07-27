@@ -21,4 +21,4 @@ export const workingHoursEditSchema = z.object({
     endTime: z.string().refine(isValidDate, {
         message: 'Invalid format: endTime must be YYYY-MM-DD HH:mm:ss'
     })
-})
+});

@@ -40,7 +40,7 @@ const router = express.Router();
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -88,7 +88,7 @@ router.get('/retrieve/:id', authenticateToken, getWorkingHoursDetails);
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -128,7 +128,7 @@ router.get('/retrieve/byuser/:userId', authenticateToken, getWorkingHours);
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -171,7 +171,7 @@ router.post('/create', authenticateToken, uploadSignature.single('signature'), v
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -208,7 +208,7 @@ router.patch('/edit/:id', authenticateToken, validate(workingHoursEditSchema), e
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */

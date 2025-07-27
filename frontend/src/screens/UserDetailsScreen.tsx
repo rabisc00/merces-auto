@@ -54,72 +54,68 @@ export default function UserDetailsScreen() {
 
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
-            <View style={globalStyles.mainContainer}>
-                {
-                    user ?
-                        <>
-                            <View style={userDetailsStyles.container}>
-                                <Image 
-                                    source={{ uri: `${API_BASE_URL}/${user.picture}` }}
-                                    style={userDetailsStyles.image}
-                                    resizeMode="cover"
-                                />
-                                <Button 
-                                    title="Pick an image"
-                                    onPress={() => pickImage(setPicture)}
-                                />
-                                {
-                                    picture !== null &&
-                                    <Text style={globalStyles.timestampText}>Image picked successfully</Text>
-                                }
-                                <View style={globalStyles.textAndInput}>
-                                    <Text style={{marginRight: 8}}>Name:</Text>
-                                    <TextInput 
-                                        value={user.name}
-                                        style={userDetailsStyles.textInput}
-                                        onChangeText={(text) => setUser((prev) => prev ? { ...prev, name: text } : prev)}
-                                    />
-                                </View>
-                                
-                                <View style={globalStyles.textAndInput}>
-                                    <Text style={{marginRight: 8}}>Document Number:</Text>
-                                    <TextInput 
-                                        value={user.documentNumber}
-                                        style={userDetailsStyles.textInput}
-                                        onChangeText={(text) => setUser((prev) => prev ? { ...prev, documentNumber: text } : prev)}
-                                    />
-                                </View>
-                                
-                                <Checkbox.Item
-                                    label="Is Active?"
-                                    status={user.active ? 'checked' : 'unchecked'}
-                                    onPress={() => setUser((prev) => prev ? {...prev, active: !prev.active} : prev)}
-                                    style={globalStyles.checkboxItem}
-                                />
-                                <Button
-                                    title="Save Changes"
-                                    disabled={!hasChanges}
-                                    onPress={() => saveChanges(
-                                        user,
-                                        picture,
-                                        userToken,
-                                        showLoading,
-                                        hideLoading,
-                                        navigation
-                                    )}
+            {
+                user ?
+                    <>
+                        <View style={userDetailsStyles.container}>
+                            <Image 
+                                source={{ uri: `${API_BASE_URL}/${user.picture}` }}
+                                style={userDetailsStyles.image}
+                                resizeMode="cover"
+                            />
+                            <Button 
+                                title="Pick an image"
+                                onPress={() => pickImage(setPicture)}
+                            />
+                            {
+                                picture !== null &&
+                                <Text style={globalStyles.timestampText}>Image picked successfully</Text>
+                            }
+                            <View style={globalStyles.textAndInput}>
+                                <Text style={{marginRight: 8}}>Name:</Text>
+                                <TextInput 
+                                    value={user.name}
+                                    style={userDetailsStyles.textInput}
+                                    onChangeText={(text) => setUser((prev) => prev ? { ...prev, name: text } : prev)}
                                 />
                             </View>
-                            <View style={globalStyles.timestampView}>
-                                <Text style={globalStyles.timestampText}>Created At: {dayjs(user.createdAt).format('YYYY-DD-MM HH:mm')}</Text>
-                                <Text style={globalStyles.timestampText}>Updated At: {dayjs(user.updatedAt).format('YYYY-DD-MM HH:mm')}</Text>
+                            
+                            <View style={globalStyles.textAndInput}>
+                                <Text style={{marginRight: 8}}>Document Number:</Text>
+                                <TextInput 
+                                    value={user.documentNumber}
+                                    style={userDetailsStyles.textInput}
+                                    onChangeText={(text) => setUser((prev) => prev ? { ...prev, documentNumber: text } : prev)}
+                                />
                             </View>
-                        </> :
-                        <Text style={globalStyles.error}>User not found</Text>
+                            
+                            <Checkbox.Item
+                                label="Is Active?"
+                                status={user.active ? 'checked' : 'unchecked'}
+                                onPress={() => setUser((prev) => prev ? {...prev, active: !prev.active} : prev)}
+                                style={globalStyles.checkboxItem}
+                            />
+                            <Button
+                                title="Save Changes"
+                                disabled={!hasChanges}
+                                onPress={() => saveChanges(
+                                    user,
+                                    picture,
+                                    userToken,
+                                    showLoading,
+                                    hideLoading,
+                                    navigation
+                                )}
+                            />
+                        </View>
+                        <View style={globalStyles.timestampView}>
+                            <Text style={globalStyles.timestampText}>Created At: {dayjs(user.createdAt).format('YYYY-DD-MM HH:mm')}</Text>
+                            <Text style={globalStyles.timestampText}>Updated At: {dayjs(user.updatedAt).format('YYYY-DD-MM HH:mm')}</Text>
+                        </View>
+                    </> :
+                    <Text style={globalStyles.error}>User not found</Text>
 
-                }
-                
-                
-            </View>
+            }
         </SafeAreaView>
         
     );

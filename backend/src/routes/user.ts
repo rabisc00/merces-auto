@@ -50,7 +50,7 @@ const router = express.Router();
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -82,7 +82,7 @@ router.get('/retrieve', authenticateToken, getUsers);
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -117,7 +117,7 @@ router.get('/retrieve/:id', authenticateToken, getUserDetails);
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -261,7 +261,7 @@ router.post('/create', authenticateToken, validate(userCreateSchema), createUser
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       404:
  *         $ref: '#/components/responses/NotFoundError'
  *       500:
@@ -298,7 +298,7 @@ router.patch('/edit/:id', authenticateToken, uploadPicture.single('picture'), va
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       404:
  *         $ref: '#/components/responses/NotFoundError'
  *       500:

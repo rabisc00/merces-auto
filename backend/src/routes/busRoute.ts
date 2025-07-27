@@ -49,7 +49,7 @@ const router = express.Router();
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -81,7 +81,7 @@ router.get('/retrieve', authenticateToken, getBusRoutes);
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -116,7 +116,7 @@ router.get('/retrieve/:id', authenticateToken, getBusRouteDetails);
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -156,7 +156,7 @@ router.get('/filter', authenticateToken, searchBusRoute);
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -199,7 +199,7 @@ router.post('/create', authenticateToken, validate(busRouteCreateSchema), create
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       404:
  *         $ref: '#/components/responses/NotFoundError'
  *       500:
@@ -236,7 +236,7 @@ router.patch('/edit/:id', authenticateToken, validate(busRouteEditSchema), editB
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         $ref: '#/components/responses/InvalidToken'
+ *         $ref: '#/components/responses/ForbiddenError'
  *       404:
  *         $ref: '#/components/responses/NotFoundError'
  *       500:

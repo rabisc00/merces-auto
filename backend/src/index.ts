@@ -16,8 +16,6 @@ import { sequelize } from './config/sequelize';
 import { swaggerOptions } from './docs/swaggerOptions';
 import fs from 'fs';
 import https from 'https';
-import DayOfTheWeek from './models/dayOfTheWeek';
-
 const app = express();
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 

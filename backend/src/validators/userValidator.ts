@@ -10,7 +10,9 @@ export const userCreateSchema = z.object({
     .regex(/[0-9]/, { message: 'Password must contain at least one number' })
     .regex(/[^A-Za-z0-9]/, { message: 'Password must contain at least one special character' }),
     isAdmin: z.boolean(),
-    name: z.string(),
+    name: z.string().min(1, {
+        error: 'Name can\'t be empty'
+    }),
     documentNumber: z.string().regex(PPS_REGEX, {
         error: 'Invalid Irish PPS number format'
     }) 

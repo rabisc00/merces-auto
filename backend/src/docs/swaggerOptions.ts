@@ -24,15 +24,15 @@ export const swaggerOptions = {
                 properties: {
                   error: {
                     type: 'string',
-                    example: 'Access Denied'
+                    example: 'Invalid or Missing Token'
                   }
                 }
               }
             }
           }
         },
-        InvalidToken: {
-          description: 'Invalid or expired token',
+        ForbiddenError: {
+          description: "You're not allowed to access this resource",
           content: {
             'application/json': {
               schema: {
@@ -40,7 +40,7 @@ export const swaggerOptions = {
                 properties: {
                   error: {
                     type: 'string',
-                    example: 'Invalid token'
+                    example: 'Access Denied'
                   }
                 }
               }

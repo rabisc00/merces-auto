@@ -3,7 +3,7 @@ import { API_BASE_URL } from "../config/api";
 import { User, UserCreate, UserDetails, UserUpdate } from "../types/user";
 import { UsersOptionsNavigationProp } from "../types/navigation";
 import { ImageProps } from "../types/image";
-import { CreateResponse, ListResponse } from "../types/api";
+import { CreateResponse, ListResponse, LoginResponse } from "../types/api";
 import { Alert } from "react-native";
 
 export const fetchUsers = async (page: number, userToken: string | null): Promise<ListResponse<User>> => {
@@ -75,8 +75,8 @@ export const registerUser = async (
                 Authorization: `Bearer ${userToken}`
             }
         });
-    } catch (error) {
-        console.error(error);
+    } catch (error: any) {
+        console.error(error.status);
         Alert.alert("Registration failed", "Invalid input data");
     } finally {
         hideLoading();
@@ -166,5 +166,27 @@ export const deleteUser = async (
         console.log(error);
     } finally {
         hideLoading()
+    }
+};
+
+export const userLogin = async (
+    email: string,
+    password: string,
+    login: (userToken: string) => void,
+    setIsAdmin: (isAdmin: boolean) => void
+) => {
+    try {
+        const res = await axios.post<LoginResponse>(`${API_BASE_URL}/users/login`, { 
+            email,
+            password
+        });
+
+        login(res.data.token);
+        setIsAdmin(res.data.isAdmin);
+
+        return true;
+    } catch (error) {
+        console.log(error);
+        Alert.alert("Login Failed", "Access Denied");
     }
 }

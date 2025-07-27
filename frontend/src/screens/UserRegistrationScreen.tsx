@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { registerUser } from '../services/userService';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { UserCreate } from '../types/user';
+import InputField from '../components/InputField';
 
 export default function UserRegistrationScreen() {
     const navigation = useNavigation();
@@ -36,27 +37,30 @@ export default function UserRegistrationScreen() {
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
             <View style={globalStyles.mainContainer}>
-                <TextInput
-                    placeholder="Email"
-                    autoCapitalize="none"
-                    onChangeText={setEmail}
-                    style={globalStyles.input}
+                <InputField
+                    label="Name"
+                    required={true}
+                    value={name}
+                    onChangeText={(text) => setName(text)}
                 />
-                <TextInput
-                    placeholder="Password"
-                    secureTextEntry
-                    onChangeText={setPassword}
-                    style={globalStyles.input}
+                <InputField
+                    label="Document Number"
+                    required={true}
+                    value={documentNumber}
+                    onChangeText={(text) => setDocumentNumber(text)}
                 />
-                <TextInput
-                    placeholder="Name"
-                    onChangeText={setName}
-                    style={globalStyles.input}
+                <InputField
+                    label="Email"
+                    required={true}
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}
                 />
-                <TextInput
-                    placeholder="Document Number"
-                    onChangeText={setDocumentNumber}
-                    style={globalStyles.input}
+                <InputField
+                    label="Password"
+                    password={true}
+                    required={true}
+                    value={password}
+                    onChangeText={(text) => setPassword(text)}
                 />
                 <Checkbox.Item
                     label="Is Admin?"
