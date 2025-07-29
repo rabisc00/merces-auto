@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Button, StyleSheet, TextInput, View } from 'react-native';
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 import { globalStyles } from '../styles/global';
 import { useNavigation } from '@react-navigation/native';
@@ -9,56 +9,18 @@ import { registerUser } from '../services/userService';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { UserCreate } from '../types/user';
 import InputField from '../components/InputField';
+import { userSchema } from '../validations/userSchema';
+import { Formik } from 'formik';
 
 export default function UserRegistrationScreen() {
     const navigation = useNavigation();
     const { userToken } = useAuth();
     const { showLoading, hideLoading } = useLoading();
 
-    const [isAdmin, setIsAdmin] = useState<boolean>(false);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
-    const [documentNumber, setDocumentNumber] = useState('');
-    const [errors, setErrors] = useState<{ 
-        email?: string;
-        password?: string;
-        documentNumber?: string;
-        name?: string
-    }>({});
-
-    const callRegisterUser = async () => {
+    const callRegisterUser = async (values: UserCreate) => {
         showLoading();
 
-        // const parseResult = userSchema.safeParse({ 
-        //     email,
-        //     password,
-        //     documentNumber,
-        //     name
-        // });
-
-        // if (!parseResult.success) {
-        //     const fieldErrors: typeof errors = {};
-        //     parseResult.error.issues.forEach(err => {
-        //         const field = err.path[0] as keyof typeof errors;
-        //         fieldErrors[field] = err.message;
-        //     })
-
-        //     setErrors(fieldErrors);
-        //     return;
-        // } else {
-        //     setErrors({});
-        // }
-
-        const user: UserCreate = {
-            email,
-            password,
-            name,
-            documentNumber,
-            isAdmin
-        };
-
-        const registrationValid = await registerUser(user, userToken);
+        const registrationValid = await registerUser(values, userToken);
         if (registrationValid) {
             navigation.goBack();
         }
@@ -67,45 +29,60 @@ export default function UserRegistrationScreen() {
 
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
-            <View style={globalStyles.mainContainer}>
-                <InputField
-                    label="Name"
-                    errorMessage={errors.name}
-                    required={true}
-                    value={name}
-                    onChangeText={(text) => setName(text)}
-                />
-                <InputField
-                    label="Document Number"
-                    errorMessage={errors.documentNumber}
-                    required={true}
-                    value={documentNumber}
-                    onChangeText={(text) => setDocumentNumber(text)}
-                />
-                <InputField
-                    label="Email"
-                    errorMessage={errors.email}
-                    required={true}
-                    value={email}
-                    onChangeText={(text) => setEmail(text)}
-                />
-                <InputField
-                    label="Password"
-                    errorMessage={errors.password}
-                    password={true}
-                    required={true}
-                    value={password}
-                    onChangeText={(text) => setPassword(text)}
-                />
-                <Checkbox.Item
-                    label="Is Admin?"
-                    onPress={() => setIsAdmin(!isAdmin)}
-                    status={isAdmin ? 'checked' : 'unchecked'}
-                    style={globalStyles.checkboxItem}
-                />
-
-                <Button title="Register" onPress={callRegisterUser} />
-            </View>
+            <Formik<UserCreate>
+                initialValues={{ name: '', documentNumber: '', email: '', password: '', isAdmin: false}}
+                validationSchema={userSchema}
+                onSubmit={callRegisterUser}
+            >
+                {({
+                    handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    setFieldValue,
+                    values,
+                    errors,
+                    touched
+                }) => (
+                    <View style={globalStyles.mainContainer}>
+                        <InputField
+                            label="Name"
+                            errorMessage={touched.name && errors.name}
+                            required={true}
+                            value={values.name}
+                            onChangeText={handleChange('name')}
+                        />
+                        <InputField
+                            label="Document Number"
+                            errorMessage={touched.documentNumber && errors.documentNumber}
+                            required={true}
+                            value={values.documentNumber}
+                            onChangeText={handleChange('documentNumber')}
+                        />
+                        <InputField
+                            label="Email"
+                            errorMessage={touched.email && errors.email}
+                            required={true}
+                            value={values.email}
+                            onChangeText={handleChange('email')}
+                        />
+                        <InputField
+                            label="Password"
+                            errorMessage={touched.password && errors.password}
+                            password={true}
+                            required={true}
+                            value={values.password}
+                            onChangeText={handleChange('password')}
+                        />
+                        <Checkbox.Item
+                            label="Is Admin?"
+                            onPress={() => setFieldValue('isAdmin', !values.isAdmin)}
+                            status={values.isAdmin ? 'checked' : 'unchecked'}
+                            style={globalStyles.checkboxItem}
+                        />
+                        <Button title="Register" onPress={() => handleSubmit()} />
+                    </View>
+                )}
+            </Formik>
         </SafeAreaView>
     );
 }

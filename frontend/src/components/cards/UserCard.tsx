@@ -15,7 +15,6 @@ import { Grayscale } from "react-native-color-matrix-image-filters";
 export function UserCard({ id, documentNumber, name, picture, isAdmin, active }: User) {
     const navigation = useNavigation<UsersOptionsNavigationProp>();
     const { userToken } = useAuth();
-    const { showLoading, hideLoading } = useLoading();
 
     const deleteAction = () => {
         if (!userToken) {
@@ -23,7 +22,7 @@ export function UserCard({ id, documentNumber, name, picture, isAdmin, active }:
             return;
         }
         confirm('Are you sure you want to delete this user?', async () => {
-            await deleteUser(id, userToken, showLoading, hideLoading);
+            await deleteUser(id, userToken);
         })
     };
 

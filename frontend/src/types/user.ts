@@ -29,7 +29,7 @@ export type UserCreate = {
 
 export type UserUpdate = {
     id: string;
-    documentNumber: string;
-    name: string;
-    active: boolean;
+    documentNumber?: string;
+    name?: string;
+    active?: boolean;
 }

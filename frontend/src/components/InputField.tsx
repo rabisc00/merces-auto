@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 
 type Props = {
   label: string;
-  errorMessage?: string;
+  errorMessage?: string | false;
   required?: boolean;
   password?: boolean;
   value: string;
@@ -18,13 +18,13 @@ const InputField: React.FC<Props> = ({ label, errorMessage, required, password, 
         {required && <Text style={styles.asterisk}> *</Text>}
       </Text>
       <TextInput
-        style={[styles.input, errorMessage &&styles.inputError]}
+        style={[styles.input, errorMessage && styles.inputError]}
         value={value}
         onChangeText={onChangeText}
         autoCapitalize='none'
         secureTextEntry={password}
       />
-      {errorMessage && <Text style={styles.errorText}>errorMessage</Text>}
+      {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
     </View>
   );
 };

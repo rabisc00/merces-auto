@@ -155,7 +155,7 @@ export const getUsers = async function (req: AuthRequest, res: Response) {
         const { count, rows } = await User.findAndCountAll({
             limit,
             offset,
-            attributes: ['id', 'name', 'active', 'documentNumber', 'picture'],
+            attributes: ['id', 'name', 'active', 'isAdmin', 'documentNumber', 'picture'],
         });
 
         res.json({

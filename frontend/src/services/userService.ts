@@ -76,8 +76,7 @@ export const saveChanges = async (
     user: UserUpdate, 
     image: ImageProps | null,
     userToken: string | null,
-    navigation: UsersOptionsNavigationProp
-) => {
+): Promise<boolean> => {
     try {
         const formData = new FormData();
         if (image?.uri) {
@@ -98,16 +97,18 @@ export const saveChanges = async (
 
         formData.append('active', user.active ? "true" : "false");
 
-        const response = await axios.patch(`${API_BASE_URL}/users/edit/${user.id}`, formData, {
+        await axios.patch(`${API_BASE_URL}/users/edit/${user.id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${userToken}`
             }
         });
 
-        navigation.goBack();
+        return true;
     } catch (error: any) {
+        console.log(error);
         showError(error.response?.status);
+        return false;
     }
 };
 

@@ -5,10 +5,9 @@ import { API_BASE_URL } from "../config/api";
 import { useAuth } from "../context/AuthContext";
 import { globalStyles } from "../styles/global";
 import { Button, Image, StyleSheet, Text, TextInput, View } from "react-native";
-import { useSafeArea } from "../hooks/useSafeArea";
 import dayjs from "dayjs";
 import { Checkbox } from "react-native-paper";
-import { UserDetails } from "../types/user";
+import { UserDetails, UserUpdate } from "../types/user";
 import { pickImage } from "../services/imageService";
 import { getUserDetails, saveChanges } from "../services/userService";
 import { ImageProps } from "../types/image";
@@ -26,19 +25,35 @@ export default function UserDetailsScreen() {
 
     const { showLoading, hideLoading } = useLoading();
     
-    const [user, setUser] = useState<UserDetails | null>(null);
+    const [user, setUser] = useState<UserDetails | null>();
     const [originalUser, setOriginalUser] = useState<UserDetails | null>(null);
     const [picture, setPicture] = useState<ImageProps | null>(null);
 
     useEffect(() => {
-        async function fetchUserDetails() {
-            const data = await getUserDetails(userId, userToken, showLoading, hideLoading);
+        const fetchUserDetails = async () => {
+            const data = await getUserDetails(userId, userToken);
             setUser(data);
             setOriginalUser(data);
-        }
+        };
 
+        showLoading();
         fetchUserDetails();
+        hideLoading();
     }, [userId]);
+
+    const saveChangesContainer = async () => {
+        const userUpdate: UserUpdate = {
+            id: userId,
+            documentNumber: user?.documentNumber,
+            name: user?.name,
+            active: user?.active
+        };
+
+        const data = await saveChanges(userUpdate, picture, userToken);
+        if (data) {
+            navigation.goBack();
+        }
+    }
 
     const hasChanges = useMemo(() => {
         if (!user || !originalUser) return false;
@@ -98,14 +113,7 @@ export default function UserDetailsScreen() {
                             <Button
                                 title="Save Changes"
                                 disabled={!hasChanges}
-                                onPress={() => saveChanges(
-                                    user,
-                                    picture,
-                                    userToken,
-                                    showLoading,
-                                    hideLoading,
-                                    navigation
-                                )}
+                                onPress={saveChangesContainer}
                             />
                         </View>
                         <View style={globalStyles.timestampView}>
