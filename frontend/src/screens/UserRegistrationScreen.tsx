@@ -9,7 +9,7 @@ import { registerUser } from '../services/userService';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { UserCreate } from '../types/user';
 import InputField from '../components/InputField';
-import { userSchema } from '../validations/userSchema';
+import { userCreateSchema } from '../validations/userSchema';
 import { Formik } from 'formik';
 
 export default function UserRegistrationScreen() {
@@ -31,12 +31,11 @@ export default function UserRegistrationScreen() {
         <SafeAreaView style={globalStyles.safeAreaContainer}>
             <Formik<UserCreate>
                 initialValues={{ name: '', documentNumber: '', email: '', password: '', isAdmin: false}}
-                validationSchema={userSchema}
+                validationSchema={userCreateSchema}
                 onSubmit={callRegisterUser}
             >
                 {({
                     handleChange,
-                    handleBlur,
                     handleSubmit,
                     setFieldValue,
                     values,

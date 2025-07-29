@@ -1,6 +1,6 @@
 import { Alert } from "react-native";
 
-export default function showError(status: number) {
+export function showError(status: number) {
     let title; let message;
 
     if (status === 400) {
@@ -27,4 +27,8 @@ export default function showError(status: number) {
     }
 
     Alert.alert(title, message);
+}
+
+export function showNoChangesAlert() {
+    Alert.alert("Save unsucessful", "No changes were made")
 }

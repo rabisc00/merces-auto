@@ -63,5 +63,11 @@ export const globalStyles = StyleSheet.create({
     mainContainer: {
         paddingHorizontal: 16,
         paddingVertical: 16
+    },
+    editContainer: {
+        flex: 1,
+        padding: 16,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });

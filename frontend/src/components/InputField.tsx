@@ -32,6 +32,7 @@ const InputField: React.FC<Props> = ({ label, errorMessage, required, password, 
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
+    width: '100%'
   },
   label: {
     fontSize: 16,
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 8,
     borderRadius: 4,
+    width: '100%'
   },
   inputError: {
     borderColor: 'red'

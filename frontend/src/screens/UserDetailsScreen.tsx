@@ -4,8 +4,7 @@ import { useLoading } from "../context/LoadingContext";
 import { API_BASE_URL } from "../config/api";
 import { useAuth } from "../context/AuthContext";
 import { globalStyles } from "../styles/global";
-import { Button, Image, StyleSheet, Text, TextInput, View } from "react-native";
-import dayjs from "dayjs";
+import { Alert, Button, Image, StyleSheet, Text, View } from "react-native";
 import { Checkbox } from "react-native-paper";
 import { UserDetails, UserUpdate } from "../types/user";
 import { pickImage } from "../services/imageService";
@@ -13,6 +12,10 @@ import { getUserDetails, saveChanges } from "../services/userService";
 import { ImageProps } from "../types/image";
 import { UsersOptionsNavigationProp, UsersStackParamList } from "../types/navigation";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Formik } from "formik";
+import { userUpdateSchema } from "../validations/userSchema";
+import InputField from "../components/InputField";
+import { showNoChangesAlert } from "../utils/alerts";
 
 type UserDetailsRouteProp = RouteProp<UsersStackParamList, 'UserDetails'>;
 
@@ -25,14 +28,12 @@ export default function UserDetailsScreen() {
 
     const { showLoading, hideLoading } = useLoading();
     
-    const [user, setUser] = useState<UserDetails | null>();
     const [originalUser, setOriginalUser] = useState<UserDetails | null>(null);
     const [picture, setPicture] = useState<ImageProps | null>(null);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
             const data = await getUserDetails(userId, userToken);
-            setUser(data);
             setOriginalUser(data);
         };
 
@@ -41,86 +42,92 @@ export default function UserDetailsScreen() {
         hideLoading();
     }, [userId]);
 
-    const saveChangesContainer = async () => {
-        const userUpdate: UserUpdate = {
-            id: userId,
-            documentNumber: user?.documentNumber,
-            name: user?.name,
-            active: user?.active
-        };
+    const callSaveChanges = async (values: UserUpdate) => {
+        if (
+            values?.name?.toUpperCase() === originalUser?.name &&
+            values?.documentNumber?.toUpperCase() === originalUser?.documentNumber &&
+            values.active === originalUser?.active &&
+            picture === null
+        ) {
+            showNoChangesAlert();
+            return;
+        }
 
-        const data = await saveChanges(userUpdate, picture, userToken);
+        const data = await saveChanges(userId, values, picture, userToken);
         if (data) {
             navigation.goBack();
         }
     }
 
-    const hasChanges = useMemo(() => {
-        if (!user || !originalUser) return false;
-        return (
-            user.name !== originalUser.name ||
-            user.documentNumber !== originalUser.documentNumber ||
-            user.active !== originalUser.active ||
-            picture !== null
-        );
-    }, [user, originalUser, picture]);
-
-    if (!user) return <Text style={globalStyles.error}>User not found</Text>
+    if (!originalUser) return <Text style={globalStyles.error}>User not found</Text>
 
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
             {
-                user ?
-                    <>
-                        <View style={userDetailsStyles.container}>
-                            <Image 
-                                source={{ uri: `${API_BASE_URL}/${user.picture}` }}
-                                style={userDetailsStyles.image}
-                                resizeMode="cover"
-                            />
-                            <Button 
-                                title="Pick an image"
-                                onPress={() => pickImage(setPicture)}
-                            />
-                            {
-                                picture !== null &&
-                                <Text style={globalStyles.timestampText}>Image picked successfully</Text>
-                            }
-                            <View style={globalStyles.textAndInput}>
-                                <Text style={{marginRight: 8}}>Name:</Text>
-                                <TextInput 
-                                    value={user.name}
-                                    style={userDetailsStyles.textInput}
-                                    onChangeText={(text) => setUser((prev) => prev ? { ...prev, name: text } : prev)}
+                originalUser ?
+                    <Formik<UserUpdate>
+                        initialValues={{ 
+                            documentNumber: originalUser?.documentNumber, 
+                            name: originalUser?.name, 
+                            active: originalUser?.active 
+                        }}
+                        validationSchema={userUpdateSchema}
+                        onSubmit={callSaveChanges}
+                    >
+                        {({
+                            handleChange,
+                            handleSubmit,
+                            setFieldValue,
+                            values,
+                            errors,
+                            touched
+                        }) => (
+                            <View style={globalStyles.editContainer}>
+                                <Image 
+                                    source={{ uri: `${API_BASE_URL}/${originalUser.picture}` }}
+                                    style={userDetailsStyles.image}
+                                    resizeMode="cover"
+                                />
+                                <Button 
+                                    title="Pick an image"
+                                    onPress={() => pickImage(setPicture)}
+                                />
+                                {
+                                    picture !== null &&
+                                    <Text style={globalStyles.timestampText}>Image picked successfully</Text>
+                                }
+
+                                <InputField
+                                    label="Name"
+                                    errorMessage={touched.name && errors.name}
+                                    required={true}
+                                    value={values.name ? values.name : ''}
+                                    onChangeText={handleChange('name')}
+                                />
+
+                                <InputField
+                                    label="Document Number"
+                                    errorMessage={touched.documentNumber && errors.documentNumber}
+                                    required={true}
+                                    value={values.documentNumber ? values.documentNumber : ''}
+                                    onChangeText={handleChange('documentNumber')}
+                                />
+                                
+                                <Checkbox.Item
+                                    label="Is Active?"
+                                    status={values.active ? 'checked' : 'unchecked'}
+                                    onPress={() => setFieldValue('active', !values.active)}
+                                    style={globalStyles.checkboxItem}
+                                />
+
+                                <Button
+                                    title="Save Changes"
+                                    onPress={() => handleSubmit()}
                                 />
                             </View>
-                            
-                            <View style={globalStyles.textAndInput}>
-                                <Text style={{marginRight: 8}}>Document Number:</Text>
-                                <TextInput 
-                                    value={user.documentNumber}
-                                    style={userDetailsStyles.textInput}
-                                    onChangeText={(text) => setUser((prev) => prev ? { ...prev, documentNumber: text } : prev)}
-                                />
-                            </View>
-                            
-                            <Checkbox.Item
-                                label="Is Active?"
-                                status={user.active ? 'checked' : 'unchecked'}
-                                onPress={() => setUser((prev) => prev ? {...prev, active: !prev.active} : prev)}
-                                style={globalStyles.checkboxItem}
-                            />
-                            <Button
-                                title="Save Changes"
-                                disabled={!hasChanges}
-                                onPress={saveChangesContainer}
-                            />
-                        </View>
-                        <View style={globalStyles.timestampView}>
-                            <Text style={globalStyles.timestampText}>Created At: {dayjs(user.createdAt).format('YYYY-DD-MM HH:mm')}</Text>
-                            <Text style={globalStyles.timestampText}>Updated At: {dayjs(user.updatedAt).format('YYYY-DD-MM HH:mm')}</Text>
-                        </View>
-                    </> :
+                        )}
+                                
+                    </Formik> :
                     <Text style={globalStyles.error}>User not found</Text>
 
             }
@@ -136,19 +143,5 @@ const userDetailsStyles = StyleSheet.create({
         borderRadius: 100,
         backgroundColor: '#ccc',
         marginBottom: 0
-    },
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    textInput: {
-        borderColor: '#219EBC',
-        borderWidth: 1,
-        width: 200,
-        marginVertical: 5,
-        borderRadius: 10,
-        paddingHorizontal: 15,
-        paddingVertical: 5
     }
 })

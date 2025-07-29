@@ -2,7 +2,7 @@ import * as yup from 'yup';
 
 const PPS_REGEX = /^[0-9]{7}[A-Z]{1,2}$/;
 
-export const userSchema = yup.object({
+export const userCreateSchema = yup.object({
     email: yup.string().email('Invalid email address').required('Email is required'),
     password: yup.string()
     .required('Password is required')
@@ -31,3 +31,13 @@ export const userSchema = yup.object({
     }).required('Name is required')
     .matches(/^[^\d]*$/, 'Name cannot contain numbers')
 });
+
+export const userUpdateSchema = yup.object({
+  documentNumber: yup.string()
+    .required('Document number is required')
+    .matches(PPS_REGEX, 'Invalid Irish PPS number format'),
+    name: yup.string().min(1, {
+        error: 'Name cannot be empty'
+    }).required('Name is required')
+    .matches(/^[^\d]*$/, 'Name cannot contain numbers')
+})

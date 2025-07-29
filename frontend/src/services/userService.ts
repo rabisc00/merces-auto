@@ -5,7 +5,7 @@ import { UsersOptionsNavigationProp } from "../types/navigation";
 import { ImageProps } from "../types/image";
 import { CreateResponse, ListResponse, LoginResponse } from "../types/api";
 import { Alert } from "react-native";
-import showError from "../utils/errors";
+import { showError } from "../utils/alerts";
 
 export const fetchUsers = async (page: number, userToken: string | null): Promise<ListResponse<User>> => {
     try {
@@ -73,6 +73,7 @@ export const registerUser = async (
 
 
 export const saveChanges = async (
+    userId: string,
     user: UserUpdate, 
     image: ImageProps | null,
     userToken: string | null,
@@ -97,7 +98,7 @@ export const saveChanges = async (
 
         formData.append('active', user.active ? "true" : "false");
 
-        await axios.patch(`${API_BASE_URL}/users/edit/${user.id}`, formData, {
+        await axios.patch(`${API_BASE_URL}/users/edit/${userId}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${userToken}`
