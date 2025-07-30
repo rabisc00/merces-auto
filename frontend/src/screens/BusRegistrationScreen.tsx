@@ -65,7 +65,7 @@ export default function BusRegistrationScreen() {
                             value={values.model}
                             onChangeText={handleChange('model')}
                         />
-                        <View style={busRegistrationStyles.inputRow}>
+                        <View style={globalStyles.inputRow}>
                             <InputField
                                 label="Capacity"
                                 errorMessage={touched.capacity && errors.capacity}
@@ -90,11 +90,3 @@ export default function BusRegistrationScreen() {
         </SafeAreaView>
     )
 }
-
-const busRegistrationStyles = StyleSheet.create({
-    inputRow: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    }
-})

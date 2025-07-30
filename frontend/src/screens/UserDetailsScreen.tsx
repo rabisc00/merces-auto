@@ -16,17 +16,19 @@ import { Formik } from "formik";
 import { userUpdateSchema } from "../validations/userSchema";
 import InputField from "../components/InputField";
 import { showNoChangesAlert } from "../utils/alerts";
+import HeaderWithSearch from "../components/HeaderWithSearch";
+import Timestamps from "../components/Timestamps";
 
 type UserDetailsRouteProp = RouteProp<UsersStackParamList, 'UserDetails'>;
 
 export default function UserDetailsScreen() {
     const { userToken } = useAuth();
+    const { showLoading, hideLoading } = useLoading();
     const navigation = useNavigation<UsersOptionsNavigationProp>();
     const route = useRoute<UserDetailsRouteProp>();
 
     const { userId } = route.params;
 
-    const { showLoading, hideLoading } = useLoading();
     
     const [originalUser, setOriginalUser] = useState<UserDetails | null>(null);
     const [picture, setPicture] = useState<ImageProps | null>(null);
@@ -43,6 +45,8 @@ export default function UserDetailsScreen() {
     }, [userId]);
 
     const callSaveChanges = async (values: UserUpdate) => {
+        showLoading();
+
         if (
             values?.name?.toUpperCase() === originalUser?.name &&
             values?.documentNumber?.toUpperCase() === originalUser?.documentNumber &&
@@ -50,19 +54,19 @@ export default function UserDetailsScreen() {
             picture === null
         ) {
             showNoChangesAlert();
-            return;
+        } else {
+            const validRequest = await saveChanges(userId, values, picture, userToken);
+            if (validRequest) {
+                navigation.navigate('UsersList');
+            }
         }
 
-        const data = await saveChanges(userId, values, picture, userToken);
-        if (data) {
-            navigation.goBack();
-        }
+        hideLoading();
     }
-
-    if (!originalUser) return <Text style={globalStyles.error}>User not found</Text>
 
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
+            <HeaderWithSearch />
             {
                 originalUser ?
                     <Formik<UserUpdate>
@@ -101,7 +105,7 @@ export default function UserDetailsScreen() {
                                     label="Name"
                                     errorMessage={touched.name && errors.name}
                                     required={true}
-                                    value={values.name ? values.name : ''}
+                                    value={values.name || ''}
                                     onChangeText={handleChange('name')}
                                 />
 
@@ -114,7 +118,7 @@ export default function UserDetailsScreen() {
                                 />
                                 
                                 <Checkbox.Item
-                                    label="Is Active?"
+                                    label="Active"
                                     status={values.active ? 'checked' : 'unchecked'}
                                     onPress={() => setFieldValue('active', !values.active)}
                                     style={globalStyles.checkboxItem}
@@ -123,6 +127,11 @@ export default function UserDetailsScreen() {
                                 <Button
                                     title="Save Changes"
                                     onPress={() => handleSubmit()}
+                                />
+
+                                <Timestamps
+                                    createdAt={originalUser.createdAt}
+                                    updatedAt={originalUser.updatedAt}
                                 />
                             </View>
                         )}

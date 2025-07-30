@@ -67,7 +67,12 @@ export const globalStyles = StyleSheet.create({
     editContainer: {
         flex: 1,
         padding: 16,
-        justifyContent: 'center',
         alignItems: 'center'
+    },
+    inputRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 16,
     }
 });

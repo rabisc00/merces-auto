@@ -15,6 +15,8 @@ export type UserDetails = {
     active: boolean;
     isAdmin: boolean;
     picture?: string;
+    createdAt?: string;
+    updatedAt?: string;
 };
 
 export type UserCreate = {

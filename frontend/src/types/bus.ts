@@ -12,6 +12,8 @@ export type BusDetails = {
     model?: string;
     capacity?: number;
     manufacturingYear?: number;
+    createdAt?: string;
+    updatedAt?: string;
 };
 
 export type BusCreate = {

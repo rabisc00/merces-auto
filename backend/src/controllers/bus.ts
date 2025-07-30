@@ -122,7 +122,7 @@ export const getBusDetails = async function(req: AuthRequest, res: Response) {
         const id = req.params.id;
 
         const busFound = await Bus.findByPk(id, {
-            attributes: ['id', 'busNumber', 'model', 'capacity', 'manufacturingYear', 'inRepair']
+            attributes: ['id', 'busNumber', 'model', 'capacity', 'manufacturingYear', 'inRepair', 'createdAt', 'updatedAt']
         });
 
         if (!busFound) {
