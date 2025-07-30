@@ -1,6 +1,5 @@
 import BaseCard from "../BaseCard";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
 import { confirm } from "../../utils/confirm";
 import { API_BASE_URL } from "../../config/api";
 import { useAuth } from "../../context/AuthContext";
@@ -14,15 +13,16 @@ import { Grayscale } from "react-native-color-matrix-image-filters";
 
 export function UserCard({ id, documentNumber, name, picture, isAdmin, active }: User) {
     const navigation = useNavigation<UsersOptionsNavigationProp>();
+    const { showLoading, hideLoading } = useLoading();
     const { userToken } = useAuth();
 
     const deleteAction = () => {
-        if (!userToken) {
-            console.warn('No token available');
-            return;
-        }
-        confirm('Are you sure you want to delete this user?', async () => {
+        confirm('Are you sure you want to delete this entry?', async () => {
+            showLoading();
             await deleteUser(id, userToken);
+            hideLoading();
+
+            navigation.navigate('UsersList');
         })
     };
 
@@ -36,11 +36,7 @@ export function UserCard({ id, documentNumber, name, picture, isAdmin, active }:
     };
     
     return (
-        <BaseCard 
-            key={id} 
-            detailsAction={detailsAction}
-            deleteAction={deleteAction}
-        >
+        <BaseCard >
             <View style={userCardStyles.cardView}>
                 {
                     active ?

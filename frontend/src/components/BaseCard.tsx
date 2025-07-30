@@ -4,11 +4,9 @@ import { globalStyles } from '../styles/global';
 
 type BaseCardProps = {
   children: React.ReactNode;
-  deleteAction: () => void;
-  detailsAction: () => void;
 };
 
-export default function BaseCard({ children, deleteAction, detailsAction }: BaseCardProps) {
+export default function BaseCard({ children }: BaseCardProps) {
   return (
     <View style={styles.card}>
       {children}

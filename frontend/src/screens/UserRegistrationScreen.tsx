@@ -11,9 +11,11 @@ import { UserCreate } from '../types/user';
 import InputField from '../components/InputField';
 import { userCreateSchema } from '../validations/userSchema';
 import { Formik } from 'formik';
+import HeaderWithSearch from '../components/HeaderWithSearch';
+import { UsersOptionsNavigationProp } from '../types/navigation';
 
 export default function UserRegistrationScreen() {
-    const navigation = useNavigation();
+    const navigation = useNavigation<UsersOptionsNavigationProp>();
     const { userToken } = useAuth();
     const { showLoading, hideLoading } = useLoading();
 
@@ -22,13 +24,15 @@ export default function UserRegistrationScreen() {
 
         const registrationValid = await registerUser(values, userToken);
         if (registrationValid) {
-            navigation.goBack();
+            navigation.navigate('UsersList');
         }
+        
         hideLoading();
     }
 
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
+            <HeaderWithSearch />
             <Formik<UserCreate>
                 initialValues={{ name: '', documentNumber: '', email: '', password: '', isAdmin: false}}
                 validationSchema={userCreateSchema}

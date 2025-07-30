@@ -267,9 +267,7 @@ export const swaggerOptions = {
             model: { type: 'string', nullable: true },
             capacity: { type: 'integer', nullable: true },
             manufacturingYear: { type: 'integer', nullable: true },
-            inRepair: { type: 'boolean', nullable: true },
-            createdAt: { type: 'string', format: 'date-time' },
-            updatedAt: { type: 'string', format: 'date-time' },
+            inRepair: { type: 'boolean', nullable: true }
           },
         },
         BusRouteDetails: {

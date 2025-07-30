@@ -4,9 +4,10 @@ import { BottomTabNavigationOptions, createBottomTabNavigator } from "@react-nav
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import WorkedHoursScreen from "../screens/WorkedHoursScreen";
 import BusRouteRegistration from "../screens/BusRouteRegistration";
-import BusRegistration from "../screens/BusRegistration";
+import BusRegistration from "../screens/BusRegistrationScreen";
 import UsersListScreen from "../screens/UsersListScreen";
 import UsersStackNavigator from "./UserNavigator";
+import BusesStackNavigator from "./BusNavigator";
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -52,7 +53,7 @@ export default function MainTabs() {
             <Tab.Screen name="WorkedHours" component={WorkedHoursScreen} options={{
                 headerShown: false
             }} />
-            <Tab.Screen name="Buses" component={BusRegistration} options={{
+            <Tab.Screen name="Buses" component={BusesStackNavigator} options={{
                 headerShown: false
             }} />
             <Tab.Screen name="Users" component={UsersStackNavigator} options={{

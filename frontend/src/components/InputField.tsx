@@ -1,18 +1,29 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, DimensionValue } from 'react-native';
 
 type Props = {
   label: string;
   errorMessage?: string | false;
   required?: boolean;
   password?: boolean;
-  value: string;
+  isNumber?: boolean;
+  value?: any;
+  width?: DimensionValue;
   onChangeText: (text: string) => void;
 };
 
-const InputField: React.FC<Props> = ({ label, errorMessage, required, password, value, onChangeText }) => {
+const InputField: React.FC<Props> = ({ 
+  label, 
+  errorMessage, 
+  required, 
+  isNumber,
+  password, 
+  value, 
+  width = '100%', 
+  onChangeText 
+}) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width }]}>
       <Text style={styles.label}>
         {label}
         {required && <Text style={styles.asterisk}> *</Text>}
@@ -21,6 +32,7 @@ const InputField: React.FC<Props> = ({ label, errorMessage, required, password, 
         style={[styles.input, errorMessage && styles.inputError]}
         value={value}
         onChangeText={onChangeText}
+        keyboardType={isNumber ? 'numeric' : 'default'}
         autoCapitalize='none'
         secureTextEntry={password}
       />

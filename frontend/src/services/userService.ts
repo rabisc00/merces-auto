@@ -17,6 +17,7 @@ export const fetchUsers = async (page: number, userToken: string | null): Promis
 
         return res.data;
     } catch (error: any) {
+        console.error(error);
         showError(error.response?.status);
 
         return {
@@ -41,6 +42,7 @@ export const getUserDetails = async (
 
         return response.data;
     } catch (error: any) {
+        console.error(error);
         showError(error.status);
         throw error;
     }
@@ -65,7 +67,7 @@ export const registerUser = async (
 
         return true;
     } catch (error: any) {
-        console.log(error.response?.status);
+        console.error(error.response?.status);
         showError(error.response?.status);
         return false;
     }
@@ -107,33 +109,24 @@ export const saveChanges = async (
 
         return true;
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
         showError(error.response?.status);
         return false;
     }
 };
 
 export const deleteUser = async (
-    userId: string | undefined,
-    userToken: string | undefined,
+    userId: string,
+    userToken: string | null,
 ) => {
     try {
-        if (!userId) {
-            Alert.alert(ALERT_MESSAGES.INVALID_ID.title, ALERT_MESSAGES.INVALID_ID.message);
-            return;
-        }
-
-        if (!userToken) {
-            Alert.alert(ALERT_MESSAGES.INVALID_TOKEN.title, ALERT_MESSAGES.INVALID_TOKEN.message);
-            return;
-        }
-
         await axios.delete(`${API_BASE_URL}/users/delete/${userId}`, {
             headers: {
                 Authorization: `Bearer ${userToken}`
             }
         });
     } catch (error: any) {
+        console.error(error);
         showError(error.response?.status);
     }
 };
@@ -150,6 +143,7 @@ export const userLogin = async (
 
         return res.data;
     } catch (error: any) {
+        console.error(error);
         showError(error.response?.status);
     }
 }

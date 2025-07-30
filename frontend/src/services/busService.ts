@@ -1,9 +1,13 @@
 import axios from "axios"
 import { API_BASE_URL } from "../config/api"
-import { ListResponse } from "../types/api";
-import { Bus } from "../types/bus";
+import { CreateResponse, ListResponse } from "../types/api";
+import { Bus, BusCreate, BusDetails, BusUpdate } from "../types/bus";
+import { showError } from "../utils/alerts";
 
-export const fetchBuses = async (page: number, userToken: string): Promise<ListResponse<Bus>> => {
+export const fetchBuses = async (
+    page: number, 
+    userToken: string | null
+): Promise<ListResponse<Bus>> => {
     try {
         const res = await axios.get(`${API_BASE_URL}/buses/retrieve?page=${page}`, {
             headers: {
@@ -12,8 +16,8 @@ export const fetchBuses = async (page: number, userToken: string): Promise<ListR
         });
 
         return res.data;
-    } catch (error) {
-        console.log('Error fetching buses:', error);
+    } catch (error: any) {
+        showError(error.response?.status);
         return {
             currentPage: page,
             totalPages: 0,
@@ -25,12 +29,9 @@ export const fetchBuses = async (page: number, userToken: string): Promise<ListR
 
 export const getBusDetails = async (
     busId: string, 
-    userToken: string | null, 
-    showLoading: () => void,
-    hideLoading: () => void
-): Promise<Bus> => {
+    userToken: string | null
+): Promise<BusDetails> => {
     try {
-        showLoading();
         const res = await axios.get<Bus>(`${API_BASE_URL}/buses/retrieve/${busId}`, {
             headers: {
                 Authorization: `Bearer ${userToken}`
@@ -38,11 +39,73 @@ export const getBusDetails = async (
         });
 
         return res.data;
-    } catch (error) {
-        console.log('Error fetching bus details:', error);
+    } catch (error: any) {
+        showError(error.response?.status)
         throw error;
-    } finally {
-        hideLoading();
     }
 };
 
+export const registerBus = async (
+    bus: BusCreate,
+    userToken: string | null
+): Promise<boolean> => {
+    try {
+        await axios.post<CreateResponse>(`${API_BASE_URL}/buses/create`, {
+            busNumber: bus.busNumber,
+            model: bus.model,
+            capacity: bus.capacity as number,
+            manufacturingYear: bus.manufacturingYear as number
+        }, {
+            headers: {
+                Authorization: `Bearer ${userToken}`
+            }
+        });
+
+        return true;
+    } catch (error: any) {
+        console.log(error);
+        showError(error.response?.status);
+        return false;
+    }
+};
+
+export const saveChanges = async (
+    busId: string,
+    bus: BusUpdate,
+    userToken: string | null
+): Promise<boolean> => {
+    try {
+        await axios.patch(`${API_BASE_URL}/buses/edit/${busId}`, {
+            model: bus.model,
+            capacity: bus.capacity,
+            manufacturingYear: bus.manufacturingYear,
+            inRepair: bus.inRepair
+        }, {
+            headers: {
+                Authorization: `Bearer ${userToken}`
+            }
+        });
+
+        return true;
+    } catch (error: any) {
+        console.log(error);
+        showError(error.response?.status);
+        return false;
+    }
+};
+
+export const deleteBus = async (
+    busId: string,
+    userToken: string | null
+) => {
+    try {
+        await axios.delete(`${API_BASE_URL}/buses/delete/${busId}`, {
+            headers: {
+                Authorization: `Bearer ${userToken}`
+            }
+        });
+    } catch (error: any) {
+        console.error(error);
+        showError(error.response?.status);
+    }
+}
