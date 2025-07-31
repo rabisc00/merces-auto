@@ -14,11 +14,11 @@ export default function BusesListScreen() {
     const { userToken } = useAuth();
     const navigation = useNavigation<BusesOptionsNavigationProp>();
 
-    const [refreshKey, setRefreshKey] = useState(0);
+    const [refreshFlag, setRefreshFlag] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
-            setRefreshKey(prev => prev + 1);
+            setRefreshFlag(prev => !prev);
         }, [])
     );
 
@@ -38,9 +38,8 @@ export default function BusesListScreen() {
                     )}
                     keyExtractor={(bus) => bus.id}
                     addButtonText="Add New Bus"
-                    addIconName="bus"
                     navigateAdd={() => navigation.navigate('BusRegistration')}
-                    refreshKey={refreshKey}
+                    refreshFlag={refreshFlag}
                 />
             </View>
         </SafeAreaView>

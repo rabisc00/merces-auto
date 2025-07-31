@@ -28,7 +28,6 @@ export default function UserDetailsScreen() {
     const route = useRoute<UserDetailsRouteProp>();
 
     const { userId } = route.params;
-
     
     const [originalUser, setOriginalUser] = useState<UserDetails | null>(null);
     const [picture, setPicture] = useState<ImageProps | null>(null);

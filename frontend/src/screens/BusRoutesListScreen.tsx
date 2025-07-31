@@ -14,11 +14,11 @@ export default function BusRoutesListScreen() {
     const { userToken } = useAuth();
     const navigation = useNavigation<BusRoutesOptionsNavigationProp>();
 
-    const [refreshKey, setRefreshKey] = useState(0);
+    const [refreshFlag, setRefreshFlag] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
-            setRefreshKey(prev => prev + 1);
+            setRefreshFlag(prev => !prev);
         }, [])
     );
     return (
@@ -37,9 +37,8 @@ export default function BusRoutesListScreen() {
                     )}
                     keyExtractor={(busRoute) => busRoute.id}
                     addButtonText={"Add New Bus Route"}
-                    addIconName="trail-sign"
                     navigateAdd={() => navigation.navigate('BusRouteRegistration')}
-                    refreshKey={refreshKey}
+                    refreshFlag={refreshFlag}
                 />
             </View>
         </SafeAreaView>

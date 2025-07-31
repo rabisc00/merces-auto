@@ -41,7 +41,6 @@ export default function UsersListScreen() {
                     }
                     keyExtractor={(user) => user.id}
                     addButtonText="Add New User"
-                    addIconName="person-add"
                     navigateAdd={() => navigation.navigate('UserRegistration')}
                     refreshFlag={refreshFlag}
                 />

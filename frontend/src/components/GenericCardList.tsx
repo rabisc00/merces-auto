@@ -10,9 +10,7 @@ type GenericCardListProps<T> = {
     keyExtractor: (item: T) => string;
     navigateAdd: () => void;
     refreshFlag: boolean;
-    addIconName: string;
     addButtonText: string;
-    pageSize?: number;
 };
 
 export function GenericCardList<T>({ 
@@ -20,10 +18,8 @@ export function GenericCardList<T>({
     renderItem,
     keyExtractor,
     navigateAdd,
-    addIconName,
     addButtonText,
-    refreshFlag,
-    pageSize = 10
+    refreshFlag
 }: GenericCardListProps<T>) {
     const [items, setItems] = useState<T[]>([]);
     const [page, setPage] = useState(1);
@@ -71,7 +67,7 @@ export function GenericCardList<T>({
                 onPress={navigateAdd}
             >
                 <Ionicons
-                    name={addIconName}
+                    name="add-circle-outline"
                     size={24}
                     style={globalStyles.buttonIcon}
                 />

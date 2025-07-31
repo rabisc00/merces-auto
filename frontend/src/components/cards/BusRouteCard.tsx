@@ -4,14 +4,15 @@ import { useLoading } from "../../context/LoadingContext";
 import { deleteBusRoute } from "../../services/busRouteService";
 import { BusRoute } from "../../types/busRoute";
 import { confirm } from "../../utils/confirm";
-import { BusRoutesOptionsNavigationProp } from "../../types/navigation";
+import { BusRoutesOptionsNavigationProp, BusRouteStackParamList } from "../../types/navigation";
 import { Alert, Text, View } from "react-native";
 import BaseCard from "../BaseCard";
 import { globalStyles } from "../../styles/global";
 import CardActionButtons from "../CardActionButtons";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export function BusRouteCard({ id, lineNumber, origin, destination }: BusRoute) {
-    const navigation = useNavigation<BusRoutesOptionsNavigationProp>();
+    const navigation = useNavigation<NativeStackNavigationProp<BusRouteStackParamList>>();
     const { showLoading, hideLoading } = useLoading();
     const { userToken } = useAuth();
     
@@ -34,6 +35,15 @@ export function BusRouteCard({ id, lineNumber, origin, destination }: BusRoute) 
         navigation.navigate('BusRouteDetails', { busRouteId: id });
     };
 
+    const timetablesAction = () => {
+        if (!id) {
+            Alert.alert(ALERT_MESSAGES.INVALID_ID.title, ALERT_MESSAGES.INVALID_ID.message);
+            return;
+        }
+
+        navigation.navigate('TimetableCalendar', { busRouteId: id });
+    }
+
     return (
         <BaseCard>
             <View style={globalStyles.cardView}>
@@ -47,6 +57,7 @@ export function BusRouteCard({ id, lineNumber, origin, destination }: BusRoute) 
                 <CardActionButtons
                     deleteAction={deleteAction}
                     detailsAction={detailsAction}
+                    timetablesAction={timetablesAction}
                 />
             </View>
         </BaseCard>
