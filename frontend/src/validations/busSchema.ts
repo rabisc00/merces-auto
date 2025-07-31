@@ -1,11 +1,11 @@
 import * as yup from 'yup';
 
 export const busCreateSchema = yup.object({
-    busNumber: yup.string().matches(
+    busNumber: yup.string().trim().matches(
         /^(0[1-9]|[1-9][0-9])-B-[0-9]{1,5}$/,
         'Must be a valid Irish bus plaque (e.g., 23-B-12345)'
     ).required('Bus number is required'),
-    model: yup.string().optional(),
+    model: yup.string().trim().optional(),
     capacity: yup.number().optional()
         .typeError('Capacity must be a number')
         .integer('Capacity must be a number')
@@ -19,7 +19,7 @@ export const busCreateSchema = yup.object({
 });
 
 export const busUpdateSchema = yup.object({
-    model: yup.string().optional(),
+    model: yup.string().trim().optional(),
     capacity: yup.number().optional()
         .typeError('Capacity must be a number')
         .integer('Capacity must be a number')

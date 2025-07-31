@@ -9,7 +9,7 @@ type GenericCardListProps<T> = {
     renderItem: (item: T) => React.ReactElement;
     keyExtractor: (item: T) => string;
     navigateAdd: () => void;
-    refreshKey: number;
+    refreshFlag: boolean;
     addIconName: string;
     addButtonText: string;
     pageSize?: number;
@@ -22,7 +22,7 @@ export function GenericCardList<T>({
     navigateAdd,
     addIconName,
     addButtonText,
-    refreshKey,
+    refreshFlag,
     pageSize = 10
 }: GenericCardListProps<T>) {
     const [items, setItems] = useState<T[]>([]);
@@ -62,7 +62,7 @@ export function GenericCardList<T>({
         };
 
         refreshItems();
-    }, [refreshKey]);
+    }, [refreshFlag]);
 
     return (
         <View>

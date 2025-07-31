@@ -75,14 +75,10 @@ export const globalStyles = StyleSheet.create({
         alignItems: 'center',
         gap: 16
     },
-    cardContent: {
-        display: 'flex',
-        flexDirection: 'row',
-        width: '80%',
-        alignItems: 'center',
-        gap: 16,
-    },
     boldText: {
         fontWeight: 'bold'
+    },
+    cardContent: {
+        width: '80%'
     }
 });

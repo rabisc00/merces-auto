@@ -8,7 +8,7 @@ import { Alert, Button, Image, StyleSheet, Text, View } from "react-native";
 import { Checkbox } from "react-native-paper";
 import { UserDetails, UserUpdate } from "../types/user";
 import { pickImage } from "../services/imageService";
-import { getUserDetails, saveChanges } from "../services/userService";
+import { getUserDetails, saveUserChanges } from "../services/userService";
 import { ImageProps } from "../types/image";
 import { UsersOptionsNavigationProp, UsersStackParamList } from "../types/navigation";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -55,7 +55,7 @@ export default function UserDetailsScreen() {
         ) {
             showNoChangesAlert();
         } else {
-            const validRequest = await saveChanges(userId, values, picture, userToken);
+            const validRequest = await saveUserChanges(userId, values, picture, userToken);
             if (validRequest) {
                 navigation.navigate('UsersList');
             }

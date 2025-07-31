@@ -74,7 +74,7 @@ export const registerUser = async (
 };
 
 
-export const saveChanges = async (
+export const saveUserChanges = async (
     userId: string,
     user: UserUpdate, 
     image: ImageProps | null,

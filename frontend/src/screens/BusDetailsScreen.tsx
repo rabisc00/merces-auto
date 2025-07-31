@@ -10,7 +10,7 @@ import HeaderWithSearch from "../components/HeaderWithSearch";
 import { Formik } from "formik";
 import { busUpdateSchema } from "../validations/busSchema";
 import { showNoChangesAlert } from "../utils/alerts";
-import { getBusDetails, saveChanges } from "../services/busService";
+import { getBusDetails, saveBusChanges } from "../services/busService";
 import InputField from "../components/InputField";
 import { Checkbox } from "react-native-paper";
 import Timestamps from "../components/Timestamps";
@@ -29,7 +29,6 @@ export default function BusDetailsScreen() {
     useEffect(() => { 
         const fetchBusDetails = async () => {
             const data = await getBusDetails(busId, userToken);
-            console.log(data);
             setOriginalBus(data);
         }
 
@@ -49,7 +48,7 @@ export default function BusDetailsScreen() {
         ) {
             showNoChangesAlert();
         } else {
-            const validRequest = await saveChanges(busId, values, userToken);
+            const validRequest = await saveBusChanges(busId, values, userToken);
             if (validRequest) navigation.navigate('BusesList');
         }
 
@@ -80,7 +79,7 @@ export default function BusDetailsScreen() {
                             touched
                         }) => (
                                 <View style={globalStyles.editContainer}>
-                                    <Text><Text style={{ fontWeight: 'bold' }}>Bus Number:</Text> {originalBus.busNumber}</Text>
+                                    <Text><Text style={globalStyles.boldText}>Bus Number:</Text> {originalBus.busNumber}</Text>
 
                                     <InputField
                                         label="Model"

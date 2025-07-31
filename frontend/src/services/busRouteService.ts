@@ -29,7 +29,7 @@ export const fetchBusRoutes = async (
     }
 };
 
-export const getBusDetails = async (
+export const getBusRouteDetails = async (
     busRouteId: string,
     userToken: string | null
 ): Promise<BusRouteDetails> => {
@@ -48,12 +48,12 @@ export const getBusDetails = async (
     }
 };
 
-export const registerBus = async (
+export const registerBusRoute = async (
     busRoute: BusRouteCreate,
     userToken: string | null
 ): Promise<boolean> => {
     try {
-        const res = axios.post<CreateResponse>(`${API_BASE_URL}/busroutes/create`, {
+        const res = await axios.post<CreateResponse>(`${API_BASE_URL}/busroutes/create`, {
             lineNumber: busRoute.lineNumber,
             origin: busRoute.origin,
             destination: busRoute.destination
@@ -71,13 +71,13 @@ export const registerBus = async (
     }
 };
 
-export const saveChanges = async (
+export const saveBusRouteChanges = async (
     busRoute: BusRouteUpdate,
     busRouteId: string,
     userToken: string | null
 ): Promise<boolean> => {
     try {
-        const res = axios.patch(`${API_BASE_URL}/busroutes/edit/${busRouteId}`, {
+        await axios.patch(`${API_BASE_URL}/busroutes/edit/${busRouteId}`, {
             lineNumber: busRoute.lineNumber,
             origin: busRoute.origin,
             destination: busRoute.destination

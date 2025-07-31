@@ -20,6 +20,8 @@ export function BusRouteCard({ id, lineNumber, origin, destination }: BusRoute) 
             showLoading();
             await deleteBusRoute(id, userToken);
             hideLoading();
+
+            navigation.navigate('BusRoutesList');
         });
     };
 
@@ -35,16 +37,18 @@ export function BusRouteCard({ id, lineNumber, origin, destination }: BusRoute) 
     return (
         <BaseCard>
             <View style={globalStyles.cardView}>
-                <View>
-                    <Text style={globalStyles.boldText}>{lineNumber}</Text>
-                    <Text>{origin} - {destination}</Text>
+                <View style={globalStyles.cardView}>
+                    <View style={globalStyles.cardContent}>
+                        <Text style={globalStyles.boldText}>{lineNumber}</Text>
+                        <Text>{origin} <Text style={globalStyles.boldText}>{"-\>"}</Text> {destination}</Text>
+                    </View>
                 </View>
-            </View>
 
-            <CardActionButtons
-                deleteAction={deleteAction}
-                detailsAction={detailsAction}
-            />
+                <CardActionButtons
+                    deleteAction={deleteAction}
+                    detailsAction={detailsAction}
+                />
+            </View>
         </BaseCard>
     )
 }

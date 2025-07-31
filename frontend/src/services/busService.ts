@@ -70,7 +70,7 @@ export const registerBus = async (
     }
 };
 
-export const saveChanges = async (
+export const saveBusChanges = async (
     busId: string,
     bus: BusUpdate,
     userToken: string | null

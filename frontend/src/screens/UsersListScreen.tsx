@@ -15,11 +15,11 @@ export default function UsersListScreen() {
     const { userToken } = useAuth();
     const navigation = useNavigation<UsersOptionsNavigationProp>();
 
-    const [refreshKey, setRefreshKey] = useState(0);
+    const [refreshFlag, setRefreshFlag] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
-            setRefreshKey(prev => prev + 1)
+            setRefreshFlag(prev => !prev);
         }, [])
     );
 
@@ -43,7 +43,7 @@ export default function UsersListScreen() {
                     addButtonText="Add New User"
                     addIconName="person-add"
                     navigateAdd={() => navigation.navigate('UserRegistration')}
-                    refreshKey={refreshKey}
+                    refreshFlag={refreshFlag}
                 />
             </View>
         </SafeAreaView>

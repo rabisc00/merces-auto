@@ -22,6 +22,8 @@ export function UserCard({ id, documentNumber, name, picture, isAdmin, active }:
             showLoading();
             await deleteUser(id, userToken);
             hideLoading();
+
+            navigation.navigate('UsersList');
         })
     };
 
@@ -37,7 +39,7 @@ export function UserCard({ id, documentNumber, name, picture, isAdmin, active }:
     return (
         <BaseCard >
             <View style={globalStyles.cardView}>
-                <View style={globalStyles.cardContent}>
+                <View style={userCardStyles.cardContent}>
                     {
                         active ?
                         <Image 
@@ -78,5 +80,12 @@ const userCardStyles = StyleSheet.create({
     },
     inactive: {
         color: '#abb2bf'
-    }
+    },
+    cardContent: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '80%',
+        alignItems: 'center',
+        gap: 16,
+    },
 })
