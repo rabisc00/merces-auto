@@ -10,6 +10,7 @@ import { registerBusRoute } from "../services/busRouteService";
 import { useAuth } from "../context/AuthContext";
 import InputField from "../components/InputField";
 import { busRouteCreateSchema } from "../validations/busRouteSchema";
+import HeaderWithSearch from "../components/HeaderWithSearch";
 
 export default function BusRouteRegistration() {
     const { userToken } = useAuth();
@@ -27,6 +28,7 @@ export default function BusRouteRegistration() {
 
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
+            <HeaderWithSearch />
             <Formik<BusRouteCreate>
                 initialValues={{ lineNumber: '', origin: '', destination: '' }}
                 validationSchema={busRouteCreateSchema}

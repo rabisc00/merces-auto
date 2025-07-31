@@ -12,6 +12,7 @@ import {
 } from 'sequelize-typescript';
 import TimetableDay from './timetableDay';
 import Timetable from './timetable';
+import { INTEGER } from 'sequelize';
 
 @Table({
   tableName: 'day_of_the_week',
@@ -28,6 +29,12 @@ export default class DayOfTheWeek extends Model {
     allowNull: false,
   })
   name!: string;
+
+  @Column({
+    type: INTEGER,
+    allowNull: false
+  })
+  dayId!: number;
 
   @CreatedAt
   @Column(DataType.DATE)

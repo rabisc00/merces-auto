@@ -129,35 +129,30 @@ export const deleteTimetable = async function (req: AuthRequest, res: Response) 
     }
 };
 
-export const getTimetablesByRouteId = async function (req: AuthRequest, res: Response) {
+export const getTimetableByDate = async function (req: AuthRequest, res: Response) {
     try {
-        const page = parseInt(req.query.page as string) || 1;
-        const offset = (page - 1) * 10;
-        const limit = 10;
+        const date = new Date(req.query.date as string);
         const routeId = req.params.routeId;
+        const dayIndex = date.getDay();
 
-        const { count, rows } = await Timetable.findAndCountAll({
-            limit,
-            offset,
+        const timetables = await Timetable.findAll({
             attributes: ['id', 'arrivalTime', 'departureTime'],
-            where: { routeId },
             include: [{
-                model: BusRoute,
-                attributes: ['id', 'lineNumber', 'origin', 'destination']
-            }, {
                 model: DayOfTheWeek,
-                attributes: ['name']
+                where: {
+                    dayId: dayIndex
+                }
+            }, {
+                model: BusRoute,
+                where: {
+                    id: routeId
+                }
             }]
         });
 
-        return res.json({
-            currentPage: page,
-            totalPages: Math.ceil(count / limit),
-            totalCount: count,
-            records: rows
-        });
+        return res.json(timetables);
     } catch (error: any) {
-        console.error('Error fetching timetables:', error);
+        console.error('Error fetching timetables by date:', error);
         return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };

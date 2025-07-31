@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { createTimetable, editTimetable, deleteTimetable, getTimetablesByRouteId, getTimetableDetails } from '../controllers/timetable';
+import { createTimetable, editTimetable, deleteTimetable, getTimetableByDate, getTimetableDetails } from '../controllers/timetable';
 import { authenticateToken } from '../middleware/auth';
 import { validate } from '../middleware/validate';
 import { timetableCreateSchema, timetableEditSchema } from '../validators/timetableValidator';
@@ -17,17 +17,17 @@ const router = express.Router();
  * @swagger
  * /timetables/retrieve/byroute/{routeId}:
  *   get:
- *     summary: Retrieve a paginated list of bus timetables by route ID
+ *     summary: Retrieves timetables of a specified bus route by date
  *     tags: [Bus Timetables]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: page
+ *         name: date
  *         schema:
- *           type: integer
- *           default: 1
- *         description: Page number
+ *           type: string
+ *           format: date
+ *         description: Timetable date
  *       - in: path
  *         name: routeId
  *         required: true
@@ -41,18 +41,9 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 currentPage:
- *                   type: integer
- *                 totalPages:
- *                   type: integer
- *                 totalCount:
- *                   type: integer
- *                 records:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Timetable'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Timetable'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
@@ -60,7 +51,7 @@ const router = express.Router();
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.get('/retrieve/byroute/:routeId', authenticateToken, getTimetablesByRouteId);
+router.get('/retrieve/byroute/:routeId', authenticateToken, getTimetableByDate);
 
 /**
  * @swagger
@@ -85,7 +76,7 @@ router.get('/retrieve/byroute/:routeId', authenticateToken, getTimetablesByRoute
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/components/schemas/Timetable'
+ *               $ref: '#/components/schemas/TimetableDetails'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
@@ -96,6 +87,7 @@ router.get('/retrieve/byroute/:routeId', authenticateToken, getTimetablesByRoute
  *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve/:id', authenticateToken, getTimetableDetails);
+
 
 /**
  * @swagger

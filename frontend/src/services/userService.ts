@@ -1,10 +1,8 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 import { User, UserCreate, UserDetails, UserUpdate } from "../types/user";
-import { UsersOptionsNavigationProp } from "../types/navigation";
 import { ImageProps } from "../types/image";
 import { CreateResponse, ListResponse, LoginResponse } from "../types/api";
-import { Alert } from "react-native";
 import { showError } from "../utils/alerts";
 
 export const fetchUsers = async (page: number, userToken: string | null): Promise<ListResponse<User>> => {

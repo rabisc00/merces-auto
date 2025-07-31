@@ -34,6 +34,13 @@ export type BusRouteStackParamList = {
   BusRoutesList: undefined;
   BusRouteRegistration: undefined;
   BusRouteDetails: { busRouteId: string };
+  TimetableCalendar: { busRouteId: string };
+  TimetableDetailsScreen: { timetableId: string };
+  TimetableListScreen: { 
+    busRouteId: string, 
+    date: string
+  },
+  TimetableRegistrationScreen: undefined;
 }
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Main'>;
