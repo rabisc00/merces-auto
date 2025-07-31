@@ -289,7 +289,15 @@ export const swaggerOptions = {
             distanceInKm: { type: 'integer' },
             averageTimeInMinutes: { type: 'integer' },
             origin: { type: 'string' },
-            destination: { type: 'string'}
+            destination: { type: 'string'},
+            createdAt: { 
+              type: 'string',
+              format: 'date-time'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time'
+            }
           }
         },
         UserDetails: {

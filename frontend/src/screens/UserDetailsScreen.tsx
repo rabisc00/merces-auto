@@ -87,6 +87,7 @@ export default function UserDetailsScreen() {
                             touched
                         }) => (
                             <View style={globalStyles.editContainer}>
+                                <Text><Text style={{ fontWeight: 'bold' }}>Email: </Text>{originalUser.email}</Text>
                                 <Image 
                                     source={{ uri: `${API_BASE_URL}/${originalUser.picture}` }}
                                     style={userDetailsStyles.image}
@@ -98,7 +99,7 @@ export default function UserDetailsScreen() {
                                 />
                                 {
                                     picture !== null &&
-                                    <Text style={globalStyles.timestampText}>Image picked successfully</Text>
+                                    <Text style={globalStyles.smallText}>Image picked successfully</Text>
                                 }
 
                                 <InputField
@@ -151,6 +152,7 @@ const userDetailsStyles = StyleSheet.create({
         height: 180,
         borderRadius: 100,
         backgroundColor: '#ccc',
-        marginBottom: 0
+        marginBottom: 0,
+        marginTop: 16
     }
 })

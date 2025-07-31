@@ -9,6 +9,7 @@ import { deleteBus } from "../../services/busService";
 import { Alert, Text } from "react-native";
 import { View } from "react-native";
 import CardActionButtons from "../CardActionButtons";
+import { globalStyles } from "../../styles/global";
 
 export function BusCard({ id, busNumber, model, inRepair }: Bus) {
     const navigation = useNavigation<BusesOptionsNavigationProp>();
@@ -16,7 +17,7 @@ export function BusCard({ id, busNumber, model, inRepair }: Bus) {
     const { userToken } = useAuth();
 
     const deleteAction = () => {
-        confirm('Are you sure you want to delete this entry?', async () => {
+        confirm(async () => {
             showLoading();
             deleteBus(id, userToken);
             hideLoading();
@@ -36,15 +37,18 @@ export function BusCard({ id, busNumber, model, inRepair }: Bus) {
 
     return (
         <BaseCard >
-            <View>
-                <Text>Bus Number: {busNumber}</Text>
-                <Text>Model: {model || 'Undefined'}</Text>
-                <Text>{inRepair ? 'In Repair' : 'Available to Use'}</Text>
+            <View style={globalStyles.cardView}>
+                <View>
+                    <Text style={globalStyles.boldText}>{busNumber}</Text>
+                    <Text>{model || 'Undefined model'}</Text>
+                    <Text>{inRepair ? 'In Repair' : 'Available to Use'}</Text>
+                </View>
+                
+                <CardActionButtons 
+                    deleteAction={deleteAction}
+                    detailsAction={detailsAction}
+                />
             </View>
-            <CardActionButtons 
-                deleteAction={deleteAction}
-                detailsAction={detailsAction}
-            />
         </BaseCard>
     )
 }

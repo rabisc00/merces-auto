@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { globalStyles } from "../styles/global";
 import { View } from "react-native";
 import React from "react";
@@ -14,11 +14,21 @@ const Timestamps: React.FC<Props> = ({
     updatedAt
 }) => {
     return (
-        <View style={globalStyles.timestampView}>
-            <Text style={globalStyles.timestampText}>Created At: {dayjs(createdAt).format('YYYY-MM-DD HH:mm')}</Text>
-            <Text style={globalStyles.timestampText}>Updated At: {dayjs(updatedAt).format('YYYY-MM-DD HH:mm')}</Text>
+        <View style={styles.timestampView}>
+            <Text style={globalStyles.smallText}>Created At: {dayjs(createdAt).format('YYYY-MM-DD HH:mm')}</Text>
+            <Text style={globalStyles.smallText}>Updated At: {dayjs(updatedAt).format('YYYY-MM-DD HH:mm')}</Text>
         </View>
     )
 };
+
+const styles = StyleSheet.create({
+    timestampView: {
+        position: 'absolute',
+        bottom: 16,
+        right: 0,
+        left: 0,
+        alignItems: 'center'
+    }
+})
 
 export default Timestamps;

@@ -1,9 +1,9 @@
 import { Alert } from "react-native";
 
-export function confirm(message: string,  onConfirm: () => void) {
+export function confirm(onConfirm: () => void) {
     Alert.alert(
         'Confirmation',
-        message,
+        'Are you sure you want to delete this entry?',
         [
             { text: 'Cancel', style: 'cancel' },
             { text: 'OK', onPress: onConfirm }

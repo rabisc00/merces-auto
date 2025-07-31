@@ -3,11 +3,12 @@ import { TabParamList } from "../types/navigation";
 import { BottomTabNavigationOptions, createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import WorkedHoursScreen from "../screens/WorkedHoursScreen";
-import BusRouteRegistration from "../screens/BusRouteRegistration";
+import BusRouteRegistration from "../screens/BusRouteRegistrationScreen";
 import BusRegistration from "../screens/BusRegistrationScreen";
 import UsersListScreen from "../screens/UsersListScreen";
 import UsersStackNavigator from "./UserNavigator";
 import BusesStackNavigator from "./BusNavigator";
+import BusRouteStackNavigator from "./BusRouteNavigator";
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -47,7 +48,7 @@ const navigatorScreenOptions = ({ route }: { route: RouteProp<TabParamList, keyo
 export default function MainTabs() {
     return (
         <Tab.Navigator screenOptions={navigatorScreenOptions}>
-            <Tab.Screen name="BusRoutes" component={BusRouteRegistration} options={{
+            <Tab.Screen name="BusRoutes" component={BusRouteStackNavigator} options={{
                 headerShown: false
             }} />
             <Tab.Screen name="WorkedHours" component={WorkedHoursScreen} options={{

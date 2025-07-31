@@ -175,7 +175,7 @@ export const getUserDetails = async function (req: AuthRequest, res: Response) {
         const id = req.params.id;
 
         const userFound = await User.findByPk(id, {
-            attributes: ['id','email', 'name', 'documentNumber', 'active', 'picture', 'createdAt', 'updatedAt']
+            attributes: ['id', 'email', 'name', 'documentNumber', 'active', 'picture', 'createdAt', 'updatedAt']
         });
 
         res.json(userFound);

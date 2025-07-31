@@ -34,17 +34,6 @@ export const globalStyles = StyleSheet.create({
         textAlign: 'center', 
         marginTop: 20 
     },
-    timestampView: {
-        position: 'absolute',
-        bottom: 16,
-        right: 0,
-        left: 0,
-        alignItems: 'center'
-    },
-    timestampText: {
-        fontSize: 12,
-        color: '#abb2bf',
-    },
     checkboxItem: {
         paddingVertical: 5,
         paddingHorizontal: 10
@@ -74,5 +63,26 @@ export const globalStyles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         gap: 16,
+    },
+    smallText: {
+        fontSize: 12,
+        color: '#abb2bf'
+    },
+    cardView: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 16
+    },
+    cardContent: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '80%',
+        alignItems: 'center',
+        gap: 16,
+    },
+    boldText: {
+        fontWeight: 'bold'
     }
 });

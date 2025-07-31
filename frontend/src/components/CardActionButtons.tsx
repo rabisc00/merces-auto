@@ -34,5 +34,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     marginTop: 8,
     gap: 16,
+    width: '20%'
   }
 });

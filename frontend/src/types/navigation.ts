@@ -30,6 +30,13 @@ export type BusStackParamList = {
   BusDetails: { busId: string };
 };
 
+export type BusRouteStackParamList = {
+  BusRoutesList: undefined;
+  BusRouteRegistration: undefined;
+  BusRouteDetails: { busRouteId: string };
+}
+
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Main'>;
 export type UsersOptionsNavigationProp = NativeStackNavigationProp<UsersStackParamList, 'UsersList'>;
 export type BusesOptionsNavigationProp = NativeStackNavigationProp<BusStackParamList, 'BusesList'>;
+export type BusRoutesOptionsNavigationProp = NativeStackNavigationProp<BusRouteStackParamList, 'BusRoutesList'>;

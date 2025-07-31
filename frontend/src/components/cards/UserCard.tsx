@@ -10,6 +10,7 @@ import { deleteUser } from "../../services/userService";
 import { UsersOptionsNavigationProp } from "../../types/navigation";
 import { User } from "../../types/user";
 import { Grayscale } from "react-native-color-matrix-image-filters";
+import { globalStyles } from "../../styles/global";
 
 export function UserCard({ id, documentNumber, name, picture, isAdmin, active }: User) {
     const navigation = useNavigation<UsersOptionsNavigationProp>();
@@ -17,12 +18,10 @@ export function UserCard({ id, documentNumber, name, picture, isAdmin, active }:
     const { userToken } = useAuth();
 
     const deleteAction = () => {
-        confirm('Are you sure you want to delete this entry?', async () => {
+        confirm(async () => {
             showLoading();
             await deleteUser(id, userToken);
             hideLoading();
-
-            navigation.navigate('UsersList');
         })
     };
 
@@ -37,27 +36,30 @@ export function UserCard({ id, documentNumber, name, picture, isAdmin, active }:
     
     return (
         <BaseCard >
-            <View style={userCardStyles.cardView}>
-                {
-                    active ?
-                    <Image 
-                        source={{ uri: `${API_BASE_URL}/${picture}` }} 
-                        style={userCardStyles.cardImage}
-                        resizeMode="cover"
-                    /> :
-                    <Grayscale>
+            <View style={globalStyles.cardView}>
+                <View style={globalStyles.cardContent}>
+                    {
+                        active ?
                         <Image 
                             source={{ uri: `${API_BASE_URL}/${picture}` }} 
                             style={userCardStyles.cardImage}
                             resizeMode="cover"
-                        />
-                    </Grayscale>
-                } 
-                <View>
-                    <Text style={[{ fontWeight: 'bold' }, !active ? userCardStyles.inactive : '']}>{name}</Text>
-                    <Text style={!active ? userCardStyles.inactive : ''}>{documentNumber}</Text>
-                    <Text style={!active ? userCardStyles.inactive : ''}>Admin: {isAdmin ? "true" : "false"}</Text>
+                        /> :
+                        <Grayscale>
+                            <Image 
+                                source={{ uri: `${API_BASE_URL}/${picture}` }} 
+                                style={userCardStyles.cardImage}
+                                resizeMode="cover"
+                            />
+                        </Grayscale>
+                    } 
+                    <View>
+                        <Text numberOfLines={3} style={[globalStyles.boldText, !active ? userCardStyles.inactive : '']}>{name}</Text>
+                        <Text style={!active ? userCardStyles.inactive : ''}>{documentNumber}</Text>
+                        <Text style={!active ? userCardStyles.inactive : ''}>Admin: {isAdmin ? "true" : "false"}</Text>
+                    </View>
                 </View>
+                
                 <CardActionButtons 
                     deleteAction={deleteAction}
                     detailsAction={detailsAction}
@@ -68,12 +70,6 @@ export function UserCard({ id, documentNumber, name, picture, isAdmin, active }:
 }
 
 const userCardStyles = StyleSheet.create({
-    cardView: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
     cardImage: {
         width: 50,
         height: 50,

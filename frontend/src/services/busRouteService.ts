@@ -1,15 +1,15 @@
-import axios from "axios"
-import { API_BASE_URL } from "../config/api"
+import axios from "axios";
 import { CreateResponse, ListResponse } from "../types/api";
-import { Bus, BusCreate, BusDetails, BusUpdate } from "../types/bus";
+import { BusRoute, BusRouteCreate, BusRouteDetails, BusRouteUpdate } from "../types/busRoute";
 import { showError } from "../utils/alerts";
+import { API_BASE_URL } from "../config/api";
 
-export const fetchBuses = async (
-    page: number, 
+export const fetchBusRoutes = async (
+    page: number,
     userToken: string | null
-): Promise<ListResponse<Bus>> => {
+): Promise<ListResponse<BusRoute>> => {
     try {
-        const res = await axios.get<ListResponse<Bus>>(`${API_BASE_URL}/buses/retrieve?page=${page}`, {
+        const res = await axios.get<ListResponse<BusRoute>>(`${API_BASE_URL}/busroutes/retrieve?page=${page}`, {
             headers: {
                 Authorization: `Bearer ${userToken}`
             }
@@ -19,6 +19,7 @@ export const fetchBuses = async (
     } catch (error: any) {
         console.error(error);
         showError(error.response?.status);
+
         return {
             currentPage: page,
             totalPages: 0,
@@ -29,11 +30,11 @@ export const fetchBuses = async (
 };
 
 export const getBusDetails = async (
-    busId: string, 
+    busRouteId: string,
     userToken: string | null
-): Promise<BusDetails> => {
+): Promise<BusRouteDetails> => {
     try {
-        const res = await axios.get<Bus>(`${API_BASE_URL}/buses/retrieve/${busId}`, {
+        const res = await axios.get<BusRouteDetails>(`${API_BASE_URL}/busroutes/retrieve/${busRouteId}`, {
             headers: {
                 Authorization: `Bearer ${userToken}`
             }
@@ -41,21 +42,21 @@ export const getBusDetails = async (
 
         return res.data;
     } catch (error: any) {
-        showError(error.response?.status)
+        console.error(error);
+        showError(error.response?.status);
         throw error;
     }
 };
 
 export const registerBus = async (
-    bus: BusCreate,
+    busRoute: BusRouteCreate,
     userToken: string | null
 ): Promise<boolean> => {
     try {
-        await axios.post<CreateResponse>(`${API_BASE_URL}/buses/create`, {
-            busNumber: bus.busNumber,
-            model: bus.model,
-            capacity: bus.capacity as number,
-            manufacturingYear: bus.manufacturingYear as number
+        const res = axios.post<CreateResponse>(`${API_BASE_URL}/busroutes/create`, {
+            lineNumber: busRoute.lineNumber,
+            origin: busRoute.origin,
+            destination: busRoute.destination
         }, {
             headers: {
                 Authorization: `Bearer ${userToken}`
@@ -63,24 +64,23 @@ export const registerBus = async (
         });
 
         return true;
-    } catch (error: any) {
-        console.log(error);
+    } catch (error: any) {  
+        console.error(error);
         showError(error.response?.status);
         return false;
     }
 };
 
 export const saveChanges = async (
-    busId: string,
-    bus: BusUpdate,
+    busRoute: BusRouteUpdate,
+    busRouteId: string,
     userToken: string | null
 ): Promise<boolean> => {
     try {
-        await axios.patch(`${API_BASE_URL}/buses/edit/${busId}`, {
-            model: bus.model,
-            capacity: bus.capacity,
-            manufacturingYear: bus.manufacturingYear,
-            inRepair: bus.inRepair
+        const res = axios.patch(`${API_BASE_URL}/busroutes/edit/${busRouteId}`, {
+            lineNumber: busRoute.lineNumber,
+            origin: busRoute.origin,
+            destination: busRoute.destination
         }, {
             headers: {
                 Authorization: `Bearer ${userToken}`
@@ -89,18 +89,18 @@ export const saveChanges = async (
 
         return true;
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
         showError(error.response?.status);
         return false;
     }
 };
 
-export const deleteBus = async (
-    busId: string,
+export const deleteBusRoute = async (
+    busRouteId: string,
     userToken: string | null
 ) => {
     try {
-        await axios.delete(`${API_BASE_URL}/buses/delete/${busId}`, {
+        await axios.delete(`${API_BASE_URL}/busroutes/delete/${busRouteId}`, {
             headers: {
                 Authorization: `Bearer ${userToken}`
             }
@@ -109,4 +109,4 @@ export const deleteBus = async (
         console.error(error);
         showError(error.response?.status);
     }
-}
+};
