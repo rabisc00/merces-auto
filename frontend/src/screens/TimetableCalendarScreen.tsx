@@ -22,7 +22,7 @@ export default function TimetableCalendarScreen() {
     };
 
     const navigateAdd = () => {
-        navigation.navigate('TimetableRegistration');
+        navigation.navigate('TimetableRegistration', { busRouteId });
     }
 
     return (

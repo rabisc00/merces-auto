@@ -7,7 +7,7 @@ import { CreateResponse } from "../types/api";
 export const fetchTimetables = async (
     busRouteId: string,
     date: string,
-    userToken: string
+    userToken: string | null
 ): Promise<Timetable[]> => {
     try {
         const res = await axios.get<Timetable[]>(`${API_BASE_URL}/timetables/retrieve/byroute/${busRouteId}?date=${date}`, {
@@ -26,7 +26,7 @@ export const fetchTimetables = async (
 
 export const getTimetableDetails = async (
     timetableId: string,
-    userToken: string
+    userToken: string | null
 ): Promise<TimetableDetails> => {
     try {
         const res = await axios.get<TimetableDetails>(`${API_BASE_URL}/timetables/retrieve/${timetableId}`, {
@@ -45,7 +45,7 @@ export const getTimetableDetails = async (
 
 export const registerTimetable = async (
     timetable: TimetableCreate,
-    userToken: string
+    userToken: string | null
 ): Promise<boolean> => {
     try {
         await axios.post<CreateResponse>(`${API_BASE_URL}/timetables/create`, {
@@ -70,7 +70,7 @@ export const registerTimetable = async (
 export const saveTimetableChanges = async (
     timetable: TimetableUpdate,
     timetableId: string,
-    userToken: string
+    userToken: string | null
 ): Promise<boolean> => {
     try {
         await axios.patch(`${API_BASE_URL}/timetables/edit/${timetableId}`, {
@@ -94,7 +94,7 @@ export const saveTimetableChanges = async (
 
 export const deleteTimetable = async (
     timetableId: string,
-    userToken: string
+    userToken: string | null
 ) => {
     try {   
         await axios.delete(`${API_BASE_URL}/timetables/delete/${timetableId}`, {

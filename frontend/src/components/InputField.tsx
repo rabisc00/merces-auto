@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, DimensionValue } from 'react-native';
+import { globalStyles } from '../styles/global';
 
 type Props = {
   label: string;
@@ -23,51 +24,22 @@ const InputField: React.FC<Props> = ({
   onChangeText 
 }) => {
   return (
-    <View style={[styles.container, { width }]}>
-      <Text style={styles.label}>
+    <View style={[globalStyles.inputContainer, { width }]}>
+      <Text style={globalStyles.inputLabel}>
         {label}
-        {required && <Text style={styles.asterisk}> *</Text>}
+        {required && <Text style={globalStyles.asterisk}> *</Text>}
       </Text>
       <TextInput
-        style={[styles.input, errorMessage && styles.inputError]}
+        style={[globalStyles.input, errorMessage && globalStyles.inputError]}
         value={value}
         onChangeText={onChangeText}
         keyboardType={isNumber ? 'numeric' : 'default'}
         autoCapitalize='none'
         secureTextEntry={password}
       />
-      {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+      {errorMessage && <Text style={globalStyles.errorText}>{errorMessage}</Text>}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 16,
-    width: '100%'
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 4,
-  },
-  asterisk: {
-    color: 'red',
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    paddingHorizontal: 8,
-    borderRadius: 4,
-    width: '100%'
-  },
-  inputError: {
-    borderColor: 'red'
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 8
-  }
-});
 
 export default InputField;

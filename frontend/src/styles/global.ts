@@ -1,13 +1,6 @@
 import { StyleSheet } from "react-native";
 
 export const globalStyles = StyleSheet.create({
-    input: {
-        borderWidth: 1, 
-        borderColor: '#cccccc', 
-        marginBottom: 10, 
-        padding: 8, 
-        borderRadius: 5 
-    },
     buttonWithIcon: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -80,5 +73,31 @@ export const globalStyles = StyleSheet.create({
     },
     cardContent: {
         width: '80%'
+    },
+    inputContainer: {
+        marginBottom: 16,
+        width: '100%'
+    },
+    inputLabel: {
+        fontSize: 16,
+        marginBottom: 4
+    },
+    asterisk: {
+        color: 'red',
+    },
+    input: {
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        paddingHorizontal: 8,
+        borderRadius: 4,
+        width: '100%'
+    },
+    inputError: {
+        borderColor: 'red'
+    },
+    errorText: {
+        color: 'red',
+        marginBottom: 8
     }
 });

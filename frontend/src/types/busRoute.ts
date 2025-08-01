@@ -26,4 +26,4 @@ export type BusRouteUpdate = {
     lineNumber: string;
     origin: string;
     destination: string;
-}
+};
