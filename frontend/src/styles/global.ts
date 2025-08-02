@@ -79,7 +79,7 @@ export const globalStyles = StyleSheet.create({
         width: '100%'
     },
     inputLabel: {
-        fontSize: 16,
+        fontSize: 14,
         marginBottom: 4
     },
     asterisk: {
@@ -91,6 +91,7 @@ export const globalStyles = StyleSheet.create({
         borderWidth: 1,
         paddingHorizontal: 8,
         borderRadius: 4,
+        fontSize: 14,
         width: '100%'
     },
     inputError: {
@@ -99,5 +100,26 @@ export const globalStyles = StyleSheet.create({
     errorText: {
         color: 'red',
         marginBottom: 8
+    },
+    dropdown: {
+        borderColor: '#ccc',
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 6,
+    },
+    dropdownItemView: {
+        padding: 10,
+    },
+    dropdownItemText: {
+        fontSize: 14
+    },
+    dropdownSelectedItemText: {
+        fontSize: 14,
+        color: 'black',
+        flex: 1
+    },
+    multiSelectMainText: {
+        fontSize: 14,
+        color: 'black'
     }
 });

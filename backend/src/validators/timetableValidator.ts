@@ -13,7 +13,7 @@ export const timetableCreateSchema = z.object({
     departureTime: z.string().refine(isValidDate, {
         message: 'Invalid format: departureTime must be YYYY-MM-DD HH:mm:ss'
     }),
-    days: z.array(z.string().nonempty()).min(1, {
+    days: z.array(z.int().min(0).max(6)).min(1, {
         error: 'Days can\'t be empty'
     })
 });
@@ -25,5 +25,5 @@ export const timetableEditSchema = z.object({
     departureTime: z.string().refine(isValidDate, {
         message: 'Invalid format: departureTime must be YYYY-MM-DD HH:mm:ss'
     }).nullable().optional(),
-    days: z.array(z.string().nonempty()).nullable().optional()
+    days: z.array(z.int().min(0).max(6)).nullable().optional()
 });

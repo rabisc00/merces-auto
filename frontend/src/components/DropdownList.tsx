@@ -2,13 +2,13 @@ import RNPickerSelect from "react-native-picker-select";
 import { DimensionValue, StyleSheet, Text, View } from "react-native";
 import { Dropdown } from 'react-native-element-dropdown';
 import { globalStyles } from "../styles/global";
-import { DropdownItem } from "../types/dropdown";
+import { ListObject } from "../types/listObject";
 
 type Props = {
     label: string;
     required: boolean;
     selectedValue: string;
-    options: DropdownItem[];
+    options: ListObject[];
     onValueChange: (value: string) => void;
     errorMessage?: string | boolean;
     width?: DimensionValue;
@@ -30,12 +30,8 @@ export const DropdownList: React.FC<Props> = ({
                 {required && <Text style={globalStyles.asterisk}> *</Text>}
             </Text>
             <Dropdown
-                style={[styles.dropdown, errorMessage && globalStyles.inputError]}
-                selectedTextStyle={{
-                    fontSize: 14,
-                    color: 'black',
-                    flex: 1
-                }}
+                style={[globalStyles.dropdown, errorMessage && globalStyles.inputError]}
+                selectedTextStyle={globalStyles.dropdownSelectedItemText}
                 data={options}
                 labelField="label"
                 valueField="value"
@@ -43,8 +39,8 @@ export const DropdownList: React.FC<Props> = ({
                 value={selectedValue}
                 onChange={(item) => onValueChange(item)}
                 renderItem={(item) => (
-                    <View style={{ padding: 10 }}>
-                        <Text numberOfLines={1} ellipsizeMode="tail" style={{ fontSize: 14 }}>
+                    <View style={globalStyles.dropdownItemView}>
+                        <Text style={globalStyles.dropdownItemText}>
                             {item.label}
                         </Text>
                     </View>
@@ -54,24 +50,3 @@ export const DropdownList: React.FC<Props> = ({
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    dropdown: {
-        borderColor: '#ccc',
-        borderWidth: 1,
-        padding: 10,
-        borderRadius: 6,
-    },
-    selectedText: {
-        fontSize: 14,
-        color: 'black',
-        overflow: 'hidden',
-    },
-    itemContainer: {
-        padding: 10,
-    },
-    itemText: {
-        fontSize: 14,
-        color: 'black',
-    },
-})

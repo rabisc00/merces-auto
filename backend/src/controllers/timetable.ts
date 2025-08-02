@@ -23,14 +23,14 @@ export const createTimetable = async function(req: AuthRequest, res: Response) {
             departureTime: dayjsDepartureTime.toDate()
         });
 
-        const inputDays = days.map(day => day.toUpperCase());
+        const daysMap = days.map((d: string) => parseInt(d))
 
         const dayRecords = await DayOfTheWeek.findAll({
-            where: { name: inputDays }
+            where: { dayId: daysMap }
         });
 
-        const foundDayNames = dayRecords.map(record => record.name);
-        const invalidDays = inputDays.filter(day => !foundDayNames.includes(day));
+        const foundDayIds = dayRecords.map(record => record.dayId);
+        const invalidDays = daysMap.filter((day: number) => !foundDayIds.includes(day));
 
         if (invalidDays.length > 0) {
             return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });

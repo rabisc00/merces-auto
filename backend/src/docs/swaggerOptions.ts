@@ -358,7 +358,7 @@ export const swaggerOptions = {
             days: {
               type: 'array',
               items: {
-                type: 'string'
+                type: 'integer'
               }
             }
           }
@@ -472,7 +472,7 @@ export const swaggerOptions = {
             days: {
               type: 'array',
               items: {
-                type: 'string'
+                type: 'integer'
               }
             }
           }
@@ -562,7 +562,7 @@ export const swaggerOptions = {
             days: {
               type: 'array',
               items: {
-                type: 'string'
+                type: 'integer'
               }
             }
           }

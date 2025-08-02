@@ -10,9 +10,11 @@ import { BusRoutesOptionsNavigationProp, BusRouteStackParamList } from "../types
 import { timetableCreateSchema } from "../validations/timetableSchema";
 import { fetchBusRoutes } from "../services/busRouteService";
 import { useEffect, useState } from "react";
-import { DropdownItem } from "../types/dropdown";
+import { ListObject } from "../types/listObject";
 import { DropdownList } from "../components/DropdownList";
 import { DatetimePicker } from "../components/DatetimePicker";
+import { MultiSelectList } from "../components/MultiSelectList";
+import { daysOfTheWeek } from "../const/days";
 
 type BusRouteRouteProp = RouteProp<BusRouteStackParamList, 'TimetableRegistration'>;
 
@@ -22,7 +24,7 @@ export default function TimetableRegistrationScreen() {
     const navigation = useNavigation<BusRoutesOptionsNavigationProp>();
     const route = useRoute<BusRouteRouteProp>();
 
-    const [busRoutes, setBusRoutes] = useState<DropdownItem[]>([]);
+    const [busRoutes, setBusRoutes] = useState<ListObject[]>([]);
     const [busRoutePage, setBusRoutePage] = useState<number>(1);
     const [loadingBusRoute, setLoadingBusRoute] = useState(false);
     const [hasMoreBusRoutes, setHasMoreBusRoutes] = useState(true);
@@ -35,7 +37,7 @@ export default function TimetableRegistrationScreen() {
 
         try {
             const response = await fetchBusRoutes(busRoutePage, userToken);
-            const dropdownObjects: DropdownItem[] = response.records.map((br) => {
+            const dropdownObjects: ListObject[] = response.records.map((br) => {
                 return {
                     value: br.id,
                     label: `${br.lineNumber}: ${br.origin} -> ${br.destination}`
@@ -77,21 +79,21 @@ export default function TimetableRegistrationScreen() {
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
             <HeaderWithSearch />
-            <Formik
+            <Formik<TimetableCreate>
                 initialValues={{ 
-                    busRouteId: busRouteId || '', 
+                    busRouteId: '', 
                     arrivalTime: '', 
                     departureTime: '', 
                     days: []
                 }}
                 onSubmit={callRegisterTimetable}
                 validationSchema={timetableCreateSchema}
-                validateOnMount={true}
             >
                 {({
                     handleSubmit,
                     setFieldValue,
                     setFieldTouched,
+                    setTouched,
                     values,
                     errors,
                     touched
@@ -135,7 +137,38 @@ export default function TimetableRegistrationScreen() {
                                 width='100%'
                             />
 
-                            <Button title="Register" onPress={() => handleSubmit()} />
+                            <MultiSelectList
+                                label="Days of the Week"
+                                required={true}
+                                onValueChange={(currentValue) => {
+                                    let updatedDays;
+                                    if (values.days.includes(currentValue)) {
+                                        updatedDays = values.days.filter(d => d != currentValue);
+                                    } else {
+                                        updatedDays = [...values.days, currentValue];
+                                    }
+                                    
+                                    setFieldValue('days', updatedDays);
+                                }}
+                                selectedItems={values.days}
+                                options={daysOfTheWeek}
+                                errorMessage={touched.days && typeof errors.days === 'string' ? errors.days : undefined}
+                                width='100%'
+                            />
+
+                            <Button 
+                                title="Register" 
+                                onPress={() => {
+                                    setTouched({
+                                        busRouteId: true,
+                                        arrivalTime: true,
+                                        departureTime: true,
+                                        days: true
+                                    });
+
+                                    handleSubmit();
+                                }}
+                            />
                         </View>
                     )
                 }}
