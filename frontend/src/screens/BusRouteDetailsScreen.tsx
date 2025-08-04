@@ -72,7 +72,6 @@ export default function BusRouteDetailsScreen() {
                     {({
                         handleChange,
                         handleSubmit,
-                        setFieldValue,
                         values,
                         errors,
                         touched

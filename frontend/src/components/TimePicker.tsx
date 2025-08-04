@@ -1,6 +1,6 @@
 import { DimensionValue, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { globalStyles } from "../styles/global";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
@@ -22,6 +22,21 @@ export const TimePicker: React.FC<Props> = ({
     width
 }) => {
     const [isPickerVisible, setPickerVisible] = useState(false);
+    const [dateString, setDateString] = useState<string>('');
+
+    useEffect(() => {
+        const initialDate = new Date(value);
+        if (!isNaN(initialDate.getTime())) {
+            initialDate.setSeconds(0);
+            setDateString(initialDate.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            }));
+        } else {
+            setDateString(value);
+        }
+    }, [value])
 
     return (
         <View style={[globalStyles.inputContainer, { width }]}>
@@ -34,10 +49,7 @@ export const TimePicker: React.FC<Props> = ({
                 style={[styles.datetimeContainer, errorMessage && globalStyles.inputError]}
             >
                 <Text>
-                    {value ?
-                        dayjs(value).format('HH:mm') :
-                        'Select Time'
-                    }
+                    {dateString || 'Select Time'}
                 </Text>
             </TouchableOpacity>
             {errorMessage && <Text style={globalStyles.errorText}>{errorMessage}</Text>}

@@ -60,22 +60,10 @@ export default function TimetableRegistrationScreen() {
     const callRegisterTimetable = async (values: TimetableCreateForm) => {
         showLoading();
 
-        const formattedArrival = (new Date(values.arrivalTime)).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        });
-
-        const formattedDeparture = (new Date(values.departureTime)).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        });
-
         const obj: TimetableCreateRequest = {
             busRouteId: values.busRouteId,
-            arrivalTime: formattedArrival,
-            departureTime: formattedDeparture,
+            arrivalTime: values.arrivalTime,
+            departureTime: values.departureTime,
             days: values.days.map((d: string) => parseInt(d))
         };
 
@@ -113,7 +101,6 @@ export default function TimetableRegistrationScreen() {
                 {({
                     handleSubmit,
                     setFieldValue,
-                    setFieldTouched,
                     setTouched,
                     values,
                     errors,

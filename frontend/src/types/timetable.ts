@@ -23,13 +23,8 @@ export type TimetableDetails = {
     departureTime: string;
     createdAt: string;
     updatedAt: string;
-    busRoute: {
-        id: string;
-        lineNumber: string;
-        origin: string;
-        destination: string;
-    };
-    days: number[];
+    busRoute: BusRoute;
+    days: DayId[];
 };
 
 export type TimetableCreateRequest = {
@@ -46,9 +41,14 @@ export type TimetableCreateForm = {
     days: string[];
 };
 
-export type TimetableUpdate = {
-    busRouteId: string;
+export type TimetableUpdateForm = {
     arrivalTime: string;
     departureTime: string;
-    days: string[] | number[];
+    days: string[];
+};
+
+export type TimetableUpdateRequest = {
+    arrivalTime: string;
+    departureTime: string;
+    days: number[];
 };

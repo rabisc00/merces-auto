@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Timetable, TimetableCreateRequest, TimetableDetails, TimetableUpdate } from "../types/timetable";
+import { Timetable, TimetableCreateRequest, TimetableDetails, TimetableUpdateRequest } from "../types/timetable";
 import { showError } from "../utils/alerts";
 import { API_BASE_URL } from "../config/api";
 import { CreateResponse, ListResponse } from "../types/api";
@@ -76,13 +76,12 @@ export const registerTimetable = async (
 };
 
 export const saveTimetableChanges = async (
-    timetable: TimetableUpdate,
+    timetable: TimetableUpdateRequest,
     timetableId: string,
     userToken: string | null
 ): Promise<boolean> => {
     try {
         await axios.patch(`${API_BASE_URL}/timetables/edit/${timetableId}`, {
-            busRouteId: timetable.busRouteId,
             arrivalTime: timetable.arrivalTime,
             departureTime: timetable.departureTime,
             days: timetable.days

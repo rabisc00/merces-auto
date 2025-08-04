@@ -154,7 +154,8 @@ export const getTimetableDetails = async function (req: AuthRequest, res: Respon
                 attributes: ['id', 'lineNumber', 'origin', 'destination'],
             }, {
                 model: DayOfTheWeek,
-                attributes: ['name']
+                attributes: ['dayId'],
+                through: { attributes: [] }
             }]
         });
 
