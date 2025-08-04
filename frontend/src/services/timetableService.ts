@@ -2,13 +2,13 @@ import axios from "axios";
 import { Timetable, TimetableCreateRequest, TimetableDetails, TimetableUpdate } from "../types/timetable";
 import { showError } from "../utils/alerts";
 import { API_BASE_URL } from "../config/api";
-import { CreateResponse } from "../types/api";
+import { CreateResponse, ListResponse } from "../types/api";
 
 export const fetchTimetables = async (
     busRouteId: string,
     date: string,
     userToken: string | null
-): Promise<Timetable[]> => {
+): Promise<ListResponse<Timetable>> => {
     try {
         const res = await axios.get<Timetable[]>(`${API_BASE_URL}/timetables/retrieve/byroute/${busRouteId}?date=${date}`, {
             headers: {
@@ -16,7 +16,14 @@ export const fetchTimetables = async (
             }
         });
 
-        return res.data;
+        const listResponse: ListResponse<Timetable> = {
+            currentPage: 0,
+            totalPages: 0,
+            totalCount: 0,
+            records: res.data
+        }
+
+        return listResponse;
     } catch (error: any) {
         console.error(error);
         showError(error.response?.status);

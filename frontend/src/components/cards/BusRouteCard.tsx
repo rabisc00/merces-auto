@@ -47,11 +47,9 @@ export function BusRouteCard({ id, lineNumber, origin, destination }: BusRoute) 
     return (
         <BaseCard>
             <View style={globalStyles.cardView}>
-                <View style={globalStyles.cardView}>
-                    <View style={globalStyles.cardContent}>
-                        <Text style={globalStyles.boldText}>{lineNumber}</Text>
-                        <Text>{origin} <Text style={globalStyles.boldText}>{"-\>"}</Text> {destination}</Text>
-                    </View>
+                <View style={globalStyles.cardContent}>
+                    <Text style={[globalStyles.cardText, globalStyles.boldText]}>{lineNumber}</Text>
+                    <Text style={globalStyles.cardText}>{origin} {"-\>"} {destination}</Text>
                 </View>
 
                 <CardActionButtons

@@ -23,7 +23,7 @@ export default function TimetableCalendarScreen() {
 
     const navigateAdd = () => {
         navigation.navigate('TimetableRegistration', { busRouteId });
-    }
+    };
 
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
@@ -43,6 +43,7 @@ export default function TimetableCalendarScreen() {
                 </TouchableOpacity>
                 
                 <Calendar
+                minDate={new Date().toISOString().split('T')[0]}
                     onDayPress={handleDayPress}
                 />
             </View>

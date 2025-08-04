@@ -36,7 +36,7 @@ export default function BusRoutesListScreen() {
                         />
                     )}
                     keyExtractor={(busRoute) => busRoute.id}
-                    addButtonText={"Add New Bus Route"}
+                    addButtonText={"Add Bus Route"}
                     navigateAdd={() => navigation.navigate('BusRouteRegistration')}
                     refreshFlag={refreshFlag}
                 />

@@ -39,9 +39,9 @@ export function BusCard({ id, busNumber, model, inRepair }: Bus) {
         <BaseCard >
             <View style={globalStyles.cardView}>
                 <View>
-                    <Text style={globalStyles.boldText}>{busNumber}</Text>
-                    <Text>{model || 'Undefined model'}</Text>
-                    <Text>{inRepair ? 'In Repair' : 'Available to Use'}</Text>
+                    <Text style={[globalStyles.cardText, globalStyles.boldText]}>{busNumber}</Text>
+                    <Text style={globalStyles.cardText}>{model || 'Undefined model'}</Text>
+                    <Text style={globalStyles.cardText}>{inRepair ? 'In Repair' : 'Available to Use'}</Text>
                 </View>
                 
                 <CardActionButtons 

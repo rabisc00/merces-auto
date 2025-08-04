@@ -197,8 +197,37 @@ export const swaggerOptions = {
             departureTime: {
               type: 'string',
               format: 'date-time'
+            },
+            busRoute: {
+              type: 'object',
+              properties: {
+                id: {
+                  type: 'string',
+                  format: 'uuid'
+                },
+                lineNumber: {
+                  type: 'string'
+                },
+                origin: {
+                  type: 'string'
+                },
+                destination: {
+                  type: 'string'
+                }
+              }
+            },
+            days: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  dayId: {
+                    type: 'number'
+                  }
+                }
+              }
             }
-          }
+          },
         }, 
         Trip: {
           type: 'object',

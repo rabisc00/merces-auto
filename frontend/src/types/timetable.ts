@@ -1,7 +1,20 @@
+type DayId = {
+    dayId: number;
+};
+
+type BusRoute = {
+    id: string;
+    lineNumber: string;
+    origin: string;
+    destination: string;
+}
+
 export type Timetable = {
     id: string;
     arrivalTime: string;
     departureTime: string;
+    days: DayId[];
+    busRoute: BusRoute
 };
 
 export type TimetableDetails = {

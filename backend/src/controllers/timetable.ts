@@ -54,26 +54,16 @@ export const editTimetable = async function(req: AuthRequest, res: Response) {
             return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
-        const existingArrival = dayjs(timetableFound.arrivalTime);
-        const existingDeparture = dayjs(timetableFound.departureTime);
-
-        const newArrival = arrivalTime ? dayjs(arrivalTime) : existingArrival;
-        const newDeparture = departureTime ? dayjs(departureTime) : existingDeparture;
-
-        if (!newDeparture.isAfter(newArrival)) {
-            return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
-        }
-
         let changed = false;
 
         // Only update if the new value is different from what's in DB
-        if (arrivalTime && !newArrival.isSame(existingArrival)) {
-            timetableFound.arrivalTime = newArrival.toDate();
+        if (arrivalTime && timetableFound.arrivalTime !== arrivalTime) {
+            timetableFound.arrivalTime = departureTime;
             changed = true;
         }
 
-        if (departureTime && !newDeparture.isSame(existingDeparture)) {
-            timetableFound.departureTime = newDeparture.toDate();
+        if (departureTime && timetableFound.departureTime !== departureTime) {
+            timetableFound.departureTime = departureTime;
             changed = true;
         }
 
@@ -130,16 +120,19 @@ export const getTimetableByDate = async function (req: AuthRequest, res: Respons
 
         const timetables = await Timetable.findAll({
             attributes: ['id', 'arrivalTime', 'departureTime'],
+            where: {
+                routeId: routeId
+            },
             include: [{
                 model: DayOfTheWeek,
+                attributes: ['dayId'],
                 where: {
                     dayId: dayIndex
-                }
+                },
+                through: { attributes: [] }
             }, {
                 model: BusRoute,
-                where: {
-                    id: routeId
-                }
+                attributes: ['id', 'lineNumber', 'origin', 'destination']
             }]
         });
 

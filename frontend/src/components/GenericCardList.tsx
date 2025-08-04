@@ -8,7 +8,7 @@ type GenericCardListProps<T> = {
     fetchData: (page: number) => Promise<ListResponse<T>>;
     renderItem: (item: T) => React.ReactElement;
     keyExtractor: (item: T) => string;
-    navigateAdd: () => void;
+    navigateAdd?: () => void;
     refreshFlag: boolean;
     addButtonText: string;
 };
@@ -62,19 +62,21 @@ export function GenericCardList<T>({
 
     return (
         <View>
-            <TouchableOpacity
-                style={globalStyles.buttonWithIcon}
-                onPress={navigateAdd}
-            >
-                <Ionicons
-                    name="add-circle-outline"
-                    size={24}
-                    style={globalStyles.buttonIcon}
-                />
-                <Text style={globalStyles.buttonWithIconText}>
-                    {addButtonText}
-                </Text>
-            </TouchableOpacity>
+            {navigateAdd &&
+                <TouchableOpacity
+                    style={globalStyles.buttonWithIcon}
+                    onPress={navigateAdd}
+                >
+                    <Ionicons
+                        name="add-circle-outline"
+                        size={24}
+                        style={globalStyles.buttonIcon}
+                    />
+                    <Text style={globalStyles.buttonWithIconText}>
+                        {addButtonText}
+                    </Text>
+                </TouchableOpacity>
+            }
             <FlatList
                 data={items}
                 renderItem={({ item }) => renderItem(item)}

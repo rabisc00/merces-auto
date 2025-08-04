@@ -62,17 +62,19 @@ export const globalStyles = StyleSheet.create({
         color: '#abb2bf'
     },
     cardView: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: 16
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        gap: 8
     },
     boldText: {
         fontWeight: 'bold'
     },
     cardContent: {
-        width: '80%'
+        width: '100%',
+    },
+    cardText: {
+        marginBottom: 6,
+        fontSize: 14
     },
     inputContainer: {
         marginBottom: 16,

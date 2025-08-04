@@ -17,7 +17,7 @@ export default function CardActionButtons({ deleteAction, detailsAction, tripsAc
                     <Ionicons
                         name="trash"
                         size={24}
-                        style={globalStyles.buttonDeleteIcon}
+                        style={[globalStyles.buttonDeleteIcon, globalStyles.buttonIcon]}
                     />
                 </TouchableOpacity>
             }
@@ -60,8 +60,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     flexWrap: 'wrap',
-    marginTop: 8,
-    gap: 16,
-    width: '20%'
+    gap: 8
   }
 });

@@ -56,9 +56,9 @@ export function UserCard({ id, documentNumber, name, picture, isAdmin, active }:
                         </Grayscale>
                     } 
                     <View>
-                        <Text numberOfLines={3} style={[globalStyles.boldText, !active ? userCardStyles.inactive : '']}>{name}</Text>
-                        <Text style={!active ? userCardStyles.inactive : ''}>{documentNumber}</Text>
-                        <Text style={!active ? userCardStyles.inactive : ''}>Admin: {isAdmin ? "true" : "false"}</Text>
+                        <Text numberOfLines={3} style={[globalStyles.cardText, globalStyles.boldText, !active ? userCardStyles.inactive : '']}>{name}</Text>
+                        <Text style={[globalStyles.cardText, !active ? userCardStyles.inactive : '']}>{documentNumber}</Text>
+                        <Text style={[globalStyles.cardText, !active ? userCardStyles.inactive : '']}>Admin: {isAdmin ? "true" : "false"}</Text>
                     </View>
                 </View>
                 
