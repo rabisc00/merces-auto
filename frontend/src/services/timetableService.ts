@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Timetable, TimetableCreate, TimetableDetails, TimetableUpdate } from "../types/timetable";
+import { Timetable, TimetableCreateRequest, TimetableDetails, TimetableUpdate } from "../types/timetable";
 import { showError } from "../utils/alerts";
 import { API_BASE_URL } from "../config/api";
 import { CreateResponse } from "../types/api";
@@ -44,10 +44,11 @@ export const getTimetableDetails = async (
 };
 
 export const registerTimetable = async (
-    timetable: TimetableCreate,
+    timetable: TimetableCreateRequest,
     userToken: string | null
 ): Promise<boolean> => {
     try {
+        console.log(timetable);
         await axios.post<CreateResponse>(`${API_BASE_URL}/timetables/create`, {
             busRouteId: timetable.busRouteId,
             arrivalTime: timetable.arrivalTime,

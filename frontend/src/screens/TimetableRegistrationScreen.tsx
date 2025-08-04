@@ -2,7 +2,7 @@ import { Button, SafeAreaView, Text, View } from "react-native";
 import { globalStyles } from "../styles/global";
 import HeaderWithSearch from "../components/HeaderWithSearch";
 import { Formik } from "formik";
-import { TimetableCreate } from "../types/timetable";
+import { TimetableCreateForm, TimetableCreateRequest } from "../types/timetable";
 import { useLoading } from "../context/LoadingContext";
 import { useAuth } from "../context/AuthContext";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -12,9 +12,10 @@ import { fetchBusRoutes } from "../services/busRouteService";
 import { useEffect, useState } from "react";
 import { ListObject } from "../types/listObject";
 import { DropdownList } from "../components/DropdownList";
-import { DatetimePicker } from "../components/DatetimePicker";
+import { TimePicker } from "../components/TimePicker";
 import { MultiSelectList } from "../components/MultiSelectList";
 import { daysOfTheWeek } from "../const/days";
+import { registerTimetable } from "../services/timetableService";
 
 type BusRouteRouteProp = RouteProp<BusRouteStackParamList, 'TimetableRegistration'>;
 
@@ -56,13 +57,33 @@ export default function TimetableRegistrationScreen() {
         }
     };
 
-    const callRegisterTimetable = async (values: TimetableCreate) => {
+    const callRegisterTimetable = async (values: TimetableCreateForm) => {
         showLoading();
-        console.log(values);
-        // const registerValid = await registerTimetable(values, userToken);
-        // if (registerValid) {
-        //     navigation.navigate('TimetableCalendar', { busRouteId });
-        // }
+
+        const formattedArrival = (new Date(values.arrivalTime)).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
+
+        const formattedDeparture = (new Date(values.departureTime)).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
+
+        const obj: TimetableCreateRequest = {
+            busRouteId: values.busRouteId,
+            arrivalTime: formattedArrival,
+            departureTime: formattedDeparture,
+            days: values.days.map((d: string) => parseInt(d))
+        };
+
+        const registerValid = await registerTimetable(obj, userToken);
+        if (registerValid) {
+            navigation.navigate('TimetableCalendar', { busRouteId });
+        }
+
         hideLoading();
     }
 
@@ -79,7 +100,7 @@ export default function TimetableRegistrationScreen() {
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
             <HeaderWithSearch />
-            <Formik<TimetableCreate>
+            <Formik<TimetableCreateForm>
                 initialValues={{ 
                     busRouteId: '', 
                     arrivalTime: '', 
@@ -96,7 +117,8 @@ export default function TimetableRegistrationScreen() {
                     setTouched,
                     values,
                     errors,
-                    touched
+                    touched,
+                    isValid
                 }) => {
                     return (
                         <View style={globalStyles.mainContainer}>
@@ -105,35 +127,8 @@ export default function TimetableRegistrationScreen() {
                                 required={true}
                                 selectedValue={values.busRouteId}
                                 options={busRoutes}
-                                onValueChange={(value) => {
-                                    setFieldValue('busRouteId', value);
-                                    setFieldTouched('busRouteId', true);
-                                }}
+                                onValueChange={(value) => setFieldValue('busRouteId', value)}
                                 errorMessage={touched.busRouteId && errors.busRouteId}
-                                width='100%'
-                            />
-                            
-                            <DatetimePicker
-                                label="Arrival Time"
-                                value={values.arrivalTime}
-                                onChangeValue={(value) => {
-                                    setFieldValue('arrivalTime', value);
-                                    setFieldTouched('arrivalTime', true);
-                                }}
-                                required={true}
-                                errorMessage={touched.arrivalTime && errors.arrivalTime}
-                                width='100%'
-                            />
-
-                            <DatetimePicker
-                                label="Departure Time"
-                                value={values.departureTime}
-                                onChangeValue={(value) => {
-                                    setFieldValue('departureTime', value);
-                                    setFieldTouched('departureTime', true);
-                                }}
-                                required={true}
-                                errorMessage={touched.departureTime && errors.departureTime}
                                 width='100%'
                             />
 
@@ -155,10 +150,30 @@ export default function TimetableRegistrationScreen() {
                                 errorMessage={touched.days && typeof errors.days === 'string' ? errors.days : undefined}
                                 width='100%'
                             />
+                            
+                            <View style={globalStyles.inputRow}>
+                                <TimePicker
+                                    label="Arrival Time"
+                                    value={values.arrivalTime}
+                                    onChangeValue={(value) => setFieldValue('arrivalTime', value)}
+                                    required={true}
+                                    errorMessage={touched.arrivalTime && errors.arrivalTime}
+                                    width='45%'
+                                />
+
+                                <TimePicker
+                                    label="Departure Time"
+                                    value={values.departureTime}
+                                    onChangeValue={(value) => setFieldValue('departureTime', value)}
+                                    required={true}
+                                    errorMessage={touched.departureTime && errors.departureTime}
+                                    width='45%'
+                                />
+                            </View>
 
                             <Button 
                                 title="Register" 
-                                onPress={() => {
+                                onPress={async () => {
                                     setTouched({
                                         busRouteId: true,
                                         arrivalTime: true,
@@ -166,7 +181,9 @@ export default function TimetableRegistrationScreen() {
                                         days: true
                                     });
 
-                                    handleSubmit();
+                                    if (isValid) {
+                                        handleSubmit();
+                                    }
                                 }}
                             />
                         </View>

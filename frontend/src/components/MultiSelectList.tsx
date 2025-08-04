@@ -31,7 +31,7 @@ export const MultiSelectList: React.FC<Props> = ({
         .join(", ");
 
     return (
-        <View style={[globalStyles.inputContainer, { width }]}>
+        <View style={[globalStyles.inputContainer, { width, position: 'relative' }]}>
             <Text style={globalStyles.inputLabel}>
                 {label}
                 {required && <Text style={globalStyles.asterisk}>*</Text>}
@@ -40,37 +40,38 @@ export const MultiSelectList: React.FC<Props> = ({
                 style={[globalStyles.dropdown, errorMessage && globalStyles.inputError]}
                 onPress={() => setExpanded(prev => !prev)}
             >
-                <Text style={[globalStyles.dropdownSelectedItemText, errorMessage && globalStyles.errorText]}>
+                <Text>
                     {selectedLabels || 'Select...'}
                 </Text>
             </TouchableOpacity>
-            {expanded && (
-                <FlatList
-                    data={options}
-                    keyExtractor={(item) => item.value.toString()}
-                    renderItem={({ item }) => {
-                        const isSelected = selectedItems.includes(item.value);
-                        return (
-                            <TouchableOpacity
-                                style={[listStyles.listItem, isSelected && listStyles.selectedText]}
-                                onPress={() => onValueChange(item.value)}
-                            >
-                                <Text style={isSelected ? listStyles.selectedText : listStyles.text}>
-                                    {item.label}
-                                </Text>
-
-                                {selectedItems.includes(item.value) && <Ionicons
-                                    name="checkmark-outline"
-                                    size={24}
-                                    style={globalStyles.buttonIcon}
-                                />}
-                            </TouchableOpacity>
-                        )
-                    }}  
-                />
-            )}
-            
             {errorMessage && <Text style={globalStyles.errorText}>{errorMessage}</Text>}
+            {expanded && (
+                <View style={listStyles.dropdownList}>
+                    <FlatList
+                        data={options}
+                        keyExtractor={(item) => item.value.toString()}
+                        renderItem={({ item }) => {
+                            const isSelected = selectedItems.includes(item.value);
+                            return (
+                                <TouchableOpacity
+                                    style={[listStyles.listItem, isSelected && listStyles.selectedText]}
+                                    onPress={() => onValueChange(item.value)}
+                                >
+                                    <Text style={isSelected ? listStyles.selectedText : listStyles.text}>
+                                        {item.label}
+                                    </Text>
+
+                                    {selectedItems.includes(item.value) && <Ionicons
+                                        name="checkmark-outline"
+                                        size={24}
+                                        style={globalStyles.buttonIcon}
+                                    />}
+                                </TouchableOpacity>
+                            )
+                        }}  
+                    />
+                </View>
+            )}
         </View>
     )
 }
@@ -86,6 +87,17 @@ const listStyles = StyleSheet.create({
         fontSize: 14,
         color: 'black',
         overflow: 'hidden',
+    },
+    dropdownList: {
+        position: 'absolute',
+        top: 60,
+        left: 0,
+        right: 0,
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        zIndex: 9999,
+        maxHeight: 200
     },
     text: {
         color: '#333',

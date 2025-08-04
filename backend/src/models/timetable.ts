@@ -28,16 +28,16 @@ export default class Timetable extends Model {
   id!: string;
 
   @Column({
-    type: DataType.DATE,
+    type: DataType.TIME,
     allowNull: false,
   })
-  arrivalTime!: Date;
+  arrivalTime!: string;
 
   @Column({
-    type: DataType.DATE,
+    type: DataType.TIME,
     allowNull: false,
   })
-  departureTime!: Date;
+  departureTime!: string;
 
   @CreatedAt
   @Column(DataType.DATE)

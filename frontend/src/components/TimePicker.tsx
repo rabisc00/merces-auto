@@ -1,4 +1,4 @@
-import { DimensionValue, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { DimensionValue, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { globalStyles } from "../styles/global";
 import { useState } from "react";
 import dayjs from "dayjs";
@@ -13,7 +13,7 @@ type Props = {
     width?: DimensionValue;
 }
 
-export const DatetimePicker: React.FC<Props> = ({
+export const TimePicker: React.FC<Props> = ({
     label,
     value,
     onChangeValue,
@@ -35,8 +35,8 @@ export const DatetimePicker: React.FC<Props> = ({
             >
                 <Text>
                     {value ?
-                        dayjs(value).format('YYYY-MM-DD HH:mm') :
-                        'Select Datetime'
+                        dayjs(value).format('HH:mm') :
+                        'Select Time'
                     }
                 </Text>
             </TouchableOpacity>
@@ -44,7 +44,9 @@ export const DatetimePicker: React.FC<Props> = ({
 
             <DateTimePickerModal
                 isVisible={isPickerVisible}
-                mode="datetime"
+                mode="time"
+                is24Hour={true}
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 onConfirm={(date) => {
                     onChangeValue(date.toString());
                     setPickerVisible(false);

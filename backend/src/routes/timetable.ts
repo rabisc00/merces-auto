@@ -149,7 +149,7 @@ router.post('/create', authenticateToken, validate(timetableCreateSchema), creat
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/TimetableInput'
+ *             $ref: '#/components/schemas/TimetableUpdateInput'
  *     responses:
  *       200:
  *         description: Bus timetable updated successfully or no changes made

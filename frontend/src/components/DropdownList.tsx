@@ -37,7 +37,7 @@ export const DropdownList: React.FC<Props> = ({
                 valueField="value"
                 placeholder="Select a bus route..."
                 value={selectedValue}
-                onChange={(item) => onValueChange(item)}
+                onChange={(item) => onValueChange(item.value)}
                 renderItem={(item) => (
                     <View style={globalStyles.dropdownItemView}>
                         <Text style={globalStyles.dropdownItemText}>

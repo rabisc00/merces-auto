@@ -10,17 +10,10 @@ export const createTimetable = async function(req: AuthRequest, res: Response) {
     try {
         const { busRouteId, arrivalTime, departureTime, days } = req.body;
 
-        const dayjsArrivalTime = dayjs(arrivalTime);
-        const dayjsDepartureTime = dayjs(departureTime);
-
-        if (!dayjsDepartureTime.isAfter(dayjsArrivalTime)) {
-            return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
-        }
-
         const timetable = await Timetable.create({
             routeId: busRouteId,
-            arrivalTime: dayjsArrivalTime.toDate(),
-            departureTime: dayjsDepartureTime.toDate()
+            arrivalTime: arrivalTime,
+            departureTime: departureTime
         });
 
         const daysMap = days.map((d: string) => parseInt(d))
