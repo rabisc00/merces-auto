@@ -240,14 +240,6 @@ export const swaggerOptions = {
             timetable: {
               type: 'object',
               properties: {
-                arrivalTime: {
-                  type: 'string',
-                  format: 'date-time'
-                },
-                departureTime: {
-                  type: 'string',
-                  format: 'date-time'
-                },
                 busRoute: {
                   type: 'object',
                   properties: {
@@ -405,32 +397,19 @@ export const swaggerOptions = {
               type: 'object',
               properties: {
                 busNumber: { type: 'string' },
-                model: { type: 'string' },
-                capacity: { type: 'integer' },
-                manufacturingYear: { type: 'integer' }
+                model: { type: 'string' }
               }
             },
-            users: {
+            user: {
               type: 'object',
               properties: {
-                email: { type: 'string' },
                 documentNumber: { type: 'string' },
-                name: { type: 'string' },
-                picture: { type: 'string' },
-                active: { type: 'boolean' }
+                name: { type: 'string' }
               }
             },
             timetable: {
               type: 'object',
               properties: {
-                arrivalTime: {
-                  type: 'string',
-                  format: 'date-time'
-                },
-                departureTime: {
-                  type: 'string',
-                  format: 'date-time'
-                },
                 busRoute: {
                   type: 'object',
                   properties: {

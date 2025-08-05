@@ -22,12 +22,18 @@ export type UsersStackParamList = {
   UsersList: undefined;
   UserRegistration: undefined;
   UserDetails: { userId: string };
+  TripsList: { userId: string };
+  TripRegistration: { userId: string };
+  TripDetails: { tripId: string }
 };
 
 export type BusStackParamList = {
   BusesList: undefined;
   BusRegistration: undefined;
   BusDetails: { busId: string };
+  TripsList: { busId: string };
+  TripRegistration: { busId: string };
+  TripDetails: { tripId: string }
 };
 
 export type BusRouteStackParamList = {
@@ -49,7 +55,7 @@ export type BusRouteStackParamList = {
   TimetableRegistration: {
     busRouteId: string
   };
-}
+};
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Main'>;
 export type UsersOptionsNavigationProp = NativeStackNavigationProp<UsersStackParamList, 'UsersList'>;

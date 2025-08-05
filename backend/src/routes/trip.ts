@@ -35,9 +35,7 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               type: object
- *               properties:
- *                 busRouteFound:
- *                   $ref: '#/components/schemas/TripDetails'
+ *               $ref: '#/components/schemas/TripDetails'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
