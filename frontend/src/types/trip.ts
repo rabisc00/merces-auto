@@ -1,8 +1,12 @@
 export type Trip = {
     id: string;
     numberOfPassengers: number;
+    date: string;
     timetable: {
+        arrivalTime: string;
+        departureTime: string;
         busRoute: {
+            id: string;
             lineNumber: string;
             origin: string;
             destination: string;
@@ -13,17 +17,24 @@ export type Trip = {
 export type TripDetails = {
     id: string;
     numberOfPassengers: number;
+    date: string;
     observations?: string;
     bus: {
+        id: string;
         busNumber: string;
         model: string;
     };
     user: {
+        id: string;
         documentNumber: string;
         name: string;
     };
     timetable: {
+        id: string;
+        arrivalTime: string;
+        departureTime: string;
         busRoute: {
+            id: string;
             lineNumber: string;
             origin: string;
             destination: string;
@@ -38,6 +49,7 @@ export type TripCreate = {
     busId: string;
     timetableId: string;
     numberOfPassengers: number;
+    date: string;
     observations?: string;
 };
 
@@ -46,5 +58,6 @@ export type TripUpdate = {
     busId: string;
     timetableId: string;
     numberOfPassengers: string;
+    date: string;
     observations?: string;
 }

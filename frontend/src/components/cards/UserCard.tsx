@@ -35,6 +35,15 @@ export function UserCard({ id, documentNumber, name, picture, isAdmin, active }:
         
         navigation.navigate('UserDetails', { userId: id });
     };
+
+    const tripsAction = () => {
+        if (!id) {
+            Alert.alert(ALERT_MESSAGES.INVALID_ID.title, ALERT_MESSAGES.INVALID_ID.message);
+            return;
+        }
+
+        navigation.navigate('UserTripsList', { id });
+    };
     
     return (
         <BaseCard >
@@ -65,6 +74,7 @@ export function UserCard({ id, documentNumber, name, picture, isAdmin, active }:
                 <CardActionButtons 
                     deleteAction={deleteAction}
                     detailsAction={detailsAction}
+                    tripsAction={tripsAction}
                 />
             </View>
         </BaseCard>

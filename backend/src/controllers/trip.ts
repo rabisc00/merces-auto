@@ -12,14 +12,16 @@ export const createTrip = async function (req: AuthRequest, res: Response) {
         const { 
             numberOfPassengers, 
             observations, 
+            date,
             userId, 
             busId, 
-            timetableId 
+            timetableId
         } = req.body;
 
         const trip = await Trip.create({
             numberOfPassengers,
             observations,
+            date,
             userId,
             busId,
             timetableId
@@ -39,6 +41,7 @@ export const editTrip = async function (req: AuthRequest, res: Response) {
         const { 
             numberOfPassengers, 
             observations, 
+            date,
             userId, 
             busId,
             timetableId
@@ -59,6 +62,11 @@ export const editTrip = async function (req: AuthRequest, res: Response) {
 
         if (observations && tripFound.observations !== observations) {
             tripFound.observations = observations;
+            changed = true;
+        }
+
+        if (date && tripFound.date !== date) {
+            tripFound.date = date;
             changed = true;
         }
 
@@ -132,13 +140,13 @@ export const getTripsByUser = async function(req: AuthRequest, res: Response) {
             offset,
             limit,
             where: { userId },
-            attributes: ['id', 'numberOfPassengers'],
+            attributes: ['id', 'numberOfPassengers', 'date'],
             include: [{
                 model: Timetable,
-                attributes: [],
+                attributes: ['id', 'departureTime', 'arrivalTime'],
                 include: [{
                     model: BusRoute,
-                    attributes: ['lineNumber', 'origin', 'destination']
+                    attributes: ['id', 'lineNumber', 'origin', 'destination']
                 }]
             }]
         });
@@ -166,13 +174,13 @@ export const getTripsByBus = async function(req: AuthRequest, res: Response) {
             offset,
             limit,
             where: { busId },
-            attributes: ['id', 'numberOfPassengers'],
+            attributes: ['id', 'numberOfPassengers', 'date'],
             include: [{
                 model: Timetable,
-                attributes: [],
+                attributes: ['id', 'arrivalTime', 'departureTime'],
                 include: [{
                     model: BusRoute,
-                    attributes: ['lineNumber', 'origin', 'destination']
+                    attributes: ['id', 'lineNumber', 'origin', 'destination']
                 }]
             }]
         });
@@ -194,16 +202,16 @@ export const getTripDetails = async function(req: AuthRequest, res: Response) {
 
     try {
         const tripFound = await Trip.findByPk(id, {
-            attributes: ['id', 'numberOfPassengers', 'observations'],
+            attributes: ['id', 'numberOfPassengers', 'observations', 'date'],
             include: [{
                 model: Bus,
-                attributes: ['busNumber', 'model']
+                attributes: ['id', 'busNumber', 'model']
             }, {
                 model: User,
-                attributes: ['documentNumber', 'name']
+                attributes: ['id', 'documentNumber', 'name']
             }, {
                 model: Timetable,
-                attributes: [],
+                attributes: ['id', 'arrivalTime', 'departureTime'],
                 include: [{
                     model: BusRoute,
                     attributes: ['lineNumber', 'origin', 'destination', 'distanceInKm', 'averageTimeInMinutes']

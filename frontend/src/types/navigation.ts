@@ -22,18 +22,18 @@ export type UsersStackParamList = {
   UsersList: undefined;
   UserRegistration: undefined;
   UserDetails: { userId: string };
-  TripsList: { userId: string };
-  TripRegistration: { userId: string };
-  TripDetails: { tripId: string }
+  UserTripsList: { id: string };
+  UserTripRegistration: { id: string };
+  UserTripDetails: { tripId: string }
 };
 
 export type BusStackParamList = {
   BusesList: undefined;
   BusRegistration: undefined;
   BusDetails: { busId: string };
-  TripsList: { busId: string };
-  TripRegistration: { busId: string };
-  TripDetails: { tripId: string }
+  BusTripsList: { id: string };
+  BusTripRegistration: { id: string };
+  BusTripDetails: { tripId: string }
 };
 
 export type BusRouteStackParamList = {

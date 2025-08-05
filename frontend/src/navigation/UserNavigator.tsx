@@ -15,9 +15,9 @@ export default function UsersStackNavigator() {
             <Stack.Screen name="UsersList" component={UsersListScreen} />
             <Stack.Screen name="UserRegistration" component={UserRegistrationScreen} />
             <Stack.Screen name="UserDetails" component={UserDetailsScreen} />
-            <Stack.Screen name="TripsList" component={TripsListScreen} />
-            <Stack.Screen name="TripRegistration" component={TripRegistrationScreen} />
-            <Stack.Screen name="TripDetails" component={TripDetailsScreen} />
+            <Stack.Screen name="UserTripsList" component={TripsListScreen} />
+            <Stack.Screen name="UserTripRegistration" component={TripRegistrationScreen} />
+            <Stack.Screen name="UserTripDetails" component={TripDetailsScreen} />
         </Stack.Navigator>
     )
 }

@@ -31,6 +31,12 @@ export default class Trip extends Model {
   })
   numberOfPassengers!: number;
 
+  @Column({
+    type: DataType.DATEONLY,
+    allowNull: false
+  })
+  date!: Date;
+
   @Column(DataType.TEXT)
   observations?: string;
 

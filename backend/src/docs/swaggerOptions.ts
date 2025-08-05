@@ -237,12 +237,30 @@ export const swaggerOptions = {
               format: 'uuid'
             },
             numberOfPassengers: { type: 'integer' },
+            date: { 
+              type: 'string',
+              format: 'date'
+            },
             timetable: {
               type: 'object',
               properties: {
+                id: {
+                  type: 'string',
+                  format: 'uuid'
+                },
+                arrivalTime: {
+                  type: 'string'
+                },
+                departureTime: {
+                  type: 'string'
+                },
                 busRoute: {
                   type: 'object',
                   properties: {
+                    id: {
+                      type: 'string',
+                      format: 'uuid'
+                    },
                     lineNumber: { type: 'string' },
                     origin: { type: 'string' },
                     destination: { type: 'string' }
@@ -393,9 +411,17 @@ export const swaggerOptions = {
             },
             numberOfPassengers: { type: 'integer' },
             observations: { type: 'string' },
+            date: { 
+              type: 'string', 
+              format: 'date'
+            },
             bus: {
               type: 'object',
               properties: {
+                id: {
+                  type: 'string',
+                  format: 'uuid'
+                },
                 busNumber: { type: 'string' },
                 model: { type: 'string' }
               }
@@ -403,6 +429,10 @@ export const swaggerOptions = {
             user: {
               type: 'object',
               properties: {
+                id: {
+                  type: 'string',
+                  format: 'uuid'
+                },
                 documentNumber: { type: 'string' },
                 name: { type: 'string' }
               }
@@ -410,9 +440,19 @@ export const swaggerOptions = {
             timetable: {
               type: 'object',
               properties: {
+                arrivalTime: {
+                  type: 'string'
+                },
+                departureTime: {
+                  type: 'string'
+                },
                 busRoute: {
                   type: 'object',
                   properties: {
+                    id: {
+                      type: 'string',
+                      format: 'uuid'
+                    },
                     lineNumber: { type: 'string' },
                     origin: { type: 'string' },
                     destination: { type: 'string' },
@@ -508,6 +548,10 @@ export const swaggerOptions = {
           properties: {
             numberOfPassengers: { type: 'integer' },
             observations: { type: 'string' },
+            date: {
+              type: 'string',
+              format: 'date'
+            },
             userId: { 
               type: 'string',
               format: 'uuid'
@@ -580,6 +624,10 @@ export const swaggerOptions = {
           properties: {
             numberOfPassengers: { type: 'integer' },
             observations: { type: 'string' },
+            date: {
+              type: 'string',
+              format: 'date'
+            },
             userId: { 
               type: 'string',
               format: 'uuid'

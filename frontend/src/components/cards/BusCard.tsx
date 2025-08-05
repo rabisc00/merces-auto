@@ -35,6 +35,15 @@ export function BusCard({ id, busNumber, model, inRepair }: Bus) {
         navigation.navigate('BusDetails', { busId: id });
     };
 
+    const tripsAction = () => {
+        if (!id) {
+            Alert.alert(ALERT_MESSAGES.INVALID_ID.title, ALERT_MESSAGES.INVALID_ID.message);
+            return;
+        }
+
+        navigation.navigate('BusTripsList', { id });
+    }
+
     return (
         <BaseCard >
             <View style={globalStyles.cardView}>
@@ -47,6 +56,7 @@ export function BusCard({ id, busNumber, model, inRepair }: Bus) {
                 <CardActionButtons 
                     deleteAction={deleteAction}
                     detailsAction={detailsAction}
+                    tripsAction={tripsAction}
                 />
             </View>
         </BaseCard>

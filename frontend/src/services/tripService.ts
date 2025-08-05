@@ -7,7 +7,7 @@ import { TripDetails } from "../types/trip";
 
 export const fetchTripsByUser = async (
     userId: string,
-    userToken: string,
+    userToken: string | null,
     page: number
 ): Promise<ListResponse<Trip>> => {
     try {
@@ -27,7 +27,7 @@ export const fetchTripsByUser = async (
 
 export const fetchTripsByBus = async (
     busId: string,
-    userToken: string,
+    userToken: string | null,
     page: number
 ): Promise<ListResponse<Trip>> => {
     try {
@@ -47,7 +47,7 @@ export const fetchTripsByBus = async (
 
 export const getTripDetails = async (
     tripId: string,
-    userToken: string
+    userToken: string | null
 ): Promise<TripDetails> => {
     try {
         const res = await axios.get<TripDetails>(`${API_BASE_URL}/trips/retrieve/${tripId}`, {
@@ -66,7 +66,7 @@ export const getTripDetails = async (
 
 export const registerTrip = async (
     trip: TripCreate,
-    userToken: string
+    userToken: string | null
 ): Promise<boolean> => {
     try {
         await axios.post<CreateResponse>(`${API_BASE_URL}/trips/create`, {
@@ -92,7 +92,7 @@ export const registerTrip = async (
 export const saveTripChanges = async (
     trip: TripUpdate,
     tripId: string,
-    userToken: string
+    userToken: string | null
 ): Promise<boolean> => {
     try {
         await axios.patch(`${API_BASE_URL}/trips/edit/${tripId}`, {
@@ -117,7 +117,7 @@ export const saveTripChanges = async (
 
 export const deleteTrip = async (
     tripId: string,
-    userToken: string
+    userToken: string | null
 ) => {
     try {
         await axios.delete(`${API_BASE_URL}/trips/delete/${tripId}`, {

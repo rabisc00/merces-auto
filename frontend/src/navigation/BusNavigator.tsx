@@ -15,9 +15,9 @@ export default function BusesStackNavigator() {
             <Stack.Screen name="BusesList" component={BusesListScreen} />
             <Stack.Screen name="BusRegistration" component={BusRegistrationScreen} />
             <Stack.Screen name="BusDetails" component={BusDetailsScreen} />
-            <Stack.Screen name="TripsList" component={TripsListScreen} />
-            <Stack.Screen name="TripRegistration" component={TripRegistrationScreen} />
-            <Stack.Screen name="TripDetails" component={TripDetailsScreen} />
+            <Stack.Screen name="BusTripsList" component={TripsListScreen} />
+            <Stack.Screen name="BusTripRegistration" component={TripRegistrationScreen} />
+            <Stack.Screen name="BusTripDetails" component={TripDetailsScreen} />
         </Stack.Navigator>
     );
 }
