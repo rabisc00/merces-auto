@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import HeaderWithSearch from "../components/HeaderWithSearch";
 import { GenericCardList } from "../components/GenericCardList";
 import { Timetable } from "../types/timetable";
-import { fetchTimetables } from "../services/timetableService";
+import { fetchTimetablesByRoute } from "../services/timetableService";
 import { TimetableCard } from "../components/cards/TimetableCard";
 
 type TimetableCalendarRouteProp = RouteProp<BusRouteStackParamList, 'TimetableList'>
@@ -32,7 +32,7 @@ export default function TimetableListScreen() {
             <HeaderWithSearch />
             <View style={globalStyles.mainContainer}>
                 <GenericCardList<Timetable>
-                    fetchData={() => fetchTimetables(busRouteId, date, userToken)}
+                    fetchData={() => fetchTimetablesByRoute(busRouteId, date, userToken)}
                     renderItem={(timetable) => (
                         <TimetableCard
                             id={timetable.id}

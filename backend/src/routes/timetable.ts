@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { createTimetable, editTimetable, deleteTimetable, getTimetableByDate, getTimetableDetails } from '../controllers/timetable';
+import { createTimetable, editTimetable, deleteTimetable, getTimetableByDate, getTimetableDetails, getTimetables } from '../controllers/timetable';
 import { authenticateToken } from '../middleware/auth';
 import { validate } from '../middleware/validate';
 import { timetableCreateSchema, timetableEditSchema } from '../validators/timetableValidator';
@@ -52,6 +52,38 @@ const router = express.Router();
  *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/retrieve/byroute/:routeId', authenticateToken, getTimetableByDate);
+
+/**
+ * @swagger
+ * /timetables/retrieve:
+ *   get:
+ *     summary: Retrieve a paginated list of timetables
+ *     tags: [Bus Timetables]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: string
+ *           default: 1
+ *         description: Page Number
+ *     responses:
+ *       200:
+ *         description: A list of timetables
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/Timetable'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.get('/retrieve', authenticateToken, getTimetables);
 
 /**
  * @swagger

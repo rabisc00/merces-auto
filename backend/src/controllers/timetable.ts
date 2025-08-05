@@ -162,3 +162,35 @@ export const getTimetableDetails = async function (req: AuthRequest, res: Respon
         return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
+
+export const getTimetables = async function (req: AuthRequest, res: Response) {
+    try {
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = 10;
+        const offset = (page - 1) * limit;
+
+        const { count, rows } = await Timetable.findAndCountAll({
+            limit,
+            offset,
+            attributes: ['id', 'arrivalTime', 'departureTime'],
+            include: [{
+                model: DayOfTheWeek,
+                attributes: ['dayId'],
+                through: { attributes: [] }
+            }, {
+                model: BusRoute,
+                attributes: ['id', 'lineNumber', 'origin', 'destination']
+            }]
+        });
+
+        return res.json({
+            currentPage: page,
+            totalPages: Math.ceil(count / limit),
+            totalCount: count,
+            records: rows
+        });
+    } catch (error: any) {
+        console.error('Error fetching timetables:', error);
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
+    }
+}

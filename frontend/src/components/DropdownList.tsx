@@ -8,18 +8,22 @@ type Props = {
     label: string;
     required: boolean;
     selectedValue: string;
+    placeholder: string;
     options: ListObject[];
     onValueChange: (value: string) => void;
     errorMessage?: string | boolean;
     width?: DimensionValue;
+    onEndReached?: () => void;
 };
 
 export const DropdownList: React.FC<Props> = ({
     label,
     required,
+    placeholder,
     selectedValue,
     options,
     onValueChange,
+    onEndReached,
     errorMessage,
     width
 }) => {
@@ -35,7 +39,7 @@ export const DropdownList: React.FC<Props> = ({
                 data={options}
                 labelField="label"
                 valueField="value"
-                placeholder="Select a bus route..."
+                placeholder={placeholder}
                 value={selectedValue}
                 onChange={(item) => onValueChange(item.value)}
                 renderItem={(item) => (
@@ -45,6 +49,12 @@ export const DropdownList: React.FC<Props> = ({
                         </Text>
                     </View>
                 )}
+                flatListProps={{
+                    onEndReached: () => {
+                        onEndReached?.();
+                    },
+                    onEndReachedThreshold: 0.5
+                }}
             />
             {errorMessage && <Text style={globalStyles.errorText}>{errorMessage}</Text>}
         </View>

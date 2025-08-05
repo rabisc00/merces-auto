@@ -15,9 +15,9 @@ export const timetableCreateSchema = yup.object({
 export const timetableUpdateSchema = yup.object({
     arrivalTime: yup.string().test('is-valid-format', 'Invalid time format', (value) => { 
         return dayjs(value, 'HH:mm').isValid();
-    }).optional(),
+    }),
     departureTime: yup.string().test('is-valid-format', 'Invalid time format', (value) => { 
         return dayjs(value, 'HH:mm').isValid();
-    }).optional(),
-    days: yup.array().of(yup.string()).min(1).max(7).required()
+    }),
+    days: yup.array().of(yup.string()).min(0).max(6).required()
 });

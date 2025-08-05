@@ -117,10 +117,12 @@ export default function TimetableRegistrationScreen() {
                         <View style={globalStyles.mainContainer}>
                             <DropdownList
                                 label="Bus Route"
+                                placeholder="Select a bus route..."
                                 required={true}
                                 selectedValue={values.busRouteId}
                                 options={busRoutes}
                                 onValueChange={(value) => setFieldValue('busRouteId', value)}
+                                onEndReached={fetchData}
                                 errorMessage={touched.busRouteId && errors.busRouteId}
                                 width='100%'
                             />

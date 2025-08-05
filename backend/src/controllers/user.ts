@@ -158,7 +158,7 @@ export const getUsers = async function (req: AuthRequest, res: Response) {
             attributes: ['id', 'name', 'active', 'isAdmin', 'documentNumber', 'picture'],
         });
 
-        res.json({
+        return res.json({
             currentPage: page,
             totalPages: Math.ceil(count / limit),
             totalCount: count,

@@ -5,6 +5,25 @@ import { API_BASE_URL } from "../config/api";
 import { CreateResponse, ListResponse } from "../types/api";
 
 export const fetchTimetables = async (
+    page: number,
+    userToken: string | null
+): Promise<ListResponse<Timetable>> => {
+    try {
+        const res = await axios.get<ListResponse<Timetable>>(`${API_BASE_URL}/timetables/retrieve?page=${page}`, {
+            headers: {
+                Authorization: `Bearer ${userToken}`
+            }
+        });
+
+        return res.data;
+    } catch (error: any) {
+        console.error(error);
+        showError(error.response?.status);
+        throw error;
+    }
+}
+
+export const fetchTimetablesByRoute = async (
     busRouteId: string,
     date: string,
     userToken: string | null
