@@ -134,7 +134,7 @@ export const deleteUser = async function (req: AuthRequest, res: Response) {
             return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
-        if (user.isAdmin) {
+        if (req.user.id !== user.id && !user.isAdmin) {
             return res.status(403).json({ error: HTTP_MESSAGES.UNAUTHORIZED });
         }
 

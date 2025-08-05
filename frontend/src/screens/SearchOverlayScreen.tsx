@@ -9,6 +9,8 @@ import { TextInput } from "react-native-paper";
 import { UserCard } from "../components/cards/UserCard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../styles/global";
+import { BusRouteCard } from "../components/cards/BusRouteCard";
+import { BusCard } from "../components/cards/BusCard";
 
 export default function SearchOverlayScreen() {
     const { userToken } = useAuth();
@@ -16,16 +18,20 @@ export default function SearchOverlayScreen() {
     const [results, setResults] = useState<SearchResponse | null>(null);
 
     const onSearch = async (text: string) => {
-        setQuery(text);
+        if (text.length > 0) {
+            setQuery(text);
 
-        const results = await axios.get(`${API_BASE_URL}/filter?q=${query}`, {
-            headers: {
-                'Authorization': `Bearer ${userToken}`
-            }
-        });
+            const res = await axios.get(`${API_BASE_URL}/filter?q=${query}`, {
+                headers: {
+                    'Authorization': `Bearer ${userToken}`
+                }
+            });
 
-        setResults(results.data);
-    }
+            setResults(res.data);
+        } else {
+            setResults(null);
+        }
+    };
 
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
@@ -35,31 +41,71 @@ export default function SearchOverlayScreen() {
                     value={query}
                     onChangeText={onSearch}
                     placeholder="Search something..."
+                    style={globalStyles.input}
+                    underlineColorAndroid="transparent"
                 />
-                <Text style={overlayStyles.listTitle}>Bus Routes</Text>
-                <Text style={overlayStyles.listTitle}>Buses</Text>
-                <Text style={overlayStyles.listTitle}>Users</Text>
-                {
-                    results?.users?.length ?
-                    <FlatList
-                        data={results?.users}
-                        keyExtractor={(item, _) => item.id}
-                        renderItem={({ item }) => (
-                            <UserCard
-                                id={item.id}
-                                documentNumber={item.documentNumber}
-                                name={item.name}
-                                picture={item.picture}
-                                active={item.active}
-                                isAdmin={item.isAdmin}
-                            />
-                        )}
-                    /> :
-                    <Text>Not Found</Text>
-                }
+                <View style={overlayStyles.listView}>
+                    <Text style={overlayStyles.listTitle}>Bus Routes</Text>
+                    {
+                        results?.routes?.length ? 
+                        <FlatList
+                            data={results?.routes}
+                            keyExtractor={(item) => item.id}
+                            renderItem={({ item }) => (
+                                <BusRouteCard
+                                    id={item.id}
+                                    lineNumber={item.lineNumber}
+                                    origin={item.origin}
+                                    destination={item.destination}
+                                />
+                            )}
+                        /> :
+                        <Text>Not Found</Text>
+                    }
+                </View>
+                <View style={overlayStyles.listView}>
+                    <Text style={overlayStyles.listTitle}>Buses</Text>
+                    {
+                        results?.buses?.length ?
+                        <FlatList
+                            data={results?.buses}
+                            keyExtractor={(item) => item.id}
+                            renderItem={({ item }) => (
+                                <BusCard
+                                    id={item.id}
+                                    busNumber={item.busNumber}
+                                    model={item.model}
+                                    inRepair={item.inRepair}
+                                />
+                            )}  
+                        /> : 
+                        <Text>Not Found</Text>
+                    }
+                </View>
+                <View style={overlayStyles.listView}>
+                    <Text style={overlayStyles.listTitle}>Users</Text>
+                    {
+                        results?.users?.length ?
+                        <FlatList
+                            data={results?.users}
+                            keyExtractor={(item) => item.id}
+                            renderItem={({ item }) => (
+                                <UserCard
+                                    id={item.id}
+                                    documentNumber={item.documentNumber}
+                                    name={item.name}
+                                    picture={item.picture}
+                                    active={item.active}
+                                    isAdmin={item.isAdmin}
+                                />
+                            )}
+                        /> :
+                        <Text>Not Found</Text>
+                    }
+                </View>
             </View>
         </SafeAreaView>
-    )
+    );
 }
 
 const overlayStyles = StyleSheet.create({
@@ -86,6 +132,13 @@ const overlayStyles = StyleSheet.create({
         textAlign: 'center'
     },
     listTitle: {
-        fontWeight: 'black'
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginTop: 16
+    },
+    listView: {
+        borderBottomWidth: 1,
+        borderColor: '#ccc',
+        paddingVertical: 16
     }
 });

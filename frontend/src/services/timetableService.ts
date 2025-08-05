@@ -16,12 +16,14 @@ export const fetchTimetables = async (
             }
         });
 
+        console.log(`${API_BASE_URL}/timetables/retrieve/byroute/${busRouteId}?date=${date}`);
+
         const listResponse: ListResponse<Timetable> = {
             currentPage: 0,
             totalPages: 0,
             totalCount: 0,
             records: res.data
-        }
+        };
 
         return listResponse;
     } catch (error: any) {

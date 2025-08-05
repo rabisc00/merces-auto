@@ -62,8 +62,14 @@ export default function TimetableRegistrationScreen() {
 
         const obj: TimetableCreateRequest = {
             busRouteId: values.busRouteId,
-            arrivalTime: values.arrivalTime,
-            departureTime: values.departureTime,
+            arrivalTime: (new Date(values.arrivalTime)).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            }),
+                departureTime: (new Date(values.departureTime)).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            }),
             days: values.days.map((d: string) => parseInt(d))
         };
 

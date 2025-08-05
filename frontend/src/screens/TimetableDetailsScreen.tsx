@@ -15,6 +15,7 @@ import { MultiSelectList } from "../components/MultiSelectList";
 import { daysOfTheWeek } from "../const/days";
 import { TimePicker } from "../components/TimePicker";
 import dayjs from "dayjs";
+import Timestamps from "../components/Timestamps";
 
 type TimetableRouteProp = RouteProp<BusRouteStackParamList, 'TimetableDetails'>; 
 
@@ -43,10 +44,12 @@ export default function TimetableDetailsScreen() {
     const callSaveChanges = async (values: TimetableUpdateForm) => {
         showLoading();
 
-        if (originalTimetable == null || originalTimetable.days == null || 
-            values == null || values.days == null) {
-                return;
-            }
+        if (
+            originalTimetable == null || originalTimetable.days == null || 
+            values == null || values.days == null
+        ) {
+            return;
+        }
 
         const sortedOriginal = [...originalTimetable?.days].sort();
         const sortedValues = [...values?.days].sort();
@@ -60,15 +63,24 @@ export default function TimetableDetailsScreen() {
             showNoChangesAlert();
         } else {
             const requestObj: TimetableUpdateRequest = {
-                arrivalTime: values.arrivalTime,
-                departureTime: values.departureTime,
+                arrivalTime: (new Date(values.arrivalTime)).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            }),
+                departureTime: (new Date(values.departureTime)).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            }),
                 days: values.days.map((d: string) => parseInt(d))
             };
 
             const validRequest = await saveTimetableChanges(requestObj, timetableId, userToken);
             if (validRequest) {
+                console.log('validRequest');
                 navigation.navigate('TimetableCalendar', { busRouteId: originalTimetable.busRoute.id });
             }
+
+            hideLoading();
         }
     }
  
@@ -96,6 +108,7 @@ export default function TimetableDetailsScreen() {
                         isValid
                     }) => (
                         <View style={globalStyles.editContainer}>
+                            <Text style={[globalStyles.boldText, { marginBottom: 16 }]}>{originalTimetable.busRoute.lineNumber}: {originalTimetable.busRoute.origin} {'->'} {originalTimetable.busRoute.destination}</Text>
                             <MultiSelectList
                                 label="Days of the Week"
                                 required={true}
@@ -146,6 +159,11 @@ export default function TimetableDetailsScreen() {
                                         handleSubmit()
                                     }
                                 }}
+                            />
+
+                            <Timestamps
+                                createdAt={originalTimetable.createdAt}
+                                updatedAt={originalTimetable.updatedAt}
                             />
                         </View>
                     )}

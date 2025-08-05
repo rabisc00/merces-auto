@@ -58,7 +58,7 @@ export const editTimetable = async function(req: AuthRequest, res: Response) {
 
         // Only update if the new value is different from what's in DB
         if (arrivalTime && timetableFound.arrivalTime !== arrivalTime) {
-            timetableFound.arrivalTime = departureTime;
+            timetableFound.arrivalTime = arrivalTime;
             changed = true;
         }
 
@@ -71,19 +71,10 @@ export const editTimetable = async function(req: AuthRequest, res: Response) {
             await timetableFound.save(); 
         } 
 
-        if (days != null) {
-            const inputDays = days.map(day => day.toUpperCase());
-
+        if (days != null) {;
             const dayRecords = await DayOfTheWeek.findAll({
-                where: { name: inputDays }
+                where: { dayId: days }
             });
-
-            const foundDayNames = dayRecords.map(record => record.name);
-            const invalidDays = inputDays.filter((day: string) => !foundDayNames.includes(day));
-
-            if (invalidDays.length > 0) {
-                return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
-            }
 
             await timetableFound.$set('days', dayRecords);
         }
@@ -117,6 +108,8 @@ export const getTimetableByDate = async function (req: AuthRequest, res: Respons
         const date = new Date(req.query.date as string);
         const routeId = req.params.routeId;
         const dayIndex = date.getDay();
+
+        console.log('dayIndex:', dayIndex);
 
         const timetables = await Timetable.findAll({
             attributes: ['id', 'arrivalTime', 'departureTime'],

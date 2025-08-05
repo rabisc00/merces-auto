@@ -94,7 +94,8 @@ export const globalStyles = StyleSheet.create({
         paddingHorizontal: 8,
         borderRadius: 4,
         fontSize: 14,
-        width: '100%'
+        width: '100%',
+        backgroundColor: '#ffffff',
     },
     inputError: {
         borderColor: 'red'

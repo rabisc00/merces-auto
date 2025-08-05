@@ -25,7 +25,7 @@ export default function AppNavigator() {
                         <Stack.Screen
                             name="SearchOverlay"
                             component={SearchOverlayScreen}
-                            options={{ presentation: 'modal', headerShown: false}}
+                            options={{ headerShown: false }}
                         />
                         <Stack.Screen 
                             name="UserDetails" 

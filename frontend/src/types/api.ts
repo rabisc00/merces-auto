@@ -14,7 +14,7 @@ export interface CreateResponse {
 
 export type SearchResponse = {
     buses: Bus[],
-    busRoutes: BusRoute[],
+    routes: BusRoute[],
     users: UserDetails[]
 };
 

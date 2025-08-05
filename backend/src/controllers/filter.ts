@@ -16,7 +16,7 @@ export const searchInfo = async function(req: AuthRequest, res: Response) {
         const qLike = `%${q}%`;
         
         const busResults = await Bus.findAll({
-            attributes: ['busNumber', 'model', 'inRepair'],
+            attributes: ['id', 'busNumber', 'model', 'inRepair'],
             where: {
                 [Op.or]: [
                     { busNumber: { [Op.like]: qLike } },
@@ -38,7 +38,7 @@ export const searchInfo = async function(req: AuthRequest, res: Response) {
         });
 
         const userResults = await User.findAll({
-            attributes: ['id', 'email', 'documentNumber', 'name', 'picture', 'active'],
+            attributes: ['id', 'documentNumber', 'name', 'picture', 'active'],
             where: {
                 [Op.or]: [
                     { documentNumber: { [Op.like]: qLike } },

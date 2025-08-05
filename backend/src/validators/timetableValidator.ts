@@ -25,5 +25,5 @@ export const timetableEditSchema = z.object({
     departureTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
         message: "Invalid time format. Expected HH:mm (24-hour).",
     }).optional(),
-    days: z.array(z.int().min(0).max(6)).nullable().optional()
+    days: z.array(z.int().min(0).max(6)).optional()
 });
