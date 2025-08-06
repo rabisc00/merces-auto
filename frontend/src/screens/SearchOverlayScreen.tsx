@@ -29,6 +29,7 @@ export default function SearchOverlayScreen() {
 
             setResults(res.data);
         } else {
+            setQuery('');
             setResults(null);
         }
     };

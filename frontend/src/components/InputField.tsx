@@ -8,6 +8,7 @@ type Props = {
   required?: boolean;
   password?: boolean;
   isNumber?: boolean;
+  multiline?: boolean;
   value?: any;
   width?: DimensionValue;
   onChangeText: (text: string) => void;
@@ -18,6 +19,7 @@ const InputField: React.FC<Props> = ({
   errorMessage, 
   required, 
   isNumber,
+  multiline,
   password, 
   value, 
   width = '100%', 
@@ -34,6 +36,8 @@ const InputField: React.FC<Props> = ({
         value={value}
         onChangeText={onChangeText}
         keyboardType={isNumber ? 'numeric' : 'default'}
+        multiline={multiline}
+        numberOfLines={multiline ? 5 : 1}
         autoCapitalize='none'
         secureTextEntry={password}
       />

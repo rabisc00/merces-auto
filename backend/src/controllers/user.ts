@@ -21,9 +21,7 @@ export const createUser = async(req: AuthRequest, res: Response) => {
 
         const existingUser = await User.findOne({ 
             where: { 
-                [Op.or]: [
-                    { email, documentNumber }
-                ]
+                [Op.or]: [ { email }, { documentNumber } ]
             }
         });
 
@@ -53,7 +51,7 @@ export const createUser = async(req: AuthRequest, res: Response) => {
 
 export const editUser = async function (req: AuthRequest, res: Response) {
     try {
-        const { documentNumber, name, active } = req.body;
+        const { email, documentNumber, name, active, isAdmin } = req.body;
         const id = req.params.id;
 
         const userFound = await User.findByPk(id);
@@ -66,6 +64,21 @@ export const editUser = async function (req: AuthRequest, res: Response) {
         const activeBool = active as boolean;
 
         let changed = false;
+
+        if (email && userFound.email !== email) {
+            const existingUser = await User.findOne({ 
+                where: { 
+                    email,
+                    id: { [Op.ne]: id }
+                }
+            });
+
+            if (existingUser) {
+                return res.status(409).json({ error: HTTP_MESSAGES.CONFLICT });
+            }
+
+            changed = true;
+        }
 
         if (formattedDocumentNumber && formattedDocumentNumber !== userFound.documentNumber) {
             userFound.documentNumber = formattedDocumentNumber;
@@ -80,6 +93,14 @@ export const editUser = async function (req: AuthRequest, res: Response) {
         if (activeBool != null && activeBool !== userFound.active) {
             userFound.active = active;
             changed = true;
+        }
+
+        if (isAdmin && userFound.isAdmin !== isAdmin) {
+            if (!req.params.admin && !userFound.isAdmin) {
+                return res.status(401).json({ error: HTTP_MESSAGES.UNAUTHORIZED });
+            }
+
+            userFound.isAdmin = isAdmin;
         }
 
         if (req.file) {
@@ -134,8 +155,8 @@ export const deleteUser = async function (req: AuthRequest, res: Response) {
             return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
         }
 
-        if (req.user.id !== user.id && !user.isAdmin) {
-            return res.status(403).json({ error: HTTP_MESSAGES.UNAUTHORIZED });
+        if (req.user.id !== user.id && user.isAdmin) {
+            return res.status(403).json({ error: HTTP_MESSAGES.FORBIDDEN });
         }
 
         await user.destroy();
@@ -243,6 +264,7 @@ export const login = async (req: Request, res: Response) => {
         
         return res.json({
             token,
+            id: userFound.id,
             isAdmin: userFound.isAdmin
         });
 

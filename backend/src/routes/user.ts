@@ -155,6 +155,9 @@ router.get('/filter', authenticateToken, searchUser);
  *               properties:
  *                 token:
  *                   type: string
+ *                 id:
+ *                   type: string
+ *                   format: uuid
  *                 isAdmin:
  *                   type: boolean
  *       401:
@@ -177,21 +180,7 @@ router.post('/login', login);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *               - isAdmin
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *               password:
- *                 type: string
- *                 format: password
- *               isAdmin:
- *                 type: boolean
- *                 description: Set to true if user is an admin
+ *             $ref: '#/components/schemas/UserInput'
  *     responses:
  *       200:
  *         description: User created successfully
@@ -232,21 +221,10 @@ router.post('/create', authenticateToken, validate(userCreateSchema), createUser
  *           type: string
  *         description: ID of the user to update
  *     requestBody:
- *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               documentNumber:
- *                 type: string
- *               name:
- *                 type: string
- *               active:
- *                 type: boolean
- *               picture:
- *                 type: string
- *                 format: binary
+ *             $ref: '#/components/schemas/UserUpdateInput'
  *     responses:
  *       200:
  *         description: User updated successfully or no changes made

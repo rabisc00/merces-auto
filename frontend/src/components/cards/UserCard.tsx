@@ -12,18 +12,36 @@ import { User } from "../../types/user";
 import { Grayscale } from "react-native-color-matrix-image-filters";
 import { globalStyles } from "../../styles/global";
 
-export function UserCard({ id, documentNumber, name, picture, isAdmin, active }: User) {
+type Props = User & {
+    onDelete?: () => void;
+}
+
+export function UserCard({ 
+    id, 
+    documentNumber, 
+    name, 
+    picture, 
+    isAdmin, 
+    active,  
+    onDelete
+}: Props) {
     const navigation = useNavigation<UsersOptionsNavigationProp>();
     const { showLoading, hideLoading } = useLoading();
-    const { userToken } = useAuth();
+    const { userToken, logout, userId } = useAuth();
 
     const deleteAction = () => {
         confirm(async () => {
-            showLoading();
-            await deleteUser(id, userToken);
-            hideLoading();
+            try {
+                showLoading();
 
-            navigation.navigate('UsersList');
+                await deleteUser(id, userToken);
+                onDelete?.();
+
+                if (userId === id) logout();
+            } finally {
+                hideLoading();
+            }
+            
         })
     };
 
@@ -49,25 +67,15 @@ export function UserCard({ id, documentNumber, name, picture, isAdmin, active }:
         <BaseCard >
             <View style={globalStyles.cardView}>
                 <View style={userCardStyles.cardContent}>
-                    {
-                        active ?
-                        <Image 
-                            source={{ uri: `${API_BASE_URL}/${picture}` }} 
-                            style={userCardStyles.cardImage}
-                            resizeMode="cover"
-                        /> :
-                        <Grayscale>
-                            <Image 
-                                source={{ uri: `${API_BASE_URL}/${picture}` }} 
-                                style={userCardStyles.cardImage}
-                                resizeMode="cover"
-                            />
-                        </Grayscale>
-                    } 
+                    <Image 
+                        source={{ uri: `${API_BASE_URL}/${picture}` }} 
+                        style={userCardStyles.cardImage}
+                        resizeMode="cover"
+                    /> 
+                    
                     <View>
-                        <Text numberOfLines={3} style={[globalStyles.cardText, globalStyles.boldText, !active ? userCardStyles.inactive : '']}>{name}</Text>
+                        <Text style={[globalStyles.cardText, globalStyles.boldText, !active ? userCardStyles.inactive : '']}>{name} {isAdmin && '(Admin)'}</Text>
                         <Text style={[globalStyles.cardText, !active ? userCardStyles.inactive : '']}>{documentNumber}</Text>
-                        <Text style={[globalStyles.cardText, !active ? userCardStyles.inactive : '']}>Admin: {isAdmin ? "true" : "false"}</Text>
                     </View>
                 </View>
                 

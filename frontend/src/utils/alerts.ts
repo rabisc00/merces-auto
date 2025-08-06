@@ -16,7 +16,7 @@ export function showError(status: number) {
         title = 'Not Found';
         message = 'Resource not found';
     } else if (status === 409) {
-        title = 'Conflic';
+        title = 'Conflict';
         message = 'Resource already exists';
     } else if (status === 500) {
         title = 'Internal server error';

@@ -31,7 +31,8 @@ const navigatorScreenOptions = ({ route }: { route: RouteProp<TabParamList, keyo
         tabBarStyle: {
         backgroundColor: '#8ecae6',
         paddingTop: 10,
-        paddingBottom: 10
+        paddingBottom: 10,
+        marginTop: 0
     }, 
     tabBarIcon: ({ focused, color, size }) => {
         const iconName = getIconName(route.name, focused);

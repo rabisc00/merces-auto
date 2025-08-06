@@ -7,7 +7,7 @@ import { userLogin } from "../services/userService";
 import InputField from "../components/InputField";
 
 export default function LoginScreen() {
-    const { login, setIsAdmin } = useAuth();
+    const { login, setIsAdmin, setUserId } = useAuth();
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -15,6 +15,7 @@ export default function LoginScreen() {
         const data = await userLogin(email, password);
         if (data) {
             login(data.token);
+            setUserId(data.id);
             setIsAdmin(data.isAdmin);
         }
     };

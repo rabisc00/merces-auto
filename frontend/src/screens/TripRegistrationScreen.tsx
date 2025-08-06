@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, View } from "react-native";
+import { Button, SafeAreaView, Text, View } from "react-native";
 import { globalStyles } from "../styles/global";
 import { useAuth } from "../context/AuthContext";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -15,6 +15,8 @@ import { registerTrip } from "../services/tripService";
 import { tripCreateSchema } from "../validations/tripSchema";
 import { DropdownList } from "../components/DropdownList";
 import HeaderWithSearch from "../components/HeaderWithSearch";
+import { DatePicker } from "../components/DatePicker";
+import InputField from "../components/InputField";
 
 type TripRegistrationRouteProp = RouteProp<
     BusStackParamList & UsersStackParamList,
@@ -54,9 +56,7 @@ export default function TripRegistrationScreen() {
             const response = await fetchTimetables(timetablesPage, userToken);
             const dropdownObjects: ListObject[] = response.records.map((t) => ({
                 value: t.id,
-                label: `${t.busRoute.lineNumber}: 
-                    ${t.busRoute.origin} (${t.departureTime}) -> 
-                    ${t.busRoute.destination} (${t.arrivalTime})`
+                label: `${t.busRoute.lineNumber}: ${t.busRoute.origin} (${t.departureTime}) -> ${t.busRoute.destination} (${t.arrivalTime})`
             }));
 
             setTimetables(prev => [...prev, ...dropdownObjects]);
@@ -117,6 +117,7 @@ export default function TripRegistrationScreen() {
     const callRegisterTrip = async (values: TripCreate) => {
         showLoading();
 
+        values.numberOfPassengers = parseInt(values.numberOfPassengers.toString());
         const validRegister = await registerTrip(values, userToken);
 
         if (validRegister) {
@@ -128,7 +129,7 @@ export default function TripRegistrationScreen() {
         }
 
         hideLoading();
-    }
+    };
 
     useEffect(() => {
         const populateDropdowns = async () => {
@@ -182,6 +183,62 @@ export default function TripRegistrationScreen() {
                                 errorMessage={touched.userId && errors.userId}
                                 width="100%"
                             />
+
+                            <DropdownList
+                                label="Bus"
+                                placeholder="Select bus..."
+                                required={true}
+                                selectedValue={values.busId}
+                                options={buses}
+                                onValueChange={(value) => setFieldValue('busId', value)}
+                                onEndReached={populateBuses}
+                                errorMessage={touched.busId && errors.busId}
+                                width="100%"
+                            />
+
+                            <DropdownList
+                                label="Timetable"
+                                placeholder="Select timetable..."
+                                required={true}
+                                selectedValue={values.timetableId}
+                                options={timetables}
+                                onValueChange={(value) => setFieldValue('timetableId', value)}
+                                onEndReached={populateTimetables}
+                                errorMessage={touched.timetableId && errors.timetableId}
+                                width="100%"
+                            />
+
+                            <View style={globalStyles.inputRow}>
+                                <DatePicker
+                                    label="Date"
+                                    value={values.date}
+                                    onChangeValue={(value) => setFieldValue('date', value)}
+                                    required={true}
+                                    errorMessage={touched.date && errors.date}
+                                    width="45%"
+                                />
+
+                                <InputField
+                                    label="Number of passengers"
+                                    errorMessage={touched.numberOfPassengers && errors.numberOfPassengers}
+                                    isNumber={true}
+                                    value={values.numberOfPassengers}
+                                    width={'45%'}
+                                    onChangeText={(value) => setFieldValue('numberOfPassengers', value)}
+                                />
+                            </View>
+
+                            <InputField
+                                label="Observations"
+                                errorMessage={touched.observations && values.observations}
+                                multiline={true}
+                                value={values.observations}
+                                required={true}
+                                width="100%"
+                                onChangeText={(value) => setFieldValue('observations', value)}
+                            />
+
+                            <Button title="Register" onPress={() => handleSubmit()} />
                         </View>
                     )
                 }}

@@ -14,7 +14,6 @@ import { timetableUpdateSchema } from "../validations/timetableSchema";
 import { MultiSelectList } from "../components/MultiSelectList";
 import { daysOfTheWeek } from "../const/days";
 import { TimePicker } from "../components/TimePicker";
-import dayjs from "dayjs";
 import Timestamps from "../components/Timestamps";
 
 type TimetableRouteProp = RouteProp<BusRouteStackParamList, 'TimetableDetails'>; 

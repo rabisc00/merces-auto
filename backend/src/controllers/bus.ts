@@ -35,7 +35,7 @@ export const createBus = async function(req: AuthRequest, res: Response) {
 export const editBus = async function(req: AuthRequest, res: Response) {
     try {
         const id = req.params.id;
-        const { model, capacity, inRepair, manufacturingYear } = req.body;
+        const { busNumber, model, capacity, inRepair, manufacturingYear } = req.body;
 
         const busFound = await Bus.findByPk(id);
         if (!busFound) {
@@ -43,6 +43,21 @@ export const editBus = async function(req: AuthRequest, res: Response) {
         }
 
         let changed = false;
+
+        if (busNumber && busFound.busNumber !== busNumber) {
+            const existingBus = await Bus.findOne({
+                where: {
+                    busNumber: busNumber,
+                    id: { [Op.ne]: id }
+                }
+            });
+
+            if (existingBus) {
+                return res.status(409).json({ error: HTTP_MESSAGES.CONFLICT });
+            }
+            
+            changed = true;
+        }
 
         if (model && busFound.model !== model) {
             busFound.model = model;

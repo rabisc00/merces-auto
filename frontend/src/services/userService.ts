@@ -50,6 +50,8 @@ export const registerUser = async (
     user: UserCreate,
     userToken: string | null
 ): Promise<boolean> => {
+    console.log(user);
+    
     try {
         const res = await axios.post<CreateResponse>(`${API_BASE_URL}/users/create`, {
             email: user.email,
@@ -126,6 +128,7 @@ export const deleteUser = async (
     } catch (error: any) {
         console.error(error);
         showError(error.response?.status);
+        throw error;
     }
 };
 

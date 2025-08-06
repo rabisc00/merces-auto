@@ -43,7 +43,7 @@ export const createTimetable = async function(req: AuthRequest, res: Response) {
 
 export const editTimetable = async function(req: AuthRequest, res: Response) {
     try {
-        const { arrivalTime, departureTime, days } = req.body;
+        const { busRouteId, arrivalTime, departureTime, days } = req.body;
         const id = req.params.id;
 
         const timetableFound = await Timetable.findByPk(id, {
@@ -56,7 +56,15 @@ export const editTimetable = async function(req: AuthRequest, res: Response) {
 
         let changed = false;
 
-        // Only update if the new value is different from what's in DB
+        if (busRouteId && timetableFound.routeId !== busRouteId) {
+            const busRouteFound = await BusRoute.findByPk(busRouteId);
+            if (!busRouteFound) {
+                return res.status(400).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
+            }
+
+            timetableFound.routeId = busRouteId;
+        }
+
         if (arrivalTime && timetableFound.arrivalTime !== arrivalTime) {
             timetableFound.arrivalTime = arrivalTime;
             changed = true;
@@ -108,8 +116,6 @@ export const getTimetableByDate = async function (req: AuthRequest, res: Respons
         const date = new Date(req.query.date as string);
         const routeId = req.params.routeId;
         const dayIndex = date.getDay();
-
-        console.log('dayIndex:', dayIndex);
 
         const timetables = await Timetable.findAll({
             attributes: ['id', 'arrivalTime', 'departureTime'],

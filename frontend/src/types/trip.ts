@@ -19,6 +19,8 @@ export type TripDetails = {
     numberOfPassengers: number;
     date: string;
     observations?: string;
+    createdAt: string;
+    updatedAt: string;
     bus: {
         id: string;
         busNumber: string;
@@ -57,7 +59,7 @@ export type TripUpdate = {
     userId: string;
     busId: string;
     timetableId: string;
-    numberOfPassengers: string;
+    numberOfPassengers: number;
     date: string;
     observations?: string;
 }

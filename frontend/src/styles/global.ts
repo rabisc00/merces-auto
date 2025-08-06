@@ -44,7 +44,8 @@ export const globalStyles = StyleSheet.create({
     },
     mainContainer: {
         paddingHorizontal: 16,
-        paddingVertical: 16
+        paddingTop: 16,
+        paddingBottom: 130
     },
     editContainer: {
         flex: 1,
@@ -71,6 +72,7 @@ export const globalStyles = StyleSheet.create({
     },
     cardContent: {
         width: '100%',
+        marginBottom: 10
     },
     cardText: {
         marginBottom: 6,
@@ -124,5 +126,11 @@ export const globalStyles = StyleSheet.create({
     multiSelectMainText: {
         fontSize: 14,
         color: 'black'
+    },
+    datetimeContainer: {
+        borderColor: '#ccc',
+        borderWidth: 1,
+        padding: 12,
+        borderRadius: 5
     }
 });

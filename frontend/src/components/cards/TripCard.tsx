@@ -50,14 +50,12 @@ export function TripCard({ id, numberOfPassengers, date, timetable }: Trip) {
         <BaseCard>
             <View style={globalStyles.cardView}>
                 <View style={globalStyles.cardContent}>
+                    <Text style={globalStyles.boldText}>{date}</Text>
                     <Text>
-                        <Text style={globalStyles.boldText}>Date:</Text>
-                        {date} | 
-                        <Text style={globalStyles.boldText}>Number of Passengers:</Text> 
-                        {numberOfPassengers}
+                        {timetable.busRoute.lineNumber}: {timetable.busRoute.origin} 
+                        ({timetable.departureTime}) {'->'} 
+                        {timetable.busRoute.destination} ({timetable.arrivalTime})
                     </Text>
-                    <Text>{timetable.busRoute.lineNumber}: {timetable.busRoute.origin} {'->'} {timetable.busRoute.destination}</Text>
-                    <Text>{timetable.arrivalTime} - {timetable.departureTime}</Text>
                 </View>
             </View>
 

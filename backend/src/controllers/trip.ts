@@ -6,6 +6,7 @@ import BusRoute from "../models/busRoute";
 import Bus from "../models/bus";
 import User from "../models/user";
 import { HTTP_MESSAGES } from "../constants/httpMessages";
+import DayOfTheWeek from "../models/dayOfTheWeek";
 
 export const createTrip = async function (req: AuthRequest, res: Response) {
     try {
@@ -18,6 +19,11 @@ export const createTrip = async function (req: AuthRequest, res: Response) {
             timetableId
         } = req.body;
 
+        const validDate = await checkValidDate(timetableId, date);
+        if (!validDate) {
+            return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
+        }
+
         const trip = await Trip.create({
             numberOfPassengers,
             observations,
@@ -26,6 +32,7 @@ export const createTrip = async function (req: AuthRequest, res: Response) {
             busId,
             timetableId
         });
+
         return res.json({ 
             message: 'Trip created successfully',
             id: trip.id
@@ -66,6 +73,11 @@ export const editTrip = async function (req: AuthRequest, res: Response) {
         }
 
         if (date && tripFound.date !== date) {
+            const validDate = await checkValidDate(timetableId || tripFound.timetableId, date);
+            if (!validDate) {
+                return res.status(400).json({ error: HTTP_MESSAGES.BAD_REQUEST });
+            }
+
             tripFound.date = date;
             changed = true;
         }
@@ -229,3 +241,19 @@ export const getTripDetails = async function(req: AuthRequest, res: Response) {
         return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
+
+async function checkValidDate(timetableId: string, date: string) {
+    const timetable = await Timetable.findByPk(timetableId, {
+        attributes: ['id'],
+        include: {
+            model: DayOfTheWeek,
+            attributes: ['dayId'],
+            through: { attributes: [] }
+        }
+    });
+
+    const dayIndex = (new Date(date)).getDay();
+
+    const foundDay = timetable.days.find((d) => d.dayId === dayIndex);
+    return foundDay != null;
+}

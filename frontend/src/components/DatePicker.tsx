@@ -1,8 +1,10 @@
-import { DimensionValue, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { globalStyles } from "../styles/global";
 import { useEffect, useState } from "react";
+import { Platform, TouchableOpacity, View } from "react-native";
+import { DimensionValue } from "react-native";
+import { globalStyles } from "../styles/global";
+import { Text } from "react-native";
 import dayjs from "dayjs";
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import DateTimePicker from "react-native-modal-datetime-picker";
 
 type Props = {
     label: string;
@@ -13,7 +15,7 @@ type Props = {
     width?: DimensionValue;
 }
 
-export const TimePicker: React.FC<Props> = ({
+export const DatePicker: React.FC<Props> = ({
     label,
     value,
     onChangeValue,
@@ -21,20 +23,15 @@ export const TimePicker: React.FC<Props> = ({
     errorMessage,
     width
 }) => {
-    const [isPickerVisible, setPickerVisible] = useState(false);
-    const [timeString, setTimeString] = useState<string>('');
+    const [pickerVisible, setPickerVisible] = useState<boolean>(false);
+    const [dateString, setDateString] = useState<string>('');
 
     useEffect(() => {
         const initialDate = new Date(value);
-        if (!isNaN(initialDate.getTime())) {
-            initialDate.setSeconds(0);
-            setTimeString(initialDate.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            }));
+        if (!isNaN(initialDate.getDate())) {
+            setDateString(dayjs(initialDate).format('YYYY-MM-DD'));
         } else {
-            setTimeString(value);
+            setDateString(value);
         }
     }, [value])
 
@@ -48,23 +45,20 @@ export const TimePicker: React.FC<Props> = ({
                 onPress={() => setPickerVisible(true)}
                 style={[globalStyles.datetimeContainer, errorMessage && globalStyles.inputError]}
             >
-                <Text>
-                    {timeString || 'Select Time'}
-                </Text>
+                <Text>{dateString || 'Select a date'}</Text>
             </TouchableOpacity>
             {errorMessage && <Text style={globalStyles.errorText}>{errorMessage}</Text>}
 
-            <DateTimePickerModal
-                isVisible={isPickerVisible}
-                mode="time"
-                is24Hour={true}
+            <DateTimePicker
+                isVisible={pickerVisible}
+                mode="date"
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 onConfirm={(date) => {
-                    onChangeValue(date.toString());
+                    onChangeValue(dayjs(date.toString()).format('YYYY-MM-DD'));
                     setPickerVisible(false);
                 }}
                 onCancel={() => setPickerVisible(false)}
             />
         </View>
     )
-};
+}

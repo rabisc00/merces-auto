@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import { dateRegex } from '../const/date';
+import dayjs from 'dayjs';
 
 const validDate = (value: any) => {
     if (!value) return false;
@@ -17,6 +18,15 @@ export const tripCreateSchema = yup.object({
     date: yup.string().required('Date is required')
         .matches(dateRegex, 'Date must be in YYYY-MM-DD format')
         .test('is-valid-date', 'Date is not a valid calendar date', validDate)
+        .test('is-future-date', 'Date can\'t be in the future', (value) => {
+            if (!value) return false;
+
+            const inputData = dayjs(value, 'YYYY-MM-DD');
+            const today = dayjs().startOf('day');
+            return inputData.isBefore(today)
+        }),
+    numberOfPassengers: yup.number().required(),
+    observations: yup.string().optional()
 });
 
 export const tripUpdateSchema = yup.object({
@@ -26,4 +36,13 @@ export const tripUpdateSchema = yup.object({
     date: yup.string().required('Date is required')
         .matches(dateRegex, 'Date must be in YYYY-MM-DD format')
         .test('is-valid-date', 'Date is not a valid calendar date', validDate)
+        .test('is-future-date', 'Date can\'t be in the future', (value) => {
+            if (!value) return false;
+
+            const inputData = dayjs(value, 'YYYY-MM-DD');
+            const today = dayjs().startOf('day');
+            return inputData.isBefore(today)
+        }),
+    numberOfPassengers: yup.number().required('Number of passengers is required'),
+    observations: yup.string().optional()
 });

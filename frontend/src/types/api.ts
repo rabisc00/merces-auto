@@ -5,6 +5,7 @@ import { UserDetails } from "./user";
 export interface LoginResponse {
     token: string;
     isAdmin: boolean;
+    id: string;
 };
 
 export interface CreateResponse {

@@ -1,7 +1,7 @@
 import { useAuth } from "../context/AuthContext";
 import { GenericCardList } from "../components/GenericCardList";
 import { UserCard } from "../components/cards/UserCard";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { UsersOptionsNavigationProp } from "../types/navigation";
 import { useCallback, useState } from "react";
@@ -37,6 +37,7 @@ export default function UsersListScreen() {
                             picture={user.picture}
                             active={user.active}
                             isAdmin={user.isAdmin}
+                            onDelete={() => setRefreshFlag(prev => !prev)}
                         />)
                     }
                     keyExtractor={(user) => user.id}

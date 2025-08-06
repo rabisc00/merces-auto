@@ -586,6 +586,7 @@ export const swaggerOptions = {
         BusUpdateInput: {
           type: 'object',
           properties: {
+            busNumber: { type: 'string' },
             model: { type: 'string' },
             capacity: { type: 'integer' },
             manufacturingYear: { type: 'integer' },
@@ -595,14 +596,45 @@ export const swaggerOptions = {
         BusRouteUpdateInput: {
           type: 'object',
           properties: {
+            busRouteId: {
+              type: 'string',
+              format: 'uuid'
+            },
             lineNumber: { type: 'string' },
             origin: { type: 'string' },
             destination: { type: 'string' }
           }
         },
+        UserUpdateInput: {
+          type: 'object',
+          properties: {
+            documentNumber: { type: 'string' },
+            email: {
+              type: 'string',
+              format: 'email'
+            },
+            name: {
+              type: 'string'
+            },
+            active: {
+              type: 'boolean'
+            },
+            picture: {
+              type: 'string',
+              format: 'binary'
+            },
+            isAdmin: {
+              type: 'boolean'
+            }
+          }
+        },  
         TimetableUpdateInput: {
           type: 'object',
           properties: {
+            busRouteId: {
+              type: 'string',
+              format: 'uuid'
+            },
             arrivalTime: {
               type: 'string',
               format: 'date-time'

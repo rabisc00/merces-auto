@@ -2,8 +2,8 @@ import * as yup from 'yup';
 
 export const busCreateSchema = yup.object({
     busNumber: yup.string().trim().matches(
-        /^(0[1-9]|[1-9][0-9])-B-[0-9]{1,5}$/,
-        'Must be a valid Irish bus plaque (e.g., 23-B-12345)'
+        /^(?:(?:[A-Z]{2,3}[- ]?\d{1,4})|(?:\d{1,4}[- ]?[A-Z]{2,3})|(?:[A-Z]{1,2}[- ]?\d{2,5})|(?:[A-Z]{1,3}[- ]?\d{1,3}[- ]?[A-Z]{1,3}))$/,
+        'Must be a valid bus plaque (e.g., 23-B-12345)'
     ).required('Bus number is required'),
     model: yup.string().trim().optional(),
     capacity: yup.number().optional()

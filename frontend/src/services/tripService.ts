@@ -69,6 +69,14 @@ export const registerTrip = async (
     userToken: string | null
 ): Promise<boolean> => {
     try {
+        console.log({
+            numberOfPassengers: trip.numberOfPassengers,
+            observations: trip.observations,
+            userId: trip.userId,
+            busId: trip.busId,
+            timetableId: trip.timetableId,
+            date: trip.date
+        });
         await axios.post<CreateResponse>(`${API_BASE_URL}/trips/create`, {
             numberOfPassengers: trip.numberOfPassengers,
             observations: trip.observations,
