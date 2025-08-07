@@ -15,7 +15,7 @@ export function TripCard({ id, numberOfPassengers, date, timetable }: Trip) {
     const busNavigation = useNavigation<BusesOptionsNavigationProp>();
     const userNavigation = useNavigation<UsersOptionsNavigationProp>();
     const { showLoading, hideLoading } = useLoading();
-    const { userToken } = useAuth();
+    const { userToken, isUserAdmin } = useAuth();
 
     const currentScreen = route.name;
 
@@ -60,7 +60,7 @@ export function TripCard({ id, numberOfPassengers, date, timetable }: Trip) {
             </View>
 
             <CardActionButtons
-                deleteAction={deleteAction}
+                deleteAction={isUserAdmin ? deleteAction : undefined}
                 detailsAction={detailsAction}
             />
         </BaseCard>

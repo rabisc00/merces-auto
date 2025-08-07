@@ -27,7 +27,7 @@ export function UserCard({
 }: Props) {
     const navigation = useNavigation<UsersOptionsNavigationProp>();
     const { showLoading, hideLoading } = useLoading();
-    const { userToken, logout, userId } = useAuth();
+    const { userToken, isUserAdmin, logout, userId } = useAuth();
 
     const deleteAction = () => {
         confirm(async () => {
@@ -80,7 +80,7 @@ export function UserCard({
                 </View>
                 
                 <CardActionButtons 
-                    deleteAction={deleteAction}
+                    deleteAction={isUserAdmin? deleteAction : undefined}
                     detailsAction={detailsAction}
                     tripsAction={tripsAction}
                 />

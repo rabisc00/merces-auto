@@ -3,11 +3,11 @@ import { useAuth } from "../context/AuthContext";
 import { Button, View } from "react-native";
 import { globalStyles } from "../styles/global";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { userLogin } from "../services/userService";
 import InputField from "../components/InputField";
+import { userLogin } from "../services/loginService";
 
 export default function LoginScreen() {
-    const { login, setIsAdmin, setUserId } = useAuth();
+    const { login, setIsUserAdmin, setUserId } = useAuth();
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -16,7 +16,7 @@ export default function LoginScreen() {
         if (data) {
             login(data.token);
             setUserId(data.id);
-            setIsAdmin(data.isAdmin);
+            setIsUserAdmin(data.isAdmin);
         }
     };
 

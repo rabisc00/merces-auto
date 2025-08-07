@@ -15,6 +15,9 @@ import { MultiSelectList } from "../components/MultiSelectList";
 import { daysOfTheWeek } from "../const/days";
 import { TimePicker } from "../components/TimePicker";
 import Timestamps from "../components/Timestamps";
+import { ListObject } from "../types/listObject";
+import { fetchBusRoutes, getBusRouteDetails } from "../services/busRouteService";
+import { DropdownList } from "../components/DropdownList";
 
 type TimetableRouteProp = RouteProp<BusRouteStackParamList, 'TimetableDetails'>; 
 
@@ -26,18 +29,62 @@ export default function TimetableDetailsScreen() {
 
     const { timetableId } = route.params;
 
+    const [busRoutes, setBusRoutes] = useState<ListObject[]>([]);
+    const [busRoutePage, setBusRoutePage] = useState<number>(1);
+    const [loadingBusRoute, setLoadingBusRoute] = useState(false);
+    const [hasMoreBusRoutes, setHasMoreBusRoutes] = useState(true);
+
     const [originalTimetable, setOriginalTimetable] = useState<TimetableDetails | null>();
 
+    const populateBusRoutes = async () => {
+        if (loadingBusRoute || !hasMoreBusRoutes) return;
+        setLoadingBusRoute(true);
+
+        try {
+            const response = await fetchBusRoutes(busRoutePage, userToken);
+            const dropdownObjects: ListObject[] = response.records.map((br) => {
+                return {
+                    value: br.id,
+                    label: `${br.lineNumber}: ${br.origin} -> ${br.destination}`
+                }
+            });
+
+            setBusRoutes(prevItems => [...prevItems, ...dropdownObjects]);
+
+            if (response.currentPage === response.totalPages) {
+                setHasMoreBusRoutes(false);
+            } else {
+                setBusRoutePage(prevPage => prevPage + 1);
+            }
+
+            if (originalTimetable == null) return;
+
+            const foundBusRoute = busRoutes.find((br) => br.value === originalTimetable.busRoute.id);
+            if (!foundBusRoute) {
+                const selectedBusRoute = await getBusRouteDetails(originalTimetable.busRoute.id, userToken);
+                const selectedDropdownObject: ListObject = {
+                    value: selectedBusRoute.id,
+                    label: `${selectedBusRoute.lineNumber}: ${selectedBusRoute.origin} -> ${selectedBusRoute.destination}`
+                }
+
+                setBusRoutes(prev => [...prev, selectedDropdownObject]);
+            }
+        } finally {
+            setLoadingBusRoute(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchTimetableDetails = async () => {
+        const populateData = async () => {
+            showLoading();
             const data = await getTimetableDetails(timetableId, userToken);
             setOriginalTimetable(data);
+
+            await populateBusRoutes();    
+            hideLoading();
         }
 
-        showLoading();
-        fetchTimetableDetails();
-
-        hideLoading();
+        populateData();
     }, [timetableId]);
 
     const callSaveChanges = async (values: TimetableUpdateForm) => {
@@ -75,7 +122,6 @@ export default function TimetableDetailsScreen() {
 
             const validRequest = await saveTimetableChanges(requestObj, timetableId, userToken);
             if (validRequest) {
-                console.log('validRequest');
                 navigation.navigate('TimetableCalendar', { busRouteId: originalTimetable.busRoute.id });
             }
 
@@ -89,6 +135,7 @@ export default function TimetableDetailsScreen() {
             {originalTimetable ?
                 <Formik<TimetableUpdateForm>
                     initialValues={{
+                        busRouteId: originalTimetable.busRoute.id,
                         arrivalTime: originalTimetable.arrivalTime,
                         departureTime: originalTimetable.departureTime,
                         days: originalTimetable.days.map((d) => d.dayId.toString())
@@ -97,7 +144,6 @@ export default function TimetableDetailsScreen() {
                     validationSchema={timetableUpdateSchema}
                 >
                     {({
-                        handleChange,
                         handleSubmit,
                         setFieldValue,
                         setTouched,
@@ -107,7 +153,17 @@ export default function TimetableDetailsScreen() {
                         isValid
                     }) => (
                         <View style={globalStyles.editContainer}>
-                            <Text style={[globalStyles.boldText, { marginBottom: 16 }]}>{originalTimetable.busRoute.lineNumber}: {originalTimetable.busRoute.origin} {'->'} {originalTimetable.busRoute.destination}</Text>
+                            <DropdownList
+                                label="Bus Route"
+                                placeholder="Select a bus route..."
+                                required={true}
+                                selectedValue={values.busRouteId}
+                                options={busRoutes}
+                                onValueChange={(value) => setFieldValue('busRouteId', value)}
+                                onEndReached={populateBusRoutes}
+                                errorMessage={touched.busRouteId && errors.busRouteId}
+                                width='100%'
+                            />
                             <MultiSelectList
                                 label="Days of the Week"
                                 required={true}
@@ -129,35 +185,25 @@ export default function TimetableDetailsScreen() {
 
                             <View style={globalStyles.inputRow}>
                                 <TimePicker
-                                    label="Arrival Time"
-                                    value={values.arrivalTime}
-                                    onChangeValue={(value) => setFieldValue('arrivalTime', value)}
-                                    errorMessage={touched.arrivalTime && errors.arrivalTime}
-                                    width='48%'
-                                />
-
-                                <TimePicker
                                     label="Departure Time"
                                     value={values.departureTime}
                                     onChangeValue={(value) => setFieldValue('departureTime', value)}
                                     errorMessage={touched.departureTime && errors.departureTime}
                                     width='48%'
                                 />
+                                
+                                <TimePicker
+                                    label="Arrival Time"
+                                    value={values.arrivalTime}
+                                    onChangeValue={(value) => setFieldValue('arrivalTime', value)}
+                                    errorMessage={touched.arrivalTime && errors.arrivalTime}
+                                    width='48%'
+                                />
                             </View>
 
                             <Button
-                                title="Register"
-                                onPress={() => {
-                                    setTouched({
-                                        arrivalTime: true,
-                                        departureTime: true,
-                                        days: true
-                                    });
-
-                                    if (isValid) {
-                                        handleSubmit()
-                                    }
-                                }}
+                                title="Save Changes"
+                                onPress={() => handleSubmit()}
                             />
 
                             <Timestamps

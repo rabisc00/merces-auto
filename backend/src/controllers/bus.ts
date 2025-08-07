@@ -3,12 +3,14 @@ import Bus from "../models/bus";
 import { AuthRequest } from "../types/authRequest";
 import { Response } from "express";
 import { HTTP_MESSAGES } from '../constants/httpMessages';
+import { removeSpecialCharacters } from '../utils/specialCharacters';
 
 export const createBus = async function(req: AuthRequest, res: Response) {
     try {
         const { busNumber, model, capacity, manufacturingYear } = req.body;
-        const busNumberFormatted = busNumber && busNumber.toUpperCase();
+        const busNumberFormatted = busNumber && removeSpecialCharacters(busNumber.toUpperCase());
         const modelFormatted = model && model.toUpperCase();
+        console.log(modelFormatted);
 
         const busFound = await Bus.findOne({ where: { busNumber: busNumberFormatted }});
         if (busFound) {
@@ -37,6 +39,9 @@ export const editBus = async function(req: AuthRequest, res: Response) {
         const id = req.params.id;
         const { busNumber, model, capacity, inRepair, manufacturingYear } = req.body;
 
+        const busNumberFormatted = busNumber && removeSpecialCharacters(busNumber.toUpperCase());
+        const modelFormatted = model && model.toUpperCase();
+
         const busFound = await Bus.findByPk(id);
         if (!busFound) {
             return res.status(404).json({ error: HTTP_MESSAGES.NOT_FOUND });
@@ -44,10 +49,10 @@ export const editBus = async function(req: AuthRequest, res: Response) {
 
         let changed = false;
 
-        if (busNumber && busFound.busNumber !== busNumber) {
+        if (busNumberFormatted && busFound.busNumber !== busNumberFormatted) {
             const existingBus = await Bus.findOne({
                 where: {
-                    busNumber: busNumber,
+                    busNumber: busNumberFormatted,
                     id: { [Op.ne]: id }
                 }
             });
@@ -56,11 +61,12 @@ export const editBus = async function(req: AuthRequest, res: Response) {
                 return res.status(409).json({ error: HTTP_MESSAGES.CONFLICT });
             }
             
+            busFound.busNumber = busNumberFormatted;
             changed = true;
         }
 
-        if (model && busFound.model !== model) {
-            busFound.model = model;
+        if (modelFormatted && busFound.model !== modelFormatted) {
+            busFound.model = modelFormatted;
             changed = true;
         }
 

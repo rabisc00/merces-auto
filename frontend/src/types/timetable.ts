@@ -42,6 +42,7 @@ export type TimetableCreateForm = {
 };
 
 export type TimetableUpdateForm = {
+    busRouteId: string;
     arrivalTime: string;
     departureTime: string;
     days: string[];

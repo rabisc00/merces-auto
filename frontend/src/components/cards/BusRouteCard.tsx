@@ -14,7 +14,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 export function BusRouteCard({ id, lineNumber, origin, destination }: BusRoute) {
     const navigation = useNavigation<NativeStackNavigationProp<BusRouteStackParamList>>();
     const { showLoading, hideLoading } = useLoading();
-    const { userToken } = useAuth();
+    const { userToken, isUserAdmin } = useAuth();
     
     const deleteAction = () => {
         confirm(async () => {
@@ -53,7 +53,7 @@ export function BusRouteCard({ id, lineNumber, origin, destination }: BusRoute) 
                 </View>
 
                 <CardActionButtons
-                    deleteAction={deleteAction}
+                    deleteAction={isUserAdmin ? deleteAction : undefined}
                     detailsAction={detailsAction}
                     timetablesAction={timetablesAction}
                 />

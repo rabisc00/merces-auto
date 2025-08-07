@@ -13,6 +13,7 @@ export const timetableCreateSchema = yup.object({
 });
 
 export const timetableUpdateSchema = yup.object({
+    busRouteId: yup.string().uuid('Invalid bus route id').required('Bus route is required'),
     arrivalTime: yup.string().test('is-valid-format', 'Invalid time format', (value) => { 
         return dayjs(value, 'HH:mm').isValid();
     }),

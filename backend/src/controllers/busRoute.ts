@@ -37,7 +37,7 @@ export const createBusRoute = async function (req: AuthRequest, res: Response) {
 };
 
 export const editBusRoute = async function (req: AuthRequest, res: Response) {
-    let { lineNumber, origin, destination } = req.body;
+    const { lineNumber, origin, destination } = req.body;
     const id = req.params.id;
 
     const lineNumberFormatted = lineNumber && lineNumber.toUpperCase();

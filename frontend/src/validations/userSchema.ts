@@ -1,7 +1,5 @@
 import * as yup from 'yup';
 
-const PPS_REGEX = /^[0-9]{7}[A-Z]{1,2}$/;
-
 export const userCreateSchema = yup.object({
     email: yup.string().email('Invalid email address').required('Email is required'),
     password: yup.string().trim()
@@ -24,8 +22,7 @@ export const userCreateSchema = yup.object({
       'Must contain at least one special character (!@#$...)'
     ),
     documentNumber: yup.string().trim()
-    .required('Document number is required')
-    .matches(PPS_REGEX, 'Invalid Irish PPS number format'),
+    .required('Document number is required'),
     name: yup.string().trim().min(1, {
         error: 'Name cannot be empty'
     }).required('Name is required')
@@ -33,9 +30,8 @@ export const userCreateSchema = yup.object({
 });
 
 export const userUpdateSchema = yup.object({
-  documentNumber: yup.string().trim()
-    .required('Document number is required')
-    .matches(PPS_REGEX, 'Invalid Irish PPS number format'),
+    documentNumber: yup.string().trim()
+    .required('Document number is required'),
     name: yup.string().trim().min(1, {
         error: 'Name cannot be empty'
     }).required('Name is required')

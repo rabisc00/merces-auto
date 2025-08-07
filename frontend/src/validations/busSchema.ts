@@ -1,10 +1,7 @@
 import * as yup from 'yup';
 
 export const busCreateSchema = yup.object({
-    busNumber: yup.string().trim().matches(
-        /^(?:(?:[A-Z]{2,3}[- ]?\d{1,4})|(?:\d{1,4}[- ]?[A-Z]{2,3})|(?:[A-Z]{1,2}[- ]?\d{2,5})|(?:[A-Z]{1,3}[- ]?\d{1,3}[- ]?[A-Z]{1,3}))$/,
-        'Must be a valid bus plaque (e.g., 23-B-12345)'
-    ).required('Bus number is required'),
+    busNumber: yup.string().trim().required('Bus number is required'),
     model: yup.string().trim().optional(),
     capacity: yup.number().optional()
         .typeError('Capacity must be a number')
@@ -19,6 +16,7 @@ export const busCreateSchema = yup.object({
 });
 
 export const busUpdateSchema = yup.object({
+    busNumber: yup.string().trim().required(),
     model: yup.string().trim().optional(),
     capacity: yup.number().optional()
         .typeError('Capacity must be a number')

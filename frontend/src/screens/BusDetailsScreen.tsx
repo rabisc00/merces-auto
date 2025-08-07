@@ -39,8 +39,11 @@ export default function BusDetailsScreen() {
 
     const callSaveChanges = async (values: BusUpdate) => {
         showLoading();
+
+        console.log(values);
         
         if (
+            values.busNumber === originalBus?.busNumber &&
             values.model === originalBus?.model &&
             values.manufacturingYear === originalBus?.manufacturingYear &&
             values.capacity === originalBus?.capacity &&
@@ -62,6 +65,7 @@ export default function BusDetailsScreen() {
                 originalBus ?
                     <Formik
                         initialValues={{ 
+                            busNumber: originalBus.busNumber,
                             model: originalBus.model, 
                             capacity: originalBus.capacity, 
                             manufacturingYear: originalBus.manufacturingYear, 
@@ -79,8 +83,13 @@ export default function BusDetailsScreen() {
                             touched
                         }) => (
                                 <View style={globalStyles.editContainer}>
-                                    <Text><Text style={globalStyles.boldText}>Bus Number:</Text> {originalBus.busNumber}</Text>
-
+                                    <InputField
+                                        label="Bus Number"
+                                        errorMessage={touched.busNumber && errors.busNumber}
+                                        required={true}
+                                        value={values.busNumber}
+                                        onChangeText={handleChange('busNumber')}
+                                    />
                                     <InputField
                                         label="Model"
                                         errorMessage={touched.model && errors.model}
@@ -94,7 +103,10 @@ export default function BusDetailsScreen() {
                                             isNumber={true}
                                             value={values.capacity?.toString()}
                                             width={'48%'}
-                                            onChangeText={handleChange('capacity')}
+                                            onChangeText={(text) => {
+                                                const parsed = parseInt(text, 10);
+                                                setFieldValue('capacity', isNaN(parsed) ? '' : parsed);
+                                            }}
                                         />
                                         <InputField
                                             label="Manufacturing Year"
@@ -102,7 +114,10 @@ export default function BusDetailsScreen() {
                                             isNumber={true}
                                             value={values.manufacturingYear?.toString()}
                                             width={'48%'}
-                                            onChangeText={handleChange('manufacturingYear')}
+                                            onChangeText={(text) => {
+                                                const parsed = parseInt(text, 10);
+                                                setFieldValue('manufacturingYear', isNaN(parsed) ? '' : parsed);
+                                            }}
                                         />
                                     </View>
                                     <Checkbox.Item

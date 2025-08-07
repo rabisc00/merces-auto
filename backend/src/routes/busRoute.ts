@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { authenticateToken } from '../middleware/auth';
+import { authenticateToken, authenticateTokenAdmin } from '../middleware/auth';
 import { busRouteCreateSchema, busRouteEditSchema } from '../validators/busRouteValidator';
 import { validate } from '../middleware/validate';
 import { createBusRoute, editBusRoute, getBusRoutes, deleteBusRoute, getBusRouteDetails, searchBusRoute } from '../controllers/busRoute';
@@ -160,7 +160,7 @@ router.get('/filter', authenticateToken, searchBusRoute);
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.post('/create', authenticateToken, validate(busRouteCreateSchema), createBusRoute);
+router.post('/create', authenticateTokenAdmin, validate(busRouteCreateSchema), createBusRoute);
 
 /**
  * @swagger
@@ -205,7 +205,7 @@ router.post('/create', authenticateToken, validate(busRouteCreateSchema), create
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.patch('/edit/:id', authenticateToken, validate(busRouteEditSchema), editBusRoute);
+router.patch('/edit/:id', authenticateTokenAdmin, validate(busRouteEditSchema), editBusRoute);
 
 /**
  * @swagger
@@ -242,6 +242,6 @@ router.patch('/edit/:id', authenticateToken, validate(busRouteEditSchema), editB
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.delete('/delete/:id', authenticateToken, deleteBusRoute);
+router.delete('/delete/:id', authenticateTokenAdmin, deleteBusRoute);
 
 export default router;

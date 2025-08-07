@@ -132,5 +132,8 @@ export const globalStyles = StyleSheet.create({
         borderWidth: 1,
         padding: 12,
         borderRadius: 5
+    },
+    detailsContainer: {
+        
     }
 });

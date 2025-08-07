@@ -5,6 +5,7 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { BusRoutesOptionsNavigationProp, BusRouteStackParamList } from "../types/navigation";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import HeaderWithSearch from "../components/HeaderWithSearch";
 
 type TimetableCalendarRouteProp = RouteProp<BusRouteStackParamList, 'TimetableCalendar'>
 
@@ -27,6 +28,7 @@ export default function TimetableCalendarScreen() {
 
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
+            <HeaderWithSearch />
             <View style={globalStyles.mainContainer}>
                 <TouchableOpacity
                     style={globalStyles.buttonWithIcon}

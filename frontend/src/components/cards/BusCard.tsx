@@ -14,7 +14,7 @@ import { globalStyles } from "../../styles/global";
 export function BusCard({ id, busNumber, model, inRepair }: Bus) {
     const navigation = useNavigation<BusesOptionsNavigationProp>();
     const { showLoading, hideLoading } = useLoading();
-    const { userToken } = useAuth();
+    const { userToken, isUserAdmin } = useAuth();
 
     const deleteAction = () => {
         confirm(async () => {
@@ -54,7 +54,7 @@ export function BusCard({ id, busNumber, model, inRepair }: Bus) {
                 </View>
                 
                 <CardActionButtons 
-                    deleteAction={deleteAction}
+                    deleteAction={isUserAdmin ? deleteAction : undefined}
                     detailsAction={detailsAction}
                     tripsAction={tripsAction}
                 />

@@ -16,18 +16,26 @@ export async function generateToken(req: Request, res: Response) {
         });
 
         const passwordMatch = await bcrypt.compare(password, userFound.password);
-        if (!userFound || !userFound.isAdmin || !passwordMatch || !userFound.active
+        if (!userFound || !passwordMatch || !userFound.active
         ) {
             return res.status(401).json({ error: HTTP_MESSAGES.UNAUTHORIZED });
         }
 
         const token = jwt.sign(
-            { id: userFound.id, email: userFound.email, isAdmin: userFound.isAdmin },
+            { 
+                id: userFound.id, 
+                email: userFound.email, 
+                isAdmin: userFound.isAdmin 
+            },
             process.env.JWT_SECRET!,
-            { expiresIn: process.env.JWT_EXPIRES_IN }
+            {  expiresIn: process.env.JWT_EXPIRES_IN }
         );
 
-        res.json({ token });
+        res.json({ 
+            token,
+            id: userFound.id,
+            isAdmin: userFound.isAdmin
+        });
     } catch (error: any) {
         console.error('Error generating token:', error);
         return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });

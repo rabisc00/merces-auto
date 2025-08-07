@@ -44,6 +44,7 @@ export default function UsersListScreen() {
                     addButtonText="Add New User"
                     navigateAdd={() => navigation.navigate('UserRegistration')}
                     refreshFlag={refreshFlag}
+                    usersScreen={true}
                 />
             </View>
         </SafeAreaView>

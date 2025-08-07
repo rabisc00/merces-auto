@@ -35,8 +35,6 @@ export const fetchTimetablesByRoute = async (
             }
         });
 
-        console.log(`${API_BASE_URL}/timetables/retrieve/byroute/${busRouteId}?date=${date}`);
-
         const listResponse: ListResponse<Timetable> = {
             currentPage: 0,
             totalPages: 0,
@@ -76,7 +74,6 @@ export const registerTimetable = async (
     userToken: string | null
 ): Promise<boolean> => {
     try {
-        console.log(timetable);
         await axios.post<CreateResponse>(`${API_BASE_URL}/timetables/create`, {
             busRouteId: timetable.busRouteId,
             arrivalTime: timetable.arrivalTime,

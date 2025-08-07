@@ -9,7 +9,7 @@ dotenv.config();
 export function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) {
     const authHeader = req.headers['authorization'];
     const token = authHeader?.split(' ')[1];
-
+    
     if (!token) {
         return res.status(401).json({ error: HTTP_MESSAGES.UNAUTHORIZED });
     }
@@ -20,6 +20,24 @@ export function authenticateToken(req: AuthRequest, res: Response, next: NextFun
         next();
     } catch (err) {
         console.error('Authentication error', err);
-        return res.status(403).json({ error: HTTP_MESSAGES.FORBIDDEN });
+        return res.status(403).json({ error: HTTP_MESSAGES.UNAUTHORIZED });
     }
-}
+};
+
+export function authenticateTokenAdmin(req: AuthRequest, res: Response, next: NextFunction) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader?.split(' ')[1];
+    
+    if (!token || !req.user.isAdmin) {
+        return res.status(401).json({ error: HTTP_MESSAGES.UNAUTHORIZED });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        console.error('Authentication error', err);
+        return res.status(403).json({ error: HTTP_MESSAGES.UNAUTHORIZED });
+    }
+};

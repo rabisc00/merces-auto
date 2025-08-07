@@ -17,7 +17,7 @@ import Timestamps from "../components/Timestamps";
 type BusRouteRouteProp = RouteProp<BusRouteStackParamList, 'BusRouteDetails'>;
 
 export default function BusRouteDetailsScreen() {
-    const { userToken } = useAuth();
+    const { userToken, isUserAdmin } = useAuth();
     const { showLoading, hideLoading } = useLoading();
     const navigation = useNavigation<BusRoutesOptionsNavigationProp>();
     const route = useRoute<BusRouteRouteProp>();
@@ -59,7 +59,8 @@ export default function BusRouteDetailsScreen() {
         <SafeAreaView style={globalStyles.safeAreaContainer}>
             <HeaderWithSearch />
             {
-                originalBusRoute ?
+                originalBusRoute ? 
+                isUserAdmin ? 
                 <Formik
                     initialValues={{ 
                         lineNumber: originalBusRoute.lineNumber,
@@ -77,21 +78,25 @@ export default function BusRouteDetailsScreen() {
                         touched
                     }) => (
                         <View style={globalStyles.editContainer}>
+                            <Text style={[globalStyles.boldText, { marginBottom: 20 }]}>Distance: {originalBusRoute.distanceInKm} Km | Duration: {originalBusRoute.averageTimeInMinutes} Minutes</Text>
                             <InputField
                                 label="Line Number"
                                 errorMessage={touched.lineNumber && errors.lineNumber}
                                 value={values.lineNumber}
+                                required={true}
                                 onChangeText={handleChange('lineNumber')}
                             />
                             <InputField
                                 label="Origin"
                                 errorMessage={touched.origin && errors.origin}
+                                required={true}
                                 value={values.origin}
                                 onChangeText={handleChange('origin')}
                             />
                             <InputField
                                 label="Destination"
                                 errorMessage={touched.destination && errors.destination}
+                                required={true}
                                 value={values.destination}
                                 onChangeText={handleChange('destination')}
                             />
@@ -107,7 +112,14 @@ export default function BusRouteDetailsScreen() {
                             />
                         </View>
                     )}
-                </Formik> :
+                    </Formik> :
+                    <View style={globalStyles.mainContainer}>
+                        <Text>Distance: {originalBusRoute.distanceInKm}</Text>
+                        <Text>Duration: {originalBusRoute.averageTimeInMinutes}</Text>
+                        <Text>Line Number: {originalBusRoute.lineNumber}</Text>
+                        <Text>Origin: {originalBusRoute.origin}</Text>
+                        <Text>Destination: {originalBusRoute.destination}</Text>
+                    </View> :
                 <Text style={globalStyles.error}>Bus route not found</Text>
             }
         </SafeAreaView>

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { globalStyles } from '../styles/global';
 import { ListResponse } from '../types/api';
+import { useAuth } from '../context/AuthContext';
 
 type GenericCardListProps<T> = {
     fetchData: (page: number) => Promise<ListResponse<T>>;
@@ -11,6 +12,7 @@ type GenericCardListProps<T> = {
     navigateAdd?: () => void;
     refreshFlag: boolean;
     addButtonText: string;
+    usersScreen?: boolean;
 };
 
 export function GenericCardList<T>({ 
@@ -19,8 +21,11 @@ export function GenericCardList<T>({
     keyExtractor,
     navigateAdd,
     addButtonText,
-    refreshFlag
+    refreshFlag,
+    usersScreen
 }: GenericCardListProps<T>) {
+    const { logout } = useAuth();
+
     const [items, setItems] = useState<T[]>([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -62,21 +67,36 @@ export function GenericCardList<T>({
 
     return (
         <View>
-            {navigateAdd &&
-                <TouchableOpacity
-                    style={globalStyles.buttonWithIcon}
-                    onPress={navigateAdd}
-                >
-                    <Ionicons
-                        name="add-circle-outline"
-                        size={24}
-                        style={globalStyles.buttonIcon}
-                    />
-                    <Text style={globalStyles.buttonWithIconText}>
-                        {addButtonText}
-                    </Text>
-                </TouchableOpacity>
-            }
+            <View style={cardListStyles.buttonsRow}>
+                {navigateAdd &&
+                    <TouchableOpacity
+                        style={[globalStyles.buttonWithIcon, {width: '85%'}]}
+                        onPress={navigateAdd}
+                    >
+                        <Ionicons
+                            name="add-circle-outline"
+                            size={24}
+                            style={globalStyles.buttonIcon}
+                        />
+                        <Text style={globalStyles.buttonWithIconText}>
+                            {addButtonText}
+                        </Text>
+                    </TouchableOpacity>
+                }
+                {usersScreen &&
+                    <TouchableOpacity
+                        style={{width: '15%'}}
+                        onPress={logout}
+                    >
+                        <Ionicons
+                            name="log-out-outline"
+                            size={30}
+                            style={globalStyles.buttonIcon}
+                        />
+                    </TouchableOpacity>
+                }
+            </View>
+            
             <FlatList
                 data={items}
                 renderItem={({ item }) => renderItem(item)}
@@ -93,3 +113,13 @@ export function GenericCardList<T>({
         </View>
     )
 }
+
+const cardListStyles = StyleSheet.create({
+    buttonsRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 16,
+        justifyContent: 'space-evenly'
+    }
+})

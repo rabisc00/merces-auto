@@ -1,8 +1,8 @@
 import * as express from 'express';
 import { userCreateSchema, userEditSchema } from '../validators/userValidator';
 import { validate } from '../middleware/validate';
-import { createUser, deleteUser, editUser, getUserDetails, getUsers, login, searchUser } from '../controllers/user';
-import { authenticateToken } from '../middleware/auth';
+import { createUser, deleteUser, editUser, getUserDetails, getUsers, searchUser } from '../controllers/user';
+import { authenticateToken, authenticateTokenAdmin } from '../middleware/auth';
 import { uploadPicture } from '../middleware/upload';
 
 /**
@@ -125,50 +125,6 @@ router.get('/filter', authenticateToken, searchUser);
 
 /**
  * @swagger
- * /login:
- *   post:
- *     summary: Authenticate a user and return a JWT token
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *               password:
- *                 type: string
- *                 format: password
- *     responses:
- *       200:
- *         description: Login successful, JWT token returned
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                 id:
- *                   type: string
- *                   format: uuid
- *                 isAdmin:
- *                   type: boolean
- *       401:
- *         $ref: '#/components/responses/UnauthorizedError'
- *       500:
- *         $ref: '#/components/responses/InternalServerError'
- */
-router.post('/login', login);
-
-/**
- * @swagger
  * /create:
  *   post:
  *     summary: Create a new user (admin-only)
@@ -203,7 +159,7 @@ router.post('/login', login);
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.post('/create', authenticateToken, validate(userCreateSchema), createUser);
+router.post('/create', authenticateTokenAdmin, validate(userCreateSchema), createUser);
 
 /**
  * @swagger
@@ -245,7 +201,7 @@ router.post('/create', authenticateToken, validate(userCreateSchema), createUser
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.patch('/edit/:id', authenticateToken, uploadPicture.single('picture'), validate(userEditSchema), editUser);
+router.patch('/edit/:id', authenticateTokenAdmin, uploadPicture.single('picture'), validate(userEditSchema), editUser);
 
 /**
  * @swagger
@@ -282,6 +238,6 @@ router.patch('/edit/:id', authenticateToken, uploadPicture.single('picture'), va
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.delete('/delete/:id', authenticateToken, deleteUser);
+router.delete('/delete/:id', authenticateTokenAdmin, deleteUser);
 
 export default router;

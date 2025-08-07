@@ -32,7 +32,7 @@ export default function TimetableRegistrationScreen() {
     
     const { busRouteId } = route.params;
 
-    const fetchData = async () => {
+    const populateBusRoutes = async () => {
         if (loadingBusRoute || !hasMoreBusRoutes) return;
         setLoadingBusRoute(true);
 
@@ -84,7 +84,7 @@ export default function TimetableRegistrationScreen() {
     useEffect(() => {
         const populateBusRoutes = async () => {
             showLoading();
-            await fetchData();
+            await populateBusRoutes();
             hideLoading();
         }
         
@@ -122,7 +122,7 @@ export default function TimetableRegistrationScreen() {
                                 selectedValue={values.busRouteId}
                                 options={busRoutes}
                                 onValueChange={(value) => setFieldValue('busRouteId', value)}
-                                onEndReached={fetchData}
+                                onEndReached={populateBusRoutes}
                                 errorMessage={touched.busRouteId && errors.busRouteId}
                                 width='100%'
                             />
@@ -148,20 +148,20 @@ export default function TimetableRegistrationScreen() {
                             
                             <View style={globalStyles.inputRow}>
                                 <TimePicker
-                                    label="Arrival Time"
-                                    value={values.arrivalTime}
-                                    onChangeValue={(value) => setFieldValue('arrivalTime', value)}
-                                    required={true}
-                                    errorMessage={touched.arrivalTime && errors.arrivalTime}
-                                    width='45%'
-                                />
-
-                                <TimePicker
                                     label="Departure Time"
                                     value={values.departureTime}
                                     onChangeValue={(value) => setFieldValue('departureTime', value)}
                                     required={true}
                                     errorMessage={touched.departureTime && errors.departureTime}
+                                    width='45%'
+                                />
+                                
+                                <TimePicker
+                                    label="Arrival Time"
+                                    value={values.arrivalTime}
+                                    onChangeValue={(value) => setFieldValue('arrivalTime', value)}
+                                    required={true}
+                                    errorMessage={touched.arrivalTime && errors.arrivalTime}
                                     width='45%'
                                 />
                             </View>

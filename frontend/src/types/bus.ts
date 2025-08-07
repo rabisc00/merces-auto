@@ -24,6 +24,7 @@ export type BusCreate = {
 };
 
 export type BusUpdate = {
+    busNumber: string;
     inRepair: boolean;
     model?: string;
     capacity?: number;

@@ -14,7 +14,7 @@ import { daysOfTheWeek } from "../../const/days";
 export function TimetableCard({ id,  arrivalTime, departureTime, days, busRoute }: Timetable) {
     const navigation = useNavigation<BusRoutesOptionsNavigationProp>();
     const { showLoading, hideLoading } = useLoading();
-    const { userToken } = useAuth();
+    const { userToken, isUserAdmin } = useAuth();
 
     const deleteAction = () => {
         confirm(async () => {
@@ -40,13 +40,13 @@ export function TimetableCard({ id,  arrivalTime, departureTime, days, busRoute 
             <View style={globalStyles.cardView}>
                 <View style={globalStyles.cardContent}>
                     <Text style={globalStyles.cardText}><Text style={globalStyles.boldText}>{busRoute.lineNumber}:</Text> {busRoute.origin} -{'>'} {busRoute.destination}</Text>
-                    <Text style={globalStyles.cardText}><Text style={globalStyles.boldText}>Arrival:</Text>{arrivalTime}</Text>
-                    <Text style={globalStyles.cardText}><Text style={globalStyles.boldText}>Departure:</Text>{departureTime}</Text>
+                    <Text style={globalStyles.cardText}><Text style={globalStyles.boldText}>Arrival:</Text> {arrivalTime}</Text>
+                    <Text style={globalStyles.cardText}><Text style={globalStyles.boldText}>Departure:</Text> {departureTime}</Text>
                 </View>
             </View>
 
             <CardActionButtons
-                deleteAction={deleteAction}
+                deleteAction={isUserAdmin ? deleteAction : undefined}
                 detailsAction={detailsAction}
             />
         </BaseCard>

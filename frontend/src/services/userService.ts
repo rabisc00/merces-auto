@@ -131,20 +131,3 @@ export const deleteUser = async (
         throw error;
     }
 };
-
-export const userLogin = async (
-    email: string,
-    password: string
-): Promise<LoginResponse | undefined> => {
-    try {
-        const res = await axios.post<LoginResponse>(`${API_BASE_URL}/users/login`, { 
-            email,
-            password
-        });
-
-        return res.data;
-    } catch (error: any) {
-        console.error(error);
-        showError(error.response?.status);
-    }
-}
