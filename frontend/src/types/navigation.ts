@@ -2,7 +2,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export type TabParamList = {
     BusRoutes: undefined;
-    WorkedHours: undefined;
+    WorkingHours: undefined;
     Buses: undefined;
     Users: undefined;
 };
@@ -26,6 +26,7 @@ export type UsersStackParamList = {
   UserTripRegistration: { id: string };
   UserTripDetails: { tripId: string };
   UserWorkingHoursList: { id: string };
+  UserWorkingHoursRegistration: { id: string };
   UserWorkingHoursDetails: { workingHoursId: string };
 };
 

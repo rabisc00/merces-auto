@@ -11,18 +11,24 @@ import { globalStyles } from "../../styles/global";
 import CardActionButtons from "../CardActionButtons";
 import { daysOfTheWeek } from "../../const/days";
 
-export function TimetableCard({ id,  arrivalTime, departureTime, days, busRoute }: Timetable) {
+type Props = Timetable & {
+    onDelete?: () => void;
+}
+
+export function TimetableCard({ id,  arrivalTime, departureTime, days, busRoute, onDelete }: Props) {
     const navigation = useNavigation<BusRoutesOptionsNavigationProp>();
     const { showLoading, hideLoading } = useLoading();
     const { userToken, isUserAdmin } = useAuth();
 
     const deleteAction = () => {
         confirm(async () => {
-            showLoading();
-            deleteTimetable(id, userToken);
-            hideLoading();
-
-            navigation.navigate('TimetableCalendar', { busRouteId: busRoute.id });
+            try {
+                showLoading();
+                deleteTimetable(id, userToken);
+                onDelete?.();
+            } finally {
+                hideLoading();
+            }
         });
     };
 

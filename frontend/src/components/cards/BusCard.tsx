@@ -11,18 +11,23 @@ import { View } from "react-native";
 import CardActionButtons from "../CardActionButtons";
 import { globalStyles } from "../../styles/global";
 
-export function BusCard({ id, busNumber, model, inRepair, manufacturingYear, capacity }: Bus) {
+type Props = Bus & {
+    onDelete?: () => void;
+}
+
+export function BusCard({ id, busNumber, model, inRepair, manufacturingYear, capacity, onDelete }: Props) {
     const navigation = useNavigation<BusesOptionsNavigationProp>();
     const { showLoading, hideLoading } = useLoading();
     const { userToken, isUserAdmin } = useAuth();
 
     const deleteAction = () => {
         confirm(async () => {
-            showLoading();
-            deleteBus(id, userToken);
-            hideLoading();
-
-            navigation.navigate('BusesList');
+            try {
+                showLoading();
+                deleteBus(id, userToken);
+            } finally {
+                hideLoading();
+            }
         })
     };
 

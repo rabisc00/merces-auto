@@ -57,6 +57,7 @@ export default function TripsListScreen() {
                         }
                     }}
                     refreshFlag={refreshFlag}
+                    showAdd={true}
                 />
             </View>
         </SafeAreaView>

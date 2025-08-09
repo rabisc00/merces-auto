@@ -1,8 +1,14 @@
+type User = {
+    id: string;
+    name: string;
+    documentNumber: string;
+}
+
 export type WorkingHours = {
     id: string;
     startTime: string;
     endTime: string;
-    userId: string;
+    user: User;
 };
 
 export type WorkingHoursDetails = {
@@ -10,6 +16,7 @@ export type WorkingHoursDetails = {
     startTime: string;
     endTime: string;
     signature: string;
+    user: User;
 };
 
 export type WorkingHoursCreate = {

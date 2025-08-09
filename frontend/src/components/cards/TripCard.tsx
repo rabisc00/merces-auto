@@ -10,7 +10,11 @@ import BaseCard from "../BaseCard";
 import { globalStyles } from "../../styles/global";
 import CardActionButtons from "../CardActionButtons";
 
-export function TripCard({ id, numberOfPassengers, date, timetable }: Trip) {
+type Props = Trip & {
+    onDelete?: () => void;
+}
+
+export function TripCard({ id, numberOfPassengers, date, timetable, onDelete }: Props) {
     const route = useRoute();
     const busNavigation = useNavigation<BusesOptionsNavigationProp>();
     const userNavigation = useNavigation<UsersOptionsNavigationProp>();
@@ -21,15 +25,15 @@ export function TripCard({ id, numberOfPassengers, date, timetable }: Trip) {
 
     const deleteAction = () => {
         confirm(async () => {
-            showLoading();
-            await deleteTrip(id, userToken);
-            hideLoading();
+            try {
+                showLoading();
+                await deleteTrip(id, userToken);
 
-            if (currentScreen === 'BusTripsList') {
-                busNavigation.navigate('BusesList')
-            } else if (currentScreen === 'UserTripsList' != null) {
-                userNavigation.navigate('UsersList');
+                onDelete?.();
+            } finally {
+                hideLoading();
             }
+            
         });
     };
 
@@ -61,7 +65,7 @@ export function TripCard({ id, numberOfPassengers, date, timetable }: Trip) {
 
             <CardActionButtons
                 deleteAction={isUserAdmin ? deleteAction : undefined}
-                detailsAction={detailsAction}
+                detailsAction={isUserAdmin ? detailsAction : undefined}
             />
         </BaseCard>
     )

@@ -42,6 +42,7 @@ export default function BusesListScreen() {
                     addButtonText="Add New Bus"
                     navigateAdd={() => navigation.navigate('BusRegistration')}
                     refreshFlag={refreshFlag}
+                    showAdd={true}
                 />
             </View>
         </SafeAreaView>

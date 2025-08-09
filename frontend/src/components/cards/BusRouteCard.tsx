@@ -11,18 +11,24 @@ import { globalStyles } from "../../styles/global";
 import CardActionButtons from "../CardActionButtons";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-export function BusRouteCard({ id, lineNumber, origin, destination, averageTimeInMinutes, distanceInKm }: BusRoute) {
+type Props = BusRoute & {
+    onDelete?: () => void;
+}
+
+export function BusRouteCard({ id, lineNumber, origin, destination, averageTimeInMinutes, distanceInKm, onDelete }: Props) {
     const navigation = useNavigation<NativeStackNavigationProp<BusRouteStackParamList>>();
     const { showLoading, hideLoading } = useLoading();
     const { userToken, isUserAdmin } = useAuth();
     
     const deleteAction = () => {
         confirm(async () => {
-            showLoading();
-            await deleteBusRoute(id, userToken);
-            hideLoading();
-
-            navigation.navigate('BusRoutesList');
+            try {
+                showLoading();
+                await deleteBusRoute(id, userToken);
+                onDelete?.();
+            } finally {
+                hideLoading();
+            }
         });
     };
 

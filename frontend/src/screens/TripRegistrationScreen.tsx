@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 import { ListObject } from "../types/listObject";
 import { useLoading } from "../context/LoadingContext";
 import { fetchTimetables, fetchTimetablesByRoute } from "../services/timetableService";
-import { fetchBuses } from "../services/busService";
-import { fetchUsers } from "../services/userService";
+import { fetchBuses, getBusDetails } from "../services/busService";
+import { fetchUsers, getUserDetails } from "../services/userService";
 import { Formik } from "formik";
 import { TripCreate } from "../types/trip";
 import { registerTrip } from "../services/tripService";
@@ -24,7 +24,7 @@ type TripRegistrationRouteProp = RouteProp<
 >;
 
 export default function TripRegistrationScreen() {
-    const { userToken } = useAuth();
+    const { userToken, isUserAdmin } = useAuth();
     const { showLoading, hideLoading } = useLoading();
     const route = useRoute<TripRegistrationRouteProp>();
     const userNavigation = useNavigation<UsersOptionsNavigationProp>();
@@ -78,7 +78,7 @@ export default function TripRegistrationScreen() {
             const response = await fetchBuses(busesPage, userToken);
             const dropdownObjects: ListObject[] = response.records.map((bus) => ({
                 value: bus.id,
-                label: `${bus.busNumber} | Model: ${bus.model || 'Undefined'}`
+                label: `${bus.busNumber} | ${bus.model || 'Undefined Model'}`
             }));
 
             setBuses(prev => [...prev, ...dropdownObjects]);
@@ -86,6 +86,19 @@ export default function TripRegistrationScreen() {
                 setHasMoreBuses(false);
             } else {
                 setBusesPage(prev => prev + 1);
+            }
+
+            if (routeName == 'BusTripRegistration' && id != null) {
+                const busFound = buses.find((bus) => bus.value == id);
+                if (!busFound) {
+                    const selectedBus = await getBusDetails(id, userToken);
+                    const selectedBusDropdownObject: ListObject = {
+                        value: selectedBus.id,
+                        label: `${selectedBus.busNumber} | ${selectedBus.model || 'Undefined Model'}`
+                    };
+
+                    setBuses(prev => [...prev, selectedBusDropdownObject]);
+                }
             }
         } finally {
             setLoadingBuses(false);
@@ -97,10 +110,11 @@ export default function TripRegistrationScreen() {
         setLoadingUsers(true);
 
         try {
+            console.log('Entered users');
             const response = await fetchUsers(usersPage, userToken);
             const dropdownObjects: ListObject[] = response.records.map((user) => ({
                 value: user.id,
-                label: `${user.name}: ${user.documentNumber}`
+                label: `${user.name} | ${user.documentNumber}`
             }));
 
             setUsers(prev => [...prev, ...dropdownObjects]);
@@ -108,6 +122,19 @@ export default function TripRegistrationScreen() {
                 setHasMoreUsers(false);
             } else {
                 setUsersPage(prev => prev + 1);
+            }
+
+            if (routeName === 'UserTripRegistration' && id != null) {
+                const userFound = users.find((user) => user.value === id);
+                if (!userFound) {
+                    const selectedUser = await getUserDetails(id, userToken);
+                    const selectedUserDropdownObject: ListObject = {
+                        value: selectedUser.id,
+                        label: `${selectedUser.name} | ${selectedUser.documentNumber}`
+                    };
+
+                    setUsers((prev) => [...prev, selectedUserDropdownObject]);
+                }
             }
         } finally {
             setLoadingUsers(false);
@@ -151,8 +178,8 @@ export default function TripRegistrationScreen() {
             
             <Formik<TripCreate>
                 initialValues={{
-                    userId: '',
-                    busId: '',
+                    userId: routeName === 'UserTripRegistration' ? id : '',
+                    busId: routeName === 'BusTripRegistration' ? id : '',
                     timetableId: '',
                     date: '',
                     observations: '',
@@ -164,11 +191,9 @@ export default function TripRegistrationScreen() {
                 {({
                     handleSubmit,
                     setFieldValue,
-                    setTouched,
                     values,
                     errors,
-                    touched,
-                    isValid
+                    touched
                 }) => {
                     return (
                         <View style={globalStyles.mainContainer}>
@@ -181,6 +206,7 @@ export default function TripRegistrationScreen() {
                                 onValueChange={(value) => setFieldValue('userId', value)}
                                 onEndReached={populateUsers}
                                 errorMessage={touched.userId && errors.userId}
+                                disabled={!isUserAdmin}
                                 width="100%"
                             />
 

@@ -8,6 +8,7 @@ import {
   UpdatedAt,
   ForeignKey,
   Default,
+  BelongsTo,
 } from 'sequelize-typescript';
 import { DataTypes } from 'sequelize';
 import User from './user';
@@ -54,4 +55,7 @@ export default class WorkingHours extends Model {
     allowNull: false,
   })
   userId!: string;
+
+  @BelongsTo(() => User)
+  user!: User;
 }

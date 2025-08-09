@@ -12,6 +12,7 @@ type Props = {
     options: ListObject[];
     onValueChange: (value: string) => void;
     errorMessage?: string | boolean;
+    disabled?: boolean;
     width?: DimensionValue;
     onEndReached?: () => void;
 };
@@ -25,6 +26,7 @@ export const DropdownList: React.FC<Props> = ({
     onValueChange,
     onEndReached,
     errorMessage,
+    disabled,
     width
 }) => {
     return (
@@ -41,6 +43,7 @@ export const DropdownList: React.FC<Props> = ({
                 valueField="value"
                 placeholder={placeholder}
                 value={selectedValue}
+                disable={disabled}
                 onChange={(item) => onValueChange(item.value)}
                 renderItem={(item) => (
                     <View style={globalStyles.dropdownItemView}>

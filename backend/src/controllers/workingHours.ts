@@ -7,6 +7,7 @@ import dayjs from '../utils/dayjs';
 import WorkingHours from "../models/workingHours";
 import { SQL_DATE_FORMAT } from "../constants/date";
 import { HTTP_MESSAGES } from "../constants/httpMessages";
+import User from "../models/user";
 
 const uploadDir = path.join(__dirname, '..', '..', 'uploads', 'signatures');
 
@@ -125,6 +126,10 @@ export const getWorkingHours = async function(req: AuthRequest, res: Response) {
             limit,
             attributes: ['id', 'startTime', 'endTime'],
             where: { userId },
+            include: [{
+                model: User,
+                attributes: ['id', 'name', 'documentNumber']
+            }],
             order: [['updatedAt', 'DESC']]
         });
         
@@ -145,7 +150,11 @@ export const getWorkingHoursDetails = async function(req: AuthRequest, res: Resp
         const workingHoursId = req.params.id;
 
         const workingHours = await WorkingHours.findByPk(workingHoursId, {
-            attributes: ['id', 'startTime', 'endTime', 'signature']
+            attributes: ['id', 'startTime', 'endTime', 'signature'],
+            include: [{
+                model: User,
+                attributes: ['id', 'name', 'documentNumber']
+            }]
         });
         
         return res.json(workingHours);

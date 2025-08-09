@@ -286,6 +286,17 @@ export const swaggerOptions = {
             endTime: {
               type: 'string',
               format: 'date-time'
+            },
+            user: {
+              type: 'object',
+              properties: {
+                id: {
+                  type: 'string',
+                  format: 'uuid'
+                },
+                name: { type: 'string' },
+                documentNumber: { type: 'string' }
+              }
             }
           }
         },
@@ -481,7 +492,18 @@ export const swaggerOptions = {
               type: 'string',
               format: 'date-time'
             },
-            signature: { type: 'string' }
+            signature: { type: 'string' },
+            user: {
+              type: 'object',
+              properties: {
+                id: {
+                  type: 'string',
+                  format: 'uuid'
+                },
+                name: { type: 'string' },
+                documentNumber: { type: 'string' }
+              }
+            }
           }
         },
         BusInput: {
