@@ -12,7 +12,7 @@ type GenericCardListProps<T> = {
     navigateAdd?: () => void;
     refreshFlag: boolean;
     addButtonText: string;
-    usersScreen?: boolean;
+    showAdd?: boolean;
 };
 
 export function GenericCardList<T>({ 
@@ -22,10 +22,8 @@ export function GenericCardList<T>({
     navigateAdd,
     addButtonText,
     refreshFlag,
-    usersScreen
+    showAdd
 }: GenericCardListProps<T>) {
-    const { logout } = useAuth();
-
     const [items, setItems] = useState<T[]>([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -67,35 +65,25 @@ export function GenericCardList<T>({
 
     return (
         <View>
-            <View style={cardListStyles.buttonsRow}>
-                {navigateAdd &&
-                    <TouchableOpacity
-                        style={[globalStyles.buttonWithIcon, {width: '85%'}]}
-                        onPress={navigateAdd}
-                    >
-                        <Ionicons
-                            name="add-circle-outline"
-                            size={24}
-                            style={globalStyles.buttonIcon}
-                        />
-                        <Text style={globalStyles.buttonWithIconText}>
-                            {addButtonText}
-                        </Text>
-                    </TouchableOpacity>
-                }
-                {usersScreen &&
-                    <TouchableOpacity
-                        style={{width: '15%'}}
-                        onPress={logout}
-                    >
-                        <Ionicons
-                            name="log-out-outline"
-                            size={30}
-                            style={globalStyles.buttonIcon}
-                        />
-                    </TouchableOpacity>
-                }
-            </View>
+            {showAdd && 
+                <View style={cardListStyles.buttonsRow}>
+                    {navigateAdd &&
+                        <TouchableOpacity
+                            style={globalStyles.buttonWithIcon}
+                            onPress={navigateAdd}
+                        >
+                            <Ionicons
+                                name="add-circle-outline"
+                                size={24}
+                                style={globalStyles.buttonIcon}
+                            />
+                            <Text style={globalStyles.buttonWithIconText}>
+                                {addButtonText}
+                            </Text>
+                        </TouchableOpacity>
+                    }
+                </View>
+            }
             
             <FlatList
                 data={items}

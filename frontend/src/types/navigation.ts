@@ -24,7 +24,9 @@ export type UsersStackParamList = {
   UserDetails: { userId: string };
   UserTripsList: { id: string };
   UserTripRegistration: { id: string };
-  UserTripDetails: { tripId: string }
+  UserTripDetails: { tripId: string };
+  UserWorkingHoursList: { id: string };
+  UserWorkingHoursDetails: { workingHoursId: string };
 };
 
 export type BusStackParamList = {
@@ -57,7 +59,16 @@ export type BusRouteStackParamList = {
   };
 };
 
+export type WorkingHoursStackParamList = {
+  WorkingHoursList: undefined;
+  WorkingHoursRegistration: undefined;
+  WorkingHoursDetails: {
+    workingHoursId: string
+  };
+};
+
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Main'>;
 export type UsersOptionsNavigationProp = NativeStackNavigationProp<UsersStackParamList, 'UsersList'>;
 export type BusesOptionsNavigationProp = NativeStackNavigationProp<BusStackParamList, 'BusesList'>;
 export type BusRoutesOptionsNavigationProp = NativeStackNavigationProp<BusRouteStackParamList, 'BusRoutesList'>;
+export type WorkingHoursOptionsNavigationProp = NativeStackNavigationProp<WorkingHoursStackParamList, 'WorkingHoursList'>;

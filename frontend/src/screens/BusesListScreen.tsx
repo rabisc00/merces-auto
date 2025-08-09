@@ -34,6 +34,8 @@ export default function BusesListScreen() {
                             busNumber={bus.busNumber}
                             model={bus.model}
                             inRepair={bus.inRepair}
+                            manufacturingYear={bus.manufacturingYear}
+                            capacity={bus.capacity}
                         />
                     )}
                     keyExtractor={(bus) => bus.id}

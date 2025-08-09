@@ -4,9 +4,11 @@ import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View } from "react-native";
 import { globalStyles } from "../styles/global";
+import { useAuth } from "../context/AuthContext";
 
 export default function HeaderWithSearch() {
     const navigation = useNavigation<NavigationProp>();
+    const { logout } = useAuth();
 
     return (
         <View style={headerWithSearchStyles.headerView}>
@@ -20,6 +22,7 @@ export default function HeaderWithSearch() {
                     style={globalStyles.buttonIcon}
                 />
             </TouchableOpacity>
+
             <TouchableOpacity
                 activeOpacity={1}
                 onPress={() => navigation.navigate('SearchOverlay')}
@@ -32,6 +35,17 @@ export default function HeaderWithSearch() {
                     style={headerWithSearchStyles.input}
                 />
             </TouchableOpacity>
+
+            <TouchableOpacity
+                style={{width: '10%'}}
+                onPress={logout}
+            >
+                <Ionicons
+                    name="log-out-outline"
+                    size={24}
+                    style={globalStyles.buttonIcon}
+                />
+            </TouchableOpacity>
         </View>
         
     );
@@ -40,10 +54,9 @@ export default function HeaderWithSearch() {
 const headerWithSearchStyles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
-        paddingHorizontal: 16,
         paddingVertical: 8,
         borderColor: '#ddd',
-        width: '90%'
+        width: '75%'
     },
     input: {
         backgroundColor: '#f0f0f0',
@@ -53,11 +66,11 @@ const headerWithSearchStyles = StyleSheet.create({
     headerView: {
         display: 'flex',
         flexDirection: 'row',
-        gap: 16,
+        gap: 12,
         alignItems: 'center',
         paddingHorizontal: 16,
-        justifyContent: 'space-around',
+        justifyContent: 'space-evenly',
         borderBottomWidth: 1,
-        borderBottomColor: '#ccc'
+        borderBottomColor: '#ccc',
     }
 })

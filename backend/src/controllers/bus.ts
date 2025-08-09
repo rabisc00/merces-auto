@@ -123,7 +123,7 @@ export const getBuses = async function(req: AuthRequest, res: Response) {
         const { count, rows } = await Bus.findAndCountAll({
             limit,
             offset,
-            attributes: ['id', 'busNumber', 'model', 'inRepair']
+            attributes: ['id', 'busNumber', 'model', 'inRepair', 'manufacturingYear', 'capacity']
         });
 
         res.json({

@@ -6,6 +6,8 @@ import UserDetailsScreen from "../screens/UserDetailsScreen";
 import TripsListScreen from "../screens/TripsListScreen";
 import TripRegistrationScreen from "../screens/TripRegistrationScreen";
 import TripDetailsScreen from "../screens/TripDetailsScreen";
+import WorkingHoursListScreen from "../screens/WorkingHoursListScreen";
+import WorkingHoursDetailsScreen from "../screens/WorkingHoursDetailsScreen";
 
 const Stack = createNativeStackNavigator<UsersStackParamList>();
 
@@ -18,6 +20,8 @@ export default function UsersStackNavigator() {
             <Stack.Screen name="UserTripsList" component={TripsListScreen} />
             <Stack.Screen name="UserTripRegistration" component={TripRegistrationScreen} />
             <Stack.Screen name="UserTripDetails" component={TripDetailsScreen} />
+            <Stack.Screen name="UserWorkingHoursList" component={WorkingHoursListScreen} />
+            <Stack.Screen name="UserWorkingHoursDetails" component={WorkingHoursDetailsScreen} />
         </Stack.Navigator>
     )
 }

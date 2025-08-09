@@ -125,6 +125,7 @@ export const getWorkingHours = async function(req: AuthRequest, res: Response) {
             limit,
             attributes: ['id', 'startTime', 'endTime'],
             where: { userId },
+            order: [['updatedAt', 'DESC']]
         });
         
         return res.json({

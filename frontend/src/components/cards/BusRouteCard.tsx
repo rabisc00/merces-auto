@@ -11,7 +11,7 @@ import { globalStyles } from "../../styles/global";
 import CardActionButtons from "../CardActionButtons";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-export function BusRouteCard({ id, lineNumber, origin, destination }: BusRoute) {
+export function BusRouteCard({ id, lineNumber, origin, destination, averageTimeInMinutes, distanceInKm }: BusRoute) {
     const navigation = useNavigation<NativeStackNavigationProp<BusRouteStackParamList>>();
     const { showLoading, hideLoading } = useLoading();
     const { userToken, isUserAdmin } = useAuth();
@@ -48,13 +48,15 @@ export function BusRouteCard({ id, lineNumber, origin, destination }: BusRoute) 
         <BaseCard>
             <View style={globalStyles.cardView}>
                 <View style={globalStyles.cardContent}>
-                    <Text style={[globalStyles.cardText, globalStyles.boldText]}>{lineNumber}</Text>
-                    <Text style={globalStyles.cardText}>{origin} {"-\>"} {destination}</Text>
+                    <Text style={[globalStyles.cardText, globalStyles.boldText]}>{lineNumber} {`(${distanceInKm} Km | ${averageTimeInMinutes} Minutes)`}</Text>
+                    <Text>Origin: {origin}</Text>
+                    <Text>Destination: {destination}</Text>
+                    <Text></Text>
                 </View>
 
                 <CardActionButtons
                     deleteAction={isUserAdmin ? deleteAction : undefined}
-                    detailsAction={detailsAction}
+                    detailsAction={isUserAdmin ? detailsAction : undefined}
                     timetablesAction={timetablesAction}
                 />
             </View>

@@ -110,7 +110,7 @@ export const getBusRoutes = async function(req: AuthRequest, res: Response) {
         const { count, rows } = await BusRoute.findAndCountAll({
             limit,
             offset,
-            attributes: ['id', 'lineNumber', 'origin', 'destination']
+            attributes: ['id', 'lineNumber', 'origin', 'destination', 'distanceInKm', 'averageTimeInMinutes']
         });
 
         res.json({

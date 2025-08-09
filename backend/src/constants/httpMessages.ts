@@ -3,7 +3,7 @@ export const HTTP_MESSAGES = {
   NO_CHANGES: 'No changes were made',
   CREATED: 'Resource created successfully',
   BAD_REQUEST: 'Invalid request data',
-  UNAUTHORIZED: 'Invalid token',
+  UNAUTHORIZED: 'Invalid credentials',
   FORBIDDEN: 'You\'re not allowed to access this resource',
   NOT_FOUND: 'Resource not found',
   CONFLICT: 'Resource already exists',

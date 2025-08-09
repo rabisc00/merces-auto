@@ -11,7 +11,7 @@ import { View } from "react-native";
 import CardActionButtons from "../CardActionButtons";
 import { globalStyles } from "../../styles/global";
 
-export function BusCard({ id, busNumber, model, inRepair }: Bus) {
+export function BusCard({ id, busNumber, model, inRepair, manufacturingYear, capacity }: Bus) {
     const navigation = useNavigation<BusesOptionsNavigationProp>();
     const { showLoading, hideLoading } = useLoading();
     const { userToken, isUserAdmin } = useAuth();
@@ -48,14 +48,14 @@ export function BusCard({ id, busNumber, model, inRepair }: Bus) {
         <BaseCard >
             <View style={globalStyles.cardView}>
                 <View>
-                    <Text style={[globalStyles.cardText, globalStyles.boldText]}>{busNumber}</Text>
-                    <Text style={globalStyles.cardText}>{model || 'Undefined model'}</Text>
+                    <Text style={[globalStyles.cardText, globalStyles.boldText]}>{busNumber} | {model || 'Undefined Model'} {manufacturingYear && `(${manufacturingYear})`}</Text>
+                    {capacity && <Text>Capacity: {capacity}</Text>}
                     <Text style={globalStyles.cardText}>{inRepair ? 'In Repair' : 'Available to Use'}</Text>
                 </View>
                 
                 <CardActionButtons 
                     deleteAction={isUserAdmin ? deleteAction : undefined}
-                    detailsAction={detailsAction}
+                    detailsAction={isUserAdmin ? detailsAction : undefined}
                     tripsAction={tripsAction}
                 />
             </View>

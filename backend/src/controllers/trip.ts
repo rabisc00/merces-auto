@@ -160,7 +160,8 @@ export const getTripsByUser = async function(req: AuthRequest, res: Response) {
                     model: BusRoute,
                     attributes: ['id', 'lineNumber', 'origin', 'destination']
                 }]
-            }]
+            }],
+            order: [['updatedAt', 'DESC']]
         });
         
         return res.json({
@@ -194,7 +195,8 @@ export const getTripsByBus = async function(req: AuthRequest, res: Response) {
                     model: BusRoute,
                     attributes: ['id', 'lineNumber', 'origin', 'destination']
                 }]
-            }]
+            }],
+            order: [['updatedAt', 'DESC']]
         });
         
         return res.json({

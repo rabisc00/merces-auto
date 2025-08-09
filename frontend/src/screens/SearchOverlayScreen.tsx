@@ -58,6 +58,8 @@ export default function SearchOverlayScreen() {
                                     lineNumber={item.lineNumber}
                                     origin={item.origin}
                                     destination={item.destination}
+                                    averageTimeInMinutes={item.averageTimeInMinutes}
+                                    distanceInKm={item.distanceInKm}
                                 />
                             )}
                         /> :

@@ -8,7 +8,8 @@ export const globalStyles = StyleSheet.create({
         marginBottom: 8,
         borderRadius: 8,
         borderWidth: 1,
-        borderColor: '#219EBC'
+        borderColor: '#219EBC',
+        width: '100%'
     },
     buttonIcon: {
         marginRight: 16,
@@ -45,7 +46,7 @@ export const globalStyles = StyleSheet.create({
     mainContainer: {
         paddingHorizontal: 16,
         paddingTop: 16,
-        paddingBottom: 130
+        paddingBottom: 20
     },
     editContainer: {
         flex: 1,

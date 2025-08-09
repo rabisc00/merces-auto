@@ -11,7 +11,7 @@ import { fetchBusRoutes } from "../services/busRouteService";
 import { BusRouteCard } from "../components/cards/BusRouteCard";
 
 export default function BusRoutesListScreen() {
-    const { userToken } = useAuth();
+    const { userToken, isUserAdmin } = useAuth();
     const navigation = useNavigation<BusRoutesOptionsNavigationProp>();
 
     const [refreshFlag, setRefreshFlag] = useState(false);
@@ -33,10 +33,13 @@ export default function BusRoutesListScreen() {
                             lineNumber={busRoute.lineNumber}
                             origin={busRoute.origin}
                             destination={busRoute.destination}
+                            distanceInKm={busRoute.distanceInKm}
+                            averageTimeInMinutes={busRoute.averageTimeInMinutes}
                         />
                     )}
                     keyExtractor={(busRoute) => busRoute.id}
                     addButtonText={"Add Bus Route"}
+                    showAdd={isUserAdmin}
                     navigateAdd={() => navigation.navigate('BusRouteRegistration')}
                     refreshFlag={refreshFlag}
                 />

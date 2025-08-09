@@ -2,10 +2,11 @@ import { RouteProp } from "@react-navigation/native";
 import { TabParamList } from "../types/navigation";
 import { BottomTabNavigationOptions, createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import WorkedHoursScreen from "../screens/WorkedHoursScreen";
+import WorkedHoursScreen from "../screens/WorkingHoursListScreen";
 import UsersStackNavigator from "./UserNavigator";
 import BusesStackNavigator from "./BusNavigator";
 import BusRouteStackNavigator from "./BusRouteNavigator";
+import { useAuth } from "../context/AuthContext";
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -44,6 +45,8 @@ const navigatorScreenOptions = ({ route }: { route: RouteProp<TabParamList, keyo
 });
 
 export default function MainTabs() {
+    const { isUserAdmin } = useAuth();
+
     return (
         <Tab.Navigator screenOptions={navigatorScreenOptions}>
             <Tab.Screen name="BusRoutes" component={BusRouteStackNavigator} options={{
@@ -55,9 +58,12 @@ export default function MainTabs() {
             <Tab.Screen name="Buses" component={BusesStackNavigator} options={{
                 headerShown: false
             }} />
-            <Tab.Screen name="Users" component={UsersStackNavigator} options={{
-                headerShown: false
-            }} />
+            {isUserAdmin &&
+                <Tab.Screen name="Users" component={UsersStackNavigator} options={{
+                    headerShown: false
+                }} /> 
+            }
+            
         </Tab.Navigator>
     );
 };

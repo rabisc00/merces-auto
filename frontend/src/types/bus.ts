@@ -3,6 +3,8 @@ export type Bus = {
     busNumber: string;
     model?: string;
     inRepair: boolean;
+    manufacturingYear?: number;
+    capacity?: number;
 };
 
 export type BusDetails = {

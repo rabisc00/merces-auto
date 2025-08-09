@@ -22,7 +22,6 @@ export const searchInfo = async function(req: AuthRequest, res: Response) {
                     { busNumber: { [Op.like]: qLike } },
                     { model: { [Op.like]: qLike } },
                 ]
-                
             }
         });
 
@@ -34,7 +33,8 @@ export const searchInfo = async function(req: AuthRequest, res: Response) {
                     { destination: { [Op.like]: qLike } },
                     { lineNumber: { [Op.like]: qLike } }
                 ]
-            }
+            },
+            order: [['lineNumber', 'ASC']]
         });
 
         const userResults = await User.findAll({
@@ -45,7 +45,8 @@ export const searchInfo = async function(req: AuthRequest, res: Response) {
                     { name: { [Op.like]: qLike } },
                     { email: { [Op.like]: qLike } }
                 ]
-            }
+            },
+            order: [['name', 'ASC']]
         });
 
         return res.json({

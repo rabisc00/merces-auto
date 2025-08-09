@@ -177,6 +177,7 @@ export const getUsers = async function (req: AuthRequest, res: Response) {
             limit,
             offset,
             attributes: ['id', 'name', 'active', 'isAdmin', 'documentNumber', 'picture'],
+            order: [['name', 'ASC']]
         });
 
         return res.json({

@@ -17,7 +17,7 @@ import Timestamps from "../components/Timestamps";
 type BusRouteRouteProp = RouteProp<BusRouteStackParamList, 'BusRouteDetails'>;
 
 export default function BusRouteDetailsScreen() {
-    const { userToken, isUserAdmin } = useAuth();
+    const { userToken } = useAuth();
     const { showLoading, hideLoading } = useLoading();
     const navigation = useNavigation<BusRoutesOptionsNavigationProp>();
     const route = useRoute<BusRouteRouteProp>();
@@ -60,7 +60,6 @@ export default function BusRouteDetailsScreen() {
             <HeaderWithSearch />
             {
                 originalBusRoute ? 
-                isUserAdmin ? 
                 <Formik
                     initialValues={{ 
                         lineNumber: originalBusRoute.lineNumber,
@@ -113,13 +112,6 @@ export default function BusRouteDetailsScreen() {
                         </View>
                     )}
                     </Formik> :
-                    <View style={globalStyles.mainContainer}>
-                        <Text>Distance: {originalBusRoute.distanceInKm}</Text>
-                        <Text>Duration: {originalBusRoute.averageTimeInMinutes}</Text>
-                        <Text>Line Number: {originalBusRoute.lineNumber}</Text>
-                        <Text>Origin: {originalBusRoute.origin}</Text>
-                        <Text>Destination: {originalBusRoute.destination}</Text>
-                    </View> :
                 <Text style={globalStyles.error}>Bus route not found</Text>
             }
         </SafeAreaView>

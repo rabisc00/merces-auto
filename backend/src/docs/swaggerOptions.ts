@@ -153,7 +153,9 @@ export const swaggerOptions = {
             },
             busNumber: { type: 'string' },
             model: { type: 'string' },
-            inRepair: { type: 'boolean' }
+            inRepair: { type: 'boolean' },
+            manufacturingYear: { type: 'number' },
+            capacity: { type: 'number' }
           }
         },
         BusRoutes: {

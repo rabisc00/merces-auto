@@ -3,6 +3,8 @@ export type BusRoute = {
     lineNumber: string;
     origin: string;
     destination: string;
+    averageTimeInMinutes: number;
+    distanceInKm: number;
 };
 
 export type BusRouteDetails = {

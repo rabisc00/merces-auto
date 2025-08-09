@@ -132,7 +132,8 @@ export const getTimetableByDate = async function (req: AuthRequest, res: Respons
             }, {
                 model: BusRoute,
                 attributes: ['id', 'lineNumber', 'origin', 'destination']
-            }]
+            }],
+            order: [['departureTime', 'ASC']]
         });
 
         return res.json(timetables);
@@ -186,7 +187,8 @@ export const getTimetables = async function (req: AuthRequest, res: Response) {
             }, {
                 model: BusRoute,
                 attributes: ['id', 'lineNumber', 'origin', 'destination']
-            }]
+            }],
+            order: [['arrivalTime', 'ASC']]
         });
 
         return res.json({
