@@ -64,7 +64,7 @@ export const registerBus = async (
 
         return true;
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
         showError(error.response?.status);
         return false;
     }
@@ -90,7 +90,7 @@ export const saveBusChanges = async (
 
         return true;
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
         showError(error.response?.status);
         return false;
     }

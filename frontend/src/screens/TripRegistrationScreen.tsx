@@ -110,7 +110,6 @@ export default function TripRegistrationScreen() {
         setLoadingUsers(true);
 
         try {
-            console.log('Entered users');
             const response = await fetchUsers(usersPage, userToken);
             const dropdownObjects: ListObject[] = response.records.map((user) => ({
                 value: user.id,

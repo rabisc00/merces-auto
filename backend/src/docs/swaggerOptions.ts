@@ -492,6 +492,14 @@ export const swaggerOptions = {
               type: 'string',
               format: 'date-time'
             },
+            createdAt: {
+              type: 'string',
+              format: 'date-time'
+            },
+            updated: {
+              type: 'string',
+              format: 'date-time'
+            },
             signature: { type: 'string' },
             user: {
               type: 'object',

@@ -1,4 +1,4 @@
-import { Button, SafeAreaView, Text, View } from "react-native";
+import { Alert, Button, Image, SafeAreaView, Text, View } from "react-native";
 import { globalStyles } from "../styles/global";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { UsersOptionsNavigationProp, UsersStackParamList, WorkingHoursOptionsNavigationProp, WorkingHoursStackParamList } from "../types/navigation";
@@ -14,6 +14,8 @@ import { registerWorkingHours } from "../services/workingHoursService";
 import { workingHoursCreateSchema } from "../validations/workingHoursSchema";
 import { DatetimePicker } from "../components/DatetimePicker";
 import { DropdownList } from "../components/DropdownList";
+import SignatureField from "../components/SignatureField";
+import { ImageProps } from "../types/image";
 
 type WorkingHoursRegistrationRouteProp = RouteProp<
     WorkingHoursStackParamList & UsersStackParamList,
@@ -31,6 +33,8 @@ export default function WorkingHoursRegistrationScreen() {
     const [usersPage, setUsersPage] = useState<number>(1);
     const [hasMoreUsers, setHasMoreUsers] = useState<boolean>(true);
     const [loadingUsers, setLoadingUsers] = useState<boolean>(false);
+
+    const [signature, setSignature] = useState<string | null>(null);
 
     const routeName = route.name;
 
@@ -71,18 +75,25 @@ export default function WorkingHoursRegistrationScreen() {
 
     const callRegisterWorkingHours = async (values: WorkingHoursCreate) => {
         showLoading();
-        const validRegister = await registerWorkingHours(values, userToken);
-        if (validRegister) {
-            if (routeName === 'WorkingHoursRegistration') {
-                workingHoursNavigation.navigate('WorkingHoursList');
-            } else if (routeName === 'UserWorkingHoursRegistration') {
-                if (userId == null) return;
-                userNavigation.navigate('UserWorkingHoursList', { id: userId });
+        try {
+            if (!signature) {
+                Alert.alert('Error', 'Signature is required');
+                return;
             }
-        }
 
-        hideLoading();
-    }
+            const validRegister = await registerWorkingHours(values, signature, userToken);
+            if (validRegister) {
+                if (routeName === 'WorkingHoursRegistration') {
+                    workingHoursNavigation.navigate('WorkingHoursList');
+                } else if (routeName === 'UserWorkingHoursRegistration') {
+                    if (userId == null) return;
+                    userNavigation.navigate('UserWorkingHoursList', { id: userId });
+                }
+            }
+        } finally {
+            hideLoading();
+        }
+    };
 
     useEffect(() => {
         const populateData = async () => {
@@ -115,38 +126,46 @@ export default function WorkingHoursRegistrationScreen() {
                         errors,
                         touched
                     }) => (
-                        <View style={globalStyles.mainContainer}>
-                            <DropdownList
-                                label="Driver"
-                                placeholder="Select driver..."
-                                required={true}
-                                selectedValue={values.userId}
-                                options={users}
-                                onValueChange={(value) => setFieldValue('userId', value)}
-                                onEndReached={populateUsers}
-                                disabled={!isUserAdmin}
-                                errorMessage={touched.userId && errors.userId}
-                                width="100%"
-                            />
-                            <DatetimePicker
-                                label="Start Time"
-                                value={values.startTime}
-                                onChangeValue={(value) => setFieldValue('startTime', value)}
-                                required={true}
-                                errorMessage={touched.startTime && errors.startTime}
-                                width="100%"
-                            />
-                            <DatetimePicker
-                                label="End Time"
-                                value={values.endTime}
-                                onChangeValue={(value) => setFieldValue('endTime', value)}
-                                required={true}
-                                errorMessage={touched.endTime && errors.endTime}
-                                width="100%"
-                            />
+                        <>
+                            <View style={globalStyles.mainContainer}>
+                                <DropdownList
+                                    label="Driver"
+                                    placeholder="Select driver..."
+                                    required={true}
+                                    selectedValue={values.userId}
+                                    options={users}
+                                    onValueChange={(value) => setFieldValue('userId', value)}
+                                    onEndReached={populateUsers}
+                                    disabled={!isUserAdmin}
+                                    errorMessage={touched.userId && errors.userId}
+                                    width="100%"
+                                />
 
-                            <Button title="Register" onPress={() => handleSubmit()} />
-                        </View>
+                                <DatetimePicker
+                                    label="Start Time"
+                                    value={values.startTime}
+                                    onChangeValue={(value) => setFieldValue('startTime', value)}
+                                    required={true}
+                                    errorMessage={touched.startTime && errors.startTime}
+                                    width="100%"
+                                />
+
+                                <DatetimePicker
+                                    label="End Time"
+                                    value={values.endTime}
+                                    onChangeValue={(value) => setFieldValue('endTime', value)}
+                                    required={true}
+                                    errorMessage={touched.endTime && errors.endTime}
+                                    width="100%"
+                                />      
+
+                            </View>
+
+                            <SignatureField onOk={(sig) => setSignature(sig)} />
+                            <View style={globalStyles.mainContainer}>
+                                <Button title="Register" onPress={() => handleSubmit()} />
+                            </View>
+                        </>
                     )}
                 </Formik> :
                 <Text>User not found</Text>

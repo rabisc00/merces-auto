@@ -76,7 +76,7 @@ export const registerUser = async (
 
 export const saveUserChanges = async (
     userId: string,
-    user: UserUpdate, 
+    user: UserUpdate,
     image: ImageProps | null,
     userToken: string | null,
 ): Promise<boolean> => {

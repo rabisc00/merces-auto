@@ -29,6 +29,7 @@ export function GenericCardList<T>({
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [totalPages, setTotalPages] = useState<number | null>(null);
+    const [error, setError] = useState<string | null>();
 
     const loadMore = async () => {
         if (loading || !hasMore) return;
@@ -41,6 +42,8 @@ export function GenericCardList<T>({
             setPage(res.currentPage + 1);
             setTotalPages(res.totalPages);
             setHasMore(res.currentPage < res.totalPages);
+        } catch (e: any) {
+            setError(e?.message ?? 'Failed to load more');
         } finally {
             setLoading(false);
         }
@@ -48,15 +51,24 @@ export function GenericCardList<T>({
 
     useEffect(() => {
         const refreshItems = async () => {
+            let cancelled = false;
+            setError(null);
             setLoading(true);
             try {
                 const res = await fetchData(1);
+                if (cancelled) return;
+
                 setItems(res.records);
                 setPage(2);
                 setTotalPages(res.totalPages);
                 setHasMore(res.currentPage < res.totalPages);
+            } catch (e: any) {
+                if (cancelled) return;
+                setItems([]);
+                setHasMore(false);
+                setError(e?.response.data?.message ?? e?.message ?? 'Failed to load');
             } finally {
-                setLoading(false);
+                if (!cancelled) setLoading(false);
             }   
         };
 
@@ -84,6 +96,12 @@ export function GenericCardList<T>({
                     }
                 </View>
             }
+
+            {error && (
+                <View style={{padding: 12}}>
+                    <Text style={{ color: 'red' }}>{error}</Text>
+                </View>
+            )}
             
             <FlatList
                 data={items}

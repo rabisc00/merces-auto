@@ -134,7 +134,9 @@ export const globalStyles = StyleSheet.create({
         padding: 12,
         borderRadius: 5
     },
-    detailsContainer: {
-        
+    signature: {
+        resizeMode: 'contain',
+        width: '100%',
+        height: '50%'
     }
 });

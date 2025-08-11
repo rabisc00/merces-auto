@@ -112,7 +112,7 @@ router.get('/retrieve/byuser/:userId', authenticateToken, getWorkingHours);
  *       200:
  *         description: Working hours entry created successfully
  *         content:
- *           application/json:
+ *           multipart/form-data:
  *             schema:
  *               type: object
  *               properties:

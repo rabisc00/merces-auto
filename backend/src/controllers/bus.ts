@@ -10,7 +10,6 @@ export const createBus = async function(req: AuthRequest, res: Response) {
         const { busNumber, model, capacity, manufacturingYear } = req.body;
         const busNumberFormatted = busNumber && removeSpecialCharacters(busNumber.toUpperCase());
         const modelFormatted = model && model.toUpperCase();
-        console.log(modelFormatted);
 
         const busFound = await Bus.findOne({ where: { busNumber: busNumberFormatted }});
         if (busFound) {
@@ -179,7 +178,7 @@ export const searchBus = async function(req: AuthRequest, res: Response) {
 
         return res.json(busResults);
     } catch (error: any) {
-        console.log('Search error:', error);
+        console.error('Search error:', error);
         return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };

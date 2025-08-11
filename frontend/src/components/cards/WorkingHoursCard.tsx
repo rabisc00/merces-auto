@@ -9,6 +9,7 @@ import { Alert, Text, View } from "react-native";
 import BaseCard from "../BaseCard";
 import { globalStyles } from "../../styles/global";
 import CardActionButtons from "../CardActionButtons";
+import dayjs from "dayjs";
 
 type Props = WorkingHours & {
     onDelete?: () => void;
@@ -58,12 +59,13 @@ export function WorkingHoursCard({ id, startTime, endTime, user, onDelete }: Pro
             <View style={globalStyles.cardView}>
                 <View style={globalStyles.cardContent}>
                     <Text style={globalStyles.boldText}>{user.name} | {user.documentNumber}</Text>
-                    <Text>${startTime} - {endTime}</Text>
+                    <Text>Start Time: {dayjs(startTime).format('YYYY-MM-DD HH:mm')}</Text>
+                    <Text>End Time: {dayjs(endTime).format('YYYY-MM-DD HH:mm')}</Text>
                 </View>
             </View>
 
             <CardActionButtons
-                detailsAction={isUserAdmin ? detailsAction : undefined}
+                detailsAction={detailsAction}
                 deleteAction={isUserAdmin ? deleteAction : undefined}
             />
         </BaseCard>

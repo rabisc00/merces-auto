@@ -35,20 +35,24 @@ export default function WorkingHoursListScreen() {
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer}>
             <HeaderWithSearch />
-            <View style={globalStyles.mainContainer}>
+            <View style={[globalStyles.mainContainer, { flex: 1}]}>
                 {
                     userId ?
                     <GenericCardList<WorkingHours>
-                        fetchData={(page) => fetchWorkingHoursByUser(userId, page, userToken)}
+                        fetchData={async (page) => {
+                            const data = await fetchWorkingHoursByUser(userId, page, userToken);
+                            return data;
+                        }}
                         renderItem={(workingHours) => (
                             <WorkingHoursCard
                                 id={workingHours.id}
                                 startTime={workingHours.startTime}
                                 endTime={workingHours.endTime}
                                 user={workingHours.user}
+                                onDelete={() => setRefreshFlag(prev => !prev)}
                             />
                         )}
-                        keyExtractor={(workingHours) => workingHours.id}
+                        keyExtractor={(workingHours) => String(workingHours.id)}
                         addButtonText="Add New Working Hours"
                         navigateAdd={() => {
                             if (routeName == 'WorkingHoursList') {

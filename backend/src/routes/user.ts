@@ -178,7 +178,7 @@ router.post('/create', authenticateTokenAdmin, validate(userCreateSchema), creat
  *         description: ID of the user to update
  *     requestBody:
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             $ref: '#/components/schemas/UserUpdateInput'
  *     responses:

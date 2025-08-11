@@ -39,8 +39,6 @@ export default function BusDetailsScreen() {
 
     const callSaveChanges = async (values: BusUpdate) => {
         showLoading();
-
-        console.log(values);
         
         if (
             values.busNumber === originalBus?.busNumber &&

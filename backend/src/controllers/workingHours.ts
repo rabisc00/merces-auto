@@ -137,7 +137,7 @@ export const getWorkingHours = async function(req: AuthRequest, res: Response) {
             currentPage: page,
             totalPages: Math.ceil(count / limit),
             totalCount: count,
-            workingHours: rows
+            records: rows
         });
     } catch (error: any) {
         console.error('Error fetching working hours:', error);
@@ -150,7 +150,7 @@ export const getWorkingHoursDetails = async function(req: AuthRequest, res: Resp
         const workingHoursId = req.params.id;
 
         const workingHours = await WorkingHours.findByPk(workingHoursId, {
-            attributes: ['id', 'startTime', 'endTime', 'signature'],
+            attributes: ['id', 'startTime', 'endTime', 'signature', 'createdAt', 'updatedAt'],
             include: [{
                 model: User,
                 attributes: ['id', 'name', 'documentNumber']

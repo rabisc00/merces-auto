@@ -17,6 +17,8 @@ export type WorkingHoursDetails = {
     endTime: string;
     signature: string;
     user: User;
+    createdAt: string;
+    updatedAt: string;
 };
 
 export type WorkingHoursCreate = {
