@@ -163,3 +163,21 @@ export const getWorkingHoursDetails = async function(req: AuthRequest, res: Resp
         return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
+
+export const getWorkingHoursByCurrentUser = async function(req: AuthRequest, res: Response) {
+    try {
+        const userId = req.user.id;
+        const workingHours = await WorkingHours.findByPk(userId, {
+            attributes: ['id', 'startTime', 'endTime', 'signature', 'createdAt', 'updatedAt'],
+            include: [{
+                model: User,
+                attributes: ['id', 'name', 'documentNumber']
+            }]
+        });
+
+        return res.json(workingHours);
+    } catch (error: any) {
+        console.error('Error fetching working hours by current user:', error);
+        return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
+    }
+}

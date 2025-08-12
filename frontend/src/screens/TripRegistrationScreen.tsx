@@ -2,7 +2,7 @@ import { Button, SafeAreaView, Text, View } from "react-native";
 import { globalStyles } from "../styles/global";
 import { useAuth } from "../context/AuthContext";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { BusesOptionsNavigationProp, BusStackParamList, UsersOptionsNavigationProp, UsersStackParamList } from "../types/navigation";
+import { BusesOptionsNavigationProp, BusStackParamList, TripStackParamList, UsersOptionsNavigationProp, UsersStackParamList } from "../types/navigation";
 import { useEffect, useState } from "react";
 import { ListObject } from "../types/listObject";
 import { useLoading } from "../context/LoadingContext";
@@ -19,8 +19,8 @@ import { DatePicker } from "../components/DatePicker";
 import InputField from "../components/InputField";
 
 type TripRegistrationRouteProp = RouteProp<
-    BusStackParamList & UsersStackParamList,
-    'BusTripRegistration' | 'UserTripRegistration'
+    BusStackParamList & UsersStackParamList & TripStackParamList,
+    'BusTripRegistration' | 'UserTripRegistration' | 'TripsRegistration'
 >;
 
 export default function TripRegistrationScreen() {
@@ -177,7 +177,7 @@ export default function TripRegistrationScreen() {
             
             <Formik<TripCreate>
                 initialValues={{
-                    userId: routeName === 'UserTripRegistration' ? id : '',
+                    userId: routeName === 'UserTripRegistration' || routeName == 'TripsRegistration' ? id : '',
                     busId: routeName === 'BusTripRegistration' ? id : '',
                     timetableId: '',
                     date: '',

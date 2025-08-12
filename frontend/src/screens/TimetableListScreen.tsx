@@ -40,6 +40,7 @@ export default function TimetableListScreen() {
                             departureTime={timetable.departureTime}
                             days={timetable.days}
                             busRoute={timetable.busRoute}
+                            onDelete={() => setRefreshFlag(prev => !prev)}
                         />
                     )}
                     keyExtractor={(item) => item.id}

@@ -62,6 +62,15 @@ export function UserCard({
 
         navigation.navigate('UserTripsList', { id });
     };
+
+    const workingHoursAction = () => {
+        if (!id) {
+            Alert.alert(ALERT_MESSAGES.INVALID_ID.title, ALERT_MESSAGES.INVALID_ID.message);
+            return;
+        }
+
+        navigation.navigate('UserWorkingHoursList', { id });
+    }
     
     return (
         <BaseCard >
@@ -83,6 +92,7 @@ export function UserCard({
                     deleteAction={isUserAdmin? deleteAction : undefined}
                     detailsAction={detailsAction}
                     tripsAction={tripsAction}
+                    workingHoursAction={workingHoursAction}
                 />
             </View>
         </BaseCard>

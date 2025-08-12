@@ -76,11 +76,12 @@ export const saveBusChanges = async (
     userToken: string | null
 ): Promise<boolean> => {
     try {
+        console.log(busId);
         await axios.patch(`${API_BASE_URL}/buses/edit/${busId}`, {
             busNumber: bus.busNumber,
             model: bus.model,
-            capacity: bus.capacity,
-            manufacturingYear: bus.manufacturingYear,
+            capacity: bus.capacity || null,
+            manufacturingYear: bus.manufacturingYear || null,
             inRepair: bus.inRepair
         }, {
             headers: {

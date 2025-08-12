@@ -25,6 +25,7 @@ export function BusCard({ id, busNumber, model, inRepair, manufacturingYear, cap
             try {
                 showLoading();
                 deleteBus(id, userToken);
+                onDelete?.();
             } finally {
                 hideLoading();
             }
@@ -54,7 +55,7 @@ export function BusCard({ id, busNumber, model, inRepair, manufacturingYear, cap
             <View style={globalStyles.cardView}>
                 <View>
                     <Text style={[globalStyles.cardText, globalStyles.boldText]}>{busNumber} | {model || 'Undefined Model'} {manufacturingYear && `(${manufacturingYear})`}</Text>
-                    {capacity && <Text>Capacity: {capacity}</Text>}
+                    {capacity ? <Text>Capacity: {capacity}</Text> : ''}
                     <Text style={globalStyles.cardText}>{inRepair ? 'In Repair' : 'Available to Use'}</Text>
                 </View>
                 

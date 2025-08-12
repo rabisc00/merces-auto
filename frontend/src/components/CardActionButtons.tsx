@@ -7,9 +7,10 @@ type CardActionButtonsProps = {
     detailsAction?: () => void;
     tripsAction?: () => void;
     timetablesAction?: () => void;
+    workingHoursAction?: () => void;
 };
 
-export default function CardActionButtons({ deleteAction, detailsAction, tripsAction, timetablesAction } : CardActionButtonsProps) {
+export default function CardActionButtons({ deleteAction, detailsAction, tripsAction, timetablesAction, workingHoursAction } : CardActionButtonsProps) {
     return (
         <View style={styles.iconButtons}>
             {deleteAction && 
@@ -35,7 +36,7 @@ export default function CardActionButtons({ deleteAction, detailsAction, tripsAc
             {tripsAction &&
                 <TouchableOpacity onPress={tripsAction}>
                     <Ionicons
-                        name="bus"
+                        name="airplane"
                         size={24}
                         style={globalStyles.buttonIcon}
                     />
@@ -46,6 +47,16 @@ export default function CardActionButtons({ deleteAction, detailsAction, tripsAc
                 <TouchableOpacity onPress={timetablesAction}>
                     <Ionicons
                         name="calendar"
+                        size={24}
+                        style={globalStyles.buttonIcon}
+                    />
+                </TouchableOpacity>
+            }
+
+            {workingHoursAction &&
+                <TouchableOpacity onPress={workingHoursAction}>
+                    <Ionicons
+                        name="alarm"
                         size={24}
                         style={globalStyles.buttonIcon}
                     />

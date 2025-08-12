@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../styles/global";
 import HeaderWithSearch from "../components/HeaderWithSearch";
 import { GenericCardList } from "../components/GenericCardList";
-import { fetchWorkingHoursByUser } from "../services/workingHoursService";
+import { fetchWorkingHoursByCurrentUser, fetchWorkingHoursByUser } from "../services/workingHoursService";
 import { useAuth } from "../context/AuthContext";
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { UsersOptionsNavigationProp, UsersStackParamList, WorkingHoursOptionsNavigationProp, WorkingHoursStackParamList } from "../types/navigation";
@@ -25,6 +25,7 @@ export default function WorkingHoursListScreen() {
     const [refreshFlag, setRefreshFlag] = useState<boolean>(false);
 
     const routeName = route.name;
+    const { id } = route.params ?? {};
 
     useFocusEffect(
         useCallback(() => {
@@ -40,8 +41,12 @@ export default function WorkingHoursListScreen() {
                     userId ?
                     <GenericCardList<WorkingHours>
                         fetchData={async (page) => {
-                            const data = await fetchWorkingHoursByUser(userId, page, userToken);
-                            return data;
+                            const fetchId = id ?? userId;
+                            if (id) {
+                                return await fetchWorkingHoursByUser(id, page, userToken);
+                            } else {
+                                return await fetchWorkingHoursByCurrentUser(1, userToken);
+                            }
                         }}
                         renderItem={(workingHours) => (
                             <WorkingHoursCard

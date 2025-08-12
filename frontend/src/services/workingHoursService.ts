@@ -32,6 +32,31 @@ export const fetchWorkingHoursByUser = async (
     }
 };
 
+export const fetchWorkingHoursByCurrentUser = async (
+    page: number,
+    userToken: string | null
+): Promise<ListResponse<WorkingHours>> => {
+    try {
+        const res = await axios.get<ListResponse<WorkingHours>>(`${API_BASE_URL}/workinghours/retrieve/currentuser?page=${page}`, {
+            headers: {
+                Authorization: `Bearer ${userToken}`
+            }
+        });
+
+        return res.data;
+    } catch (error: any) {  
+        console.error(error);
+        showError(error.response?.status);
+
+        return {
+            currentPage: page,
+            totalPages: 0,
+            totalCount: 0,
+            records: []
+        };
+    }
+};
+
 export const getWorkingHoursDetails = async (
     workingHoursId: string,
     userToken: string | null

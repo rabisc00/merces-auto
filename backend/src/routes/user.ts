@@ -2,7 +2,7 @@ import * as express from 'express';
 import { userCreateSchema, userEditSchema } from '../validators/userValidator';
 import { validate } from '../middleware/validate';
 import { createUser, deleteUser, editUser, getUserDetails, getUsers, searchUser } from '../controllers/user';
-import { authenticateToken, authenticateTokenAdmin } from '../middleware/auth';
+import { authenticateToken, requireAdmin } from '../middleware/auth';
 import { uploadPicture } from '../middleware/upload';
 
 /**
@@ -159,7 +159,7 @@ router.get('/filter', authenticateToken, searchUser);
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.post('/create', authenticateTokenAdmin, validate(userCreateSchema), createUser);
+router.post('/create', authenticateToken, requireAdmin, validate(userCreateSchema), createUser);
 
 /**
  * @swagger
@@ -201,7 +201,7 @@ router.post('/create', authenticateTokenAdmin, validate(userCreateSchema), creat
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.patch('/edit/:id', authenticateTokenAdmin, uploadPicture.single('picture'), validate(userEditSchema), editUser);
+router.patch('/edit/:id', authenticateToken, requireAdmin, uploadPicture.single('picture'), validate(userEditSchema), editUser);
 
 /**
  * @swagger
@@ -238,6 +238,6 @@ router.patch('/edit/:id', authenticateTokenAdmin, uploadPicture.single('picture'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.delete('/delete/:id', authenticateTokenAdmin, deleteUser);
+router.delete('/delete/:id', authenticateToken, requireAdmin, deleteUser);
 
 export default router;

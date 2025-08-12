@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { authenticateToken, authenticateTokenAdmin } from '../middleware/auth';
+import { authenticateToken, requireAdmin } from '../middleware/auth';
 import { tripCreateSchema, tripEditSchema } from '../validators/tripValidator';
 import { validate } from '../middleware/validate';
 import { createTrip, deleteTrip, editTrip, getTripDetails, getTripsByBus, getTripsByUser } from '../controllers/trip';
@@ -179,7 +179,7 @@ router.get('/retrieve/byuser/:userId', authenticateToken, getTripsByUser);
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.post('/create', authenticateTokenAdmin, validate(tripCreateSchema), createTrip);
+router.post('/create', authenticateToken, requireAdmin, validate(tripCreateSchema), createTrip);
 
 /**
  * @swagger
@@ -222,7 +222,7 @@ router.post('/create', authenticateTokenAdmin, validate(tripCreateSchema), creat
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.patch('/edit/:id', authenticateTokenAdmin, validate(tripEditSchema), editTrip);
+router.patch('/edit/:id', authenticateToken, requireAdmin, validate(tripEditSchema), editTrip);
 
 /**
  * @swagger
@@ -259,6 +259,6 @@ router.patch('/edit/:id', authenticateTokenAdmin, validate(tripEditSchema), edit
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.delete('/delete/:id', authenticateTokenAdmin, deleteTrip);
+router.delete('/delete/:id', authenticateToken, requireAdmin, deleteTrip);
 
 export default router;

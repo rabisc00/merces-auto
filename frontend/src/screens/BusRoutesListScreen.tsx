@@ -35,6 +35,7 @@ export default function BusRoutesListScreen() {
                             destination={busRoute.destination}
                             distanceInKm={busRoute.distanceInKm}
                             averageTimeInMinutes={busRoute.averageTimeInMinutes}
+                            onDelete={() => setRefreshFlag(prev => !prev)}
                         />
                     )}
                     keyExtractor={(busRoute) => busRoute.id}

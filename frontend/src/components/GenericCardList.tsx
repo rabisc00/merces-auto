@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { globalStyles } from '../styles/global';
 import { ListResponse } from '../types/api';
-import { useAuth } from '../context/AuthContext';
 
 type GenericCardListProps<T> = {
     fetchData: (page: number) => Promise<ListResponse<T>>;
@@ -76,7 +75,7 @@ export function GenericCardList<T>({
     }, [refreshFlag]);
 
     return (
-        <View>
+        <View style={{paddingBottom: 160}}>
             {showAdd && 
                 <View style={cardListStyles.buttonsRow}>
                     {navigateAdd &&

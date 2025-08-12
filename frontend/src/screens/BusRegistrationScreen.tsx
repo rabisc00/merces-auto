@@ -20,14 +20,6 @@ export default function BusRegistrationScreen() {
     const callRegisterBus = async (values: BusCreate) => {
         showLoading();
 
-        if (values.capacity !== null) {
-            values.capacity = parseInt(values.capacity?.toString() || '0');
-        }
-
-        if (values.manufacturingYear !== null) {
-            values.manufacturingYear = parseInt(values.manufacturingYear?.toString() || '0');
-        }
-
         const registrationValid = await registerBus(values, userToken);
         if (registrationValid) {
             navigation.navigate('BusesList');
@@ -47,6 +39,7 @@ export default function BusRegistrationScreen() {
                 {({
                     handleChange,
                     handleSubmit,
+                    setFieldValue,
                     values,
                     errors,
                     touched
@@ -70,17 +63,17 @@ export default function BusRegistrationScreen() {
                                 label="Capacity"
                                 errorMessage={touched.capacity && errors.capacity}
                                 isNumber={true}
-                                value={values.capacity}
+                                value={values.capacity?.toString() ?? ''}
                                 width={'45%'}
-                                onChangeText={handleChange('capacity')}
+                                onChangeText={(value) => setFieldValue('capacity', value ? parseInt(value, 10) : undefined)}
                             />
                             <InputField
                                 label="Manufacturing Year"
                                 errorMessage={touched.manufacturingYear && errors.manufacturingYear}
                                 isNumber={true}
-                                value={values.manufacturingYear}
+                                value={values.manufacturingYear?.toString() ?? ''}
                                 width={'45%'}
-                                onChangeText={handleChange('manufacturingYear')}
+                                onChangeText={(value) => setFieldValue('manufacturingYear', value ? parseInt(value, 10) : undefined)}
                             />
                         </View>
                         <Button title="Register" onPress={() => handleSubmit()} />

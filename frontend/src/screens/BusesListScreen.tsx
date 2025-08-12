@@ -36,6 +36,7 @@ export default function BusesListScreen() {
                             inRepair={bus.inRepair}
                             manufacturingYear={bus.manufacturingYear}
                             capacity={bus.capacity}
+                            onDelete={() => setRefreshFlag(prev => !prev)}
                         />
                     )}
                     keyExtractor={(bus) => bus.id}

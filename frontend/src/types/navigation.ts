@@ -5,6 +5,7 @@ export type TabParamList = {
     WorkingHours: undefined;
     Buses: undefined;
     Users: undefined;
+    Trips: undefined;
 };
 
 export type AuthStackParamList = {
@@ -68,8 +69,15 @@ export type WorkingHoursStackParamList = {
   };
 };
 
+export type TripStackParamList = {
+  TripsList: undefined;
+  TripsRegistration: { id: string };
+  TripDetails: { tripId: string };
+};
+
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Main'>;
 export type UsersOptionsNavigationProp = NativeStackNavigationProp<UsersStackParamList, 'UsersList'>;
 export type BusesOptionsNavigationProp = NativeStackNavigationProp<BusStackParamList, 'BusesList'>;
 export type BusRoutesOptionsNavigationProp = NativeStackNavigationProp<BusRouteStackParamList, 'BusRoutesList'>;
 export type WorkingHoursOptionsNavigationProp = NativeStackNavigationProp<WorkingHoursStackParamList, 'WorkingHoursList'>;
+export type TripsOptionsNavigationProp = NativeStackNavigationProp<TripStackParamList, 'TripsList'>;

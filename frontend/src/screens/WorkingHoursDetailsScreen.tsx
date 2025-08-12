@@ -1,4 +1,4 @@
-import { Button, Image, SafeAreaView, Text, View } from "react-native";
+import { Button, Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { globalStyles } from "../styles/global";
 import { useAuth } from "../context/AuthContext";
 import { useLoading } from "../context/LoadingContext";
@@ -105,10 +105,13 @@ export default function WorkingHoursDetailsScreen() {
                                 width="100%"
                             />
 
-                            <Image 
-                                source={{ uri: `${API_BASE_URL}/${originalWorkingHours.signature}` }}
-                                style={globalStyles.signature}
-                            />
+                            <View style={detailsStyle.signatureRow}>
+                                <Text>Signature:</Text>
+                                <Image 
+                                    source={{ uri: `${API_BASE_URL}/${originalWorkingHours.signature}` }}
+                                    style={globalStyles.signature}
+                                />
+                            </View>
 
                             <Button
                                 title="Save Changes"
@@ -127,3 +130,12 @@ export default function WorkingHoursDetailsScreen() {
         </SafeAreaView>
     )
 }
+
+const detailsStyle = StyleSheet.create({
+    signatureRow: {
+        display: 'flex', 
+        flexDirection: 'row', 
+        alignItems: 'center',
+        marginVertical: 16
+    }
+});

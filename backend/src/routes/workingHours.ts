@@ -1,9 +1,9 @@
 import * as express from 'express';
 import { uploadSignature} from '../middleware/upload';
-import { createWorkingHours, editWorkingHours, deleteWorkingHours, getWorkingHours, getWorkingHoursDetails } from '../controllers/workingHours';
+import { createWorkingHours, editWorkingHours, deleteWorkingHours, getWorkingHours, getWorkingHoursDetails, getWorkingHoursByCurrentUser } from '../controllers/workingHours';
 import { validate } from '../middleware/validate';
 import { workingHoursCreateSchema, workingHoursEditSchema } from '../validators/workingHoursValidator';
-import { authenticateToken } from '../middleware/auth';
+import { authenticateToken, requireAdmin } from '../middleware/auth';
 
 /**
 * @swagger
@@ -44,7 +44,7 @@ const router = express.Router();
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.get('/retrieve/:id', authenticateToken, getWorkingHoursDetails);
+router.get('/retrieve/:id', authenticateToken, requireAdmin, getWorkingHoursDetails);
 
 /**
  * @swagger
@@ -92,7 +92,55 @@ router.get('/retrieve/:id', authenticateToken, getWorkingHoursDetails);
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.get('/retrieve/byuser/:userId', authenticateToken, getWorkingHours);
+router.get('/retrieve/byuser/:userId', authenticateToken, requireAdmin, getWorkingHours);
+
+/**
+ * @swagger
+ * /workinghours/retrieve/byuser/{userId}:
+ *   get:
+ *     summary: Retrieve the details of a working hours entry a user's ID
+ *     tags: [Working Hours]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: string
+ *           default: 1
+ *         description: Page Number
+ *     responses:
+ *       200:
+ *         description: A user's working hours
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 currentPage:
+ *                   type: integer
+ *                 totalPages:
+ *                   type: integer
+ *                 totalCount:
+ *                   type: integer
+ *                 records:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/WorkingHours'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.get('/retrieve/currentuser', authenticateToken, getWorkingHoursByCurrentUser);
 
 /**
  * @swagger
@@ -132,7 +180,7 @@ router.get('/retrieve/byuser/:userId', authenticateToken, getWorkingHours);
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.post('/create', authenticateToken, uploadSignature.single('signature'), validate(workingHoursCreateSchema), createWorkingHours);
+router.post('/create', authenticateToken, requireAdmin, uploadSignature.single('signature'), validate(workingHoursCreateSchema), createWorkingHours);
 
 /**
  * @swagger
@@ -175,7 +223,7 @@ router.post('/create', authenticateToken, uploadSignature.single('signature'), v
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.patch('/edit/:id', authenticateToken, validate(workingHoursEditSchema), editWorkingHours);
+router.patch('/edit/:id', authenticateToken, requireAdmin, validate(workingHoursEditSchema), editWorkingHours);
 
 /**
  * @swagger
@@ -212,6 +260,6 @@ router.patch('/edit/:id', authenticateToken, validate(workingHoursEditSchema), e
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.delete('/delete/:id', authenticateToken, deleteWorkingHours);
+router.delete('/delete/:id', authenticateToken, requireAdmin, deleteWorkingHours);
 
 export default router;

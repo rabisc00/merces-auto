@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { createTimetable, editTimetable, deleteTimetable, getTimetableByDate, getTimetableDetails, getTimetables } from '../controllers/timetable';
-import { authenticateToken, authenticateTokenAdmin } from '../middleware/auth';
+import { authenticateToken, requireAdmin } from '../middleware/auth';
 import { validate } from '../middleware/validate';
 import { timetableCreateSchema, timetableEditSchema } from '../validators/timetableValidator';
 
@@ -159,7 +159,7 @@ router.get('/retrieve/:id', authenticateToken, getTimetableDetails);
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.post('/create', authenticateTokenAdmin, validate(timetableCreateSchema), createTimetable);
+router.post('/create', authenticateToken, requireAdmin, validate(timetableCreateSchema), createTimetable);
 
 /**
  * @swagger
@@ -202,7 +202,7 @@ router.post('/create', authenticateTokenAdmin, validate(timetableCreateSchema), 
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.patch('/edit/:id', authenticateTokenAdmin, validate(timetableEditSchema), editTimetable);
+router.patch('/edit/:id', authenticateToken, requireAdmin, validate(timetableEditSchema), editTimetable);
 
 /**
  * @swagger
@@ -239,6 +239,6 @@ router.patch('/edit/:id', authenticateTokenAdmin, validate(timetableEditSchema),
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.delete('/delete/:id', authenticateTokenAdmin, deleteTimetable);
+router.delete('/delete/:id', authenticateToken, requireAdmin, deleteTimetable);
 
 export default router;

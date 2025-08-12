@@ -8,7 +8,7 @@ import { useAuth } from "../context/AuthContext";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { BusRoutesOptionsNavigationProp, BusRouteStackParamList } from "../types/navigation";
 import { timetableCreateSchema } from "../validations/timetableSchema";
-import { fetchBusRoutes } from "../services/busRouteService";
+import { fetchBusRoutes, getBusRouteDetails } from "../services/busRouteService";
 import { useEffect, useState } from "react";
 import { ListObject } from "../types/listObject";
 import { DropdownList } from "../components/DropdownList";
@@ -52,6 +52,19 @@ export default function TimetableRegistrationScreen() {
             } else {
                 setBusRoutePage(prevPage => prevPage + 1);
             }
+
+            if (busRouteId == null) return;
+
+            const foundBusRoute = busRoutes.find((busRoute) => busRoute.value == busRouteId);
+            if (!foundBusRoute) {
+                const initialBusRoute = await getBusRouteDetails(busRouteId, userToken);
+                const initialDropdownObject: ListObject = {
+                    value: initialBusRoute.id,
+                    label: `${initialBusRoute.lineNumber}: ${initialBusRoute.origin} -> ${initialBusRoute.destination}`
+                };
+
+                setBusRoutes((prev) => [...prev, initialDropdownObject]);
+            }
         } finally {
             setLoadingBusRoute(false);
         }
@@ -82,13 +95,13 @@ export default function TimetableRegistrationScreen() {
     }
 
     useEffect(() => {
-        const populateBusRoutes = async () => {
+        const populateFields = async () => {
             showLoading();
             await populateBusRoutes();
             hideLoading();
         }
         
-        populateBusRoutes();
+        populateFields();
     }, []);
 
     return (
@@ -96,7 +109,7 @@ export default function TimetableRegistrationScreen() {
             <HeaderWithSearch />
             <Formik<TimetableCreateForm>
                 initialValues={{ 
-                    busRouteId: '', 
+                    busRouteId: busRouteId, 
                     arrivalTime: '', 
                     departureTime: '', 
                     days: []

@@ -7,6 +7,7 @@ import BusesStackNavigator from "./BusNavigator";
 import BusRouteStackNavigator from "./BusRouteNavigator";
 import { useAuth } from "../context/AuthContext";
 import { WorkingHoursStackNavigator } from "./WorkingHoursNavigator";
+import TripStackNavigator from "./TripNavigator";
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -15,7 +16,8 @@ const getIconName = (routeName: string, focused: boolean): string => {
     BusRoutes: { active: 'trail-sign', inactive: 'trail-sign-outline' },
     WorkingHours: { active: 'alarm', inactive: 'alarm-outline' },
     Buses: { active: 'bus', inactive: 'bus-outline' },
-    Users: { active: 'person', inactive: 'person-outline' }
+    Users: { active: 'person', inactive: 'person-outline' },
+    Trips: { active: 'airplane', inactive: 'airplane-outline' }
   };
   
   const icon = icons[routeName];
@@ -58,12 +60,15 @@ export default function MainTabs() {
             <Tab.Screen name="Buses" component={BusesStackNavigator} options={{
                 headerShown: false
             }} />
+            <Tab.Screen name="Trips" component={TripStackNavigator} options={{
+                headerShown: false
+            }} />
             {isUserAdmin &&
                 <Tab.Screen name="Users" component={UsersStackNavigator} options={{
                     headerShown: false
                 }} /> 
             }
-            
+        
         </Tab.Navigator>
     );
 };
