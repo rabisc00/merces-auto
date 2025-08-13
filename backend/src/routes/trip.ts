@@ -179,7 +179,7 @@ router.get('/retrieve/byuser/:userId', authenticateToken, getTripsByUser);
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.post('/create', authenticateToken, requireAdmin, validate(tripCreateSchema), createTrip);
+router.post('/create', authenticateToken, validate(tripCreateSchema), createTrip);
 
 /**
  * @swagger
@@ -222,7 +222,7 @@ router.post('/create', authenticateToken, requireAdmin, validate(tripCreateSchem
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.patch('/edit/:id', authenticateToken, requireAdmin, validate(tripEditSchema), editTrip);
+router.patch('/edit/:id', authenticateToken, validate(tripEditSchema), editTrip);
 
 /**
  * @swagger

@@ -9,17 +9,18 @@ import { useAuth } from "../../context/AuthContext";
 import BaseCard from "../BaseCard";
 import { globalStyles } from "../../styles/global";
 import CardActionButtons from "../CardActionButtons";
+import dayjs from "dayjs";
 
 type Props = Trip & {
     onDelete?: () => void;
 }
 
-export function TripCard({ id, numberOfPassengers, date, timetable, onDelete }: Props) {
+export function TripCard({ id, numberOfPassengers, date, timetable, user, onDelete }: Props) {
     const route = useRoute();
     const busNavigation = useNavigation<BusesOptionsNavigationProp>();
     const userNavigation = useNavigation<UsersOptionsNavigationProp>();
     const { showLoading, hideLoading } = useLoading();
-    const { userToken, isUserAdmin } = useAuth();
+    const { userToken, isUserAdmin, userId } = useAuth();
 
     const currentScreen = route.name;
 
@@ -54,18 +55,17 @@ export function TripCard({ id, numberOfPassengers, date, timetable, onDelete }: 
         <BaseCard>
             <View style={globalStyles.cardView}>
                 <View style={globalStyles.cardContent}>
-                    <Text style={globalStyles.boldText}>{date}</Text>
+                    <Text style={globalStyles.boldText}>{timetable.busRoute.lineNumber} | {date}</Text>
                     <Text>
-                        {timetable.busRoute.lineNumber}: {timetable.busRoute.origin} 
-                        ({timetable.departureTime}) {'->'} 
-                        {timetable.busRoute.destination} ({timetable.arrivalTime})
+                        {timetable.busRoute.origin} ({timetable.departureTime.slice(0, 5)}) {'-> '}
+                        {timetable.busRoute.destination} ({timetable.arrivalTime.slice(0, 5)})
                     </Text>
                 </View>
             </View>
 
             <CardActionButtons
                 deleteAction={isUserAdmin ? deleteAction : undefined}
-                detailsAction={isUserAdmin ? detailsAction : undefined}
+                detailsAction={isUserAdmin || user.id === userId ? detailsAction : undefined}
             />
         </BaseCard>
     )

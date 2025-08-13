@@ -148,6 +148,7 @@ export const getWorkingHours = async function(req: AuthRequest, res: Response) {
 export const getWorkingHoursDetails = async function(req: AuthRequest, res: Response) {
     try {
         const workingHoursId = req.params.id;
+        const { id, isAdmin } = req.user;
 
         const workingHours = await WorkingHours.findByPk(workingHoursId, {
             attributes: ['id', 'startTime', 'endTime', 'signature', 'createdAt', 'updatedAt'],
@@ -156,6 +157,10 @@ export const getWorkingHoursDetails = async function(req: AuthRequest, res: Resp
                 attributes: ['id', 'name', 'documentNumber']
             }]
         });
+
+        if (!isAdmin && workingHours.user.id !== id) {
+            return res.status(403).json({ error: HTTP_MESSAGES.FORBIDDEN });
+        }
         
         return res.json(workingHours);
     } catch (error: any) {
@@ -167,15 +172,29 @@ export const getWorkingHoursDetails = async function(req: AuthRequest, res: Resp
 export const getWorkingHoursByCurrentUser = async function(req: AuthRequest, res: Response) {
     try {
         const userId = req.user.id;
-        const workingHours = await WorkingHours.findByPk(userId, {
-            attributes: ['id', 'startTime', 'endTime', 'signature', 'createdAt', 'updatedAt'],
+        const page = parseInt(req.query.page as string) || 1;
+        const offset = (page - 1) * 10;
+        const limit = 10;
+
+        const { count, rows } = await WorkingHours.findAndCountAll({
+            offset,
+            limit,
+            attributes: ['id', 'startTime', 'endTime', 'signature'],
             include: [{
                 model: User,
-                attributes: ['id', 'name', 'documentNumber']
+                attributes: ['id', 'name', 'documentNumber'],
+                where: {
+                    id: userId
+                }
             }]
         });
 
-        return res.json(workingHours);
+        return res.json({
+            currentPage: page,
+            totalPages: Math.ceil(count / limit),
+            totalCount: count,
+            records: rows
+        });
     } catch (error: any) {
         console.error('Error fetching working hours by current user:', error);
         return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });

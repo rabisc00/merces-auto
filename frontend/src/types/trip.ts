@@ -11,7 +11,10 @@ export type Trip = {
             origin: string;
             destination: string;
         }
-    }
+    };
+    user: {
+        id: string;
+    };
 };
 
 export type TripDetails = {

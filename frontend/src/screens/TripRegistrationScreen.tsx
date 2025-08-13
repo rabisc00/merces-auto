@@ -24,7 +24,7 @@ type TripRegistrationRouteProp = RouteProp<
 >;
 
 export default function TripRegistrationScreen() {
-    const { userToken, isUserAdmin } = useAuth();
+    const { userToken, isUserAdmin, userId } = useAuth();
     const { showLoading, hideLoading } = useLoading();
     const route = useRoute<TripRegistrationRouteProp>();
     const userNavigation = useNavigation<UsersOptionsNavigationProp>();
@@ -123,8 +123,10 @@ export default function TripRegistrationScreen() {
                 setUsersPage(prev => prev + 1);
             }
 
-            if (routeName === 'UserTripRegistration' && id != null) {
-                const userFound = users.find((user) => user.value === id);
+            const initialId = id ?? userId;
+
+            if (routeName === 'UserTripRegistration' && initialId != null) {
+                const userFound = users.find((user) => user.value === initialId);
                 if (!userFound) {
                     const selectedUser = await getUserDetails(id, userToken);
                     const selectedUserDropdownObject: ListObject = {
@@ -177,7 +179,7 @@ export default function TripRegistrationScreen() {
             
             <Formik<TripCreate>
                 initialValues={{
-                    userId: routeName === 'UserTripRegistration' || routeName == 'TripsRegistration' ? id : '',
+                    userId: routeName === 'UserTripRegistration' ? id : userId || '',
                     busId: routeName === 'BusTripRegistration' ? id : '',
                     timetableId: '',
                     date: '',

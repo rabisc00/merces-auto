@@ -11,7 +11,7 @@ import { fetchBuses } from "../services/busService";
 import { BusCard } from "../components/cards/BusCard";
 
 export default function BusesListScreen() {
-    const { userToken } = useAuth();
+    const { userToken, isUserAdmin } = useAuth();
     const navigation = useNavigation<BusesOptionsNavigationProp>();
 
     const [refreshFlag, setRefreshFlag] = useState(false);
@@ -41,7 +41,7 @@ export default function BusesListScreen() {
                     )}
                     keyExtractor={(bus) => bus.id}
                     addButtonText="Add New Bus"
-                    navigateAdd={() => navigation.navigate('BusRegistration')}
+                    navigateAdd={isUserAdmin ? (() => navigation.navigate('BusRegistration')) : undefined}
                     refreshFlag={refreshFlag}
                     showAdd={true}
                 />

@@ -243,6 +243,15 @@ export const swaggerOptions = {
               type: 'string',
               format: 'date'
             },
+            user: {
+              type: 'object',
+              properties: {
+                id: {
+                  type: 'string',
+                  format: 'uuid'
+                }
+              }
+            },
             timetable: {
               type: 'object',
               properties: {

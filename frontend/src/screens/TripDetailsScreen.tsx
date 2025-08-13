@@ -128,7 +128,7 @@ export default function TripDetailsScreen() {
             const response = await fetchUsers(usersPage, userToken);
             const dropdownObjects: ListObject[] = response.records.map((user) => ({
                 value: user.id,
-                label: `${user.name}: ${user.documentNumber}`
+                label: `${user.name} | ${user.documentNumber}`
             }));
 
             setUsers(prev => [...prev, ...dropdownObjects]);
@@ -145,7 +145,7 @@ export default function TripDetailsScreen() {
                 const selectedUser = await getUserDetails(originalTrip.user.id, userToken);
                 const selectedDropdownObject: ListObject = {
                     value: selectedUser.id,
-                    label: `${selectedUser.name}: ${selectedUser.documentNumber}`
+                    label: `${selectedUser.name} | ${selectedUser.documentNumber}`
                 }
 
                 setUsers(prev => [...prev, selectedDropdownObject]);

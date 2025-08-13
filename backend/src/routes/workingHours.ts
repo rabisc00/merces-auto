@@ -16,86 +16,6 @@ const router = express.Router();
 
 /**
  * @swagger
- * /workinghours/retrieve/{id}:
- *   get:
- *     summary: Retrieve the details of a working hours entry by ID
- *     tags: [Working Hours]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Working Hours ID
- *     responses:
- *       200:
- *         description: Details of the working hours entry
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               $ref: '#/components/schemas/WorkingHoursDetails'
- *       401:
- *         $ref: '#/components/responses/UnauthorizedError'
- *       403:
- *         $ref: '#/components/responses/ForbiddenError'
- *       500:
- *         $ref: '#/components/responses/InternalServerError'
- */
-router.get('/retrieve/:id', authenticateToken, requireAdmin, getWorkingHoursDetails);
-
-/**
- * @swagger
- * /workinghours/retrieve/byuser/{userId}:
- *   get:
- *     summary: Retrieve the details of a working hours entry a user's ID
- *     tags: [Working Hours]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: User ID
- *       - in: query
- *         name: page
- *         schema:
- *           type: string
- *           default: 1
- *         description: Page Number
- *     responses:
- *       200:
- *         description: A user's working hours
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 currentPage:
- *                   type: integer
- *                 totalPages:
- *                   type: integer
- *                 totalCount:
- *                   type: integer
- *                 records:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/WorkingHours'
- *       401:
- *         $ref: '#/components/responses/UnauthorizedError'
- *       403:
- *         $ref: '#/components/responses/ForbiddenError'
- *       500:
- *         $ref: '#/components/responses/InternalServerError'
- */
-router.get('/retrieve/byuser/:userId', authenticateToken, requireAdmin, getWorkingHours);
-
-/**
- * @swagger
  * /workinghours/retrieve/byuser/{userId}:
  *   get:
  *     summary: Retrieve the details of a working hours entry a user's ID
@@ -144,6 +64,86 @@ router.get('/retrieve/currentuser', authenticateToken, getWorkingHoursByCurrentU
 
 /**
  * @swagger
+ * /workinghours/retrieve/byuser/{userId}:
+ *   get:
+ *     summary: Retrieve the details of a working hours entry a user's ID
+ *     tags: [Working Hours]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: string
+ *           default: 1
+ *         description: Page Number
+ *     responses:
+ *       200:
+ *         description: A user's working hours
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 currentPage:
+ *                   type: integer
+ *                 totalPages:
+ *                   type: integer
+ *                 totalCount:
+ *                   type: integer
+ *                 records:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/WorkingHours'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.get('/retrieve/byuserid/:userId', authenticateToken, requireAdmin, getWorkingHours);
+
+/**
+ * @swagger
+ * /workinghours/retrieve/{id}:
+ *   get:
+ *     summary: Retrieve the details of a working hours entry by ID
+ *     tags: [Working Hours]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Working Hours ID
+ *     responses:
+ *       200:
+ *         description: Details of the working hours entry
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/WorkingHoursDetails'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+router.get('/retrieve/:id', authenticateToken, getWorkingHoursDetails);
+
+/**
+ * @swagger
  * /workinghours/create:
  *   post:
  *     summary: Create a new working hours entry
@@ -180,7 +180,7 @@ router.get('/retrieve/currentuser', authenticateToken, getWorkingHoursByCurrentU
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.post('/create', authenticateToken, requireAdmin, uploadSignature.single('signature'), validate(workingHoursCreateSchema), createWorkingHours);
+router.post('/create', authenticateToken, uploadSignature.single('signature'), validate(workingHoursCreateSchema), createWorkingHours);
 
 /**
  * @swagger
@@ -223,7 +223,7 @@ router.post('/create', authenticateToken, requireAdmin, uploadSignature.single('
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.patch('/edit/:id', authenticateToken, requireAdmin, validate(workingHoursEditSchema), editWorkingHours);
+router.patch('/edit/:id', authenticateToken, validate(workingHoursEditSchema), editWorkingHours);
 
 /**
  * @swagger

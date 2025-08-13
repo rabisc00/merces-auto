@@ -26,7 +26,7 @@ export function authenticateToken(req: AuthRequest, res: Response, next: NextFun
 
 export function requireAdmin(req: AuthRequest, res: Response, next: NextFunction) {
     if (!req.user?.isAdmin) {
-        return res.status(401).json({ error: HTTP_MESSAGES.UNAUTHORIZED });
+        return res.status(401).json({ error: HTTP_MESSAGES.FORBIDDEN });
     }
     
     return next();

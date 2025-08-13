@@ -31,11 +31,14 @@ export const fetchTripsByBus = async (
     page: number
 ): Promise<ListResponse<Trip>> => {
     try {
+        console.log(`${API_BASE_URL}/trips/retrieve/bybus/${busId}?page=${page}`);
         const res = await axios.get<ListResponse<Trip>>(`${API_BASE_URL}/trips/retrieve/bybus/${busId}?page=${page}`, {
             headers: {
                 Authorization: `Bearer ${userToken}`
             }
         });
+
+        console.log(res.data);
 
         return res.data
     } catch (error: any) {
@@ -74,6 +77,7 @@ export const registerTrip = async (
             observations: trip.observations,
             userId: trip.userId,
             busId: trip.busId,
+            date: trip.date,
             timetableId: trip.timetableId
         }, {
             headers: {

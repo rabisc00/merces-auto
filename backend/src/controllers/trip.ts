@@ -160,6 +160,9 @@ export const getTripsByUser = async function(req: AuthRequest, res: Response) {
                     model: BusRoute,
                     attributes: ['id', 'lineNumber', 'origin', 'destination']
                 }]
+            }, {
+                model: User,
+                attributes: ['id']
             }],
             order: [['updatedAt', 'DESC']]
         });
@@ -195,6 +198,9 @@ export const getTripsByBus = async function(req: AuthRequest, res: Response) {
                     model: BusRoute,
                     attributes: ['id', 'lineNumber', 'origin', 'destination']
                 }]
+            }, {
+                model: User,
+                attributes: ['id']
             }],
             order: [['updatedAt', 'DESC']]
         });
@@ -225,11 +231,7 @@ export const getTripDetails = async function(req: AuthRequest, res: Response) {
                 attributes: ['id', 'documentNumber', 'name']
             }, {
                 model: Timetable,
-                attributes: ['id', 'arrivalTime', 'departureTime'],
-                include: [{
-                    model: BusRoute,
-                    attributes: ['lineNumber', 'origin', 'destination', 'distanceInKm', 'averageTimeInMinutes']
-                }]
+                attributes: ['id', 'arrivalTime', 'departureTime']
             }]
         });
 

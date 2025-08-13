@@ -60,7 +60,7 @@ async function start() {
             console.log('Swagger docs at https://localhost:3000/api-docs');
         })
     } catch (error) {
-        console.log(error);
+        console.error(error);
         console.log('Error connecting to the database');
     }
 }

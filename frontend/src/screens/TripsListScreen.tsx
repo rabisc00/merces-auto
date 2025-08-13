@@ -50,6 +50,7 @@ export default function TripsListScreen() {
                             numberOfPassengers={trip.numberOfPassengers}
                             date={trip.date}
                             timetable={trip.timetable}
+                            user={trip.user}
                             onDelete={() => setRefreshFlag(prev => !prev)}
                         />
                     )}

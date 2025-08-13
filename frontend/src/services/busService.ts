@@ -76,7 +76,6 @@ export const saveBusChanges = async (
     userToken: string | null
 ): Promise<boolean> => {
     try {
-        console.log(busId);
         await axios.patch(`${API_BASE_URL}/buses/edit/${busId}`, {
             busNumber: bus.busNumber,
             model: bus.model,

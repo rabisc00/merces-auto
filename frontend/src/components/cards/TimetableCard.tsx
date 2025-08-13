@@ -53,7 +53,7 @@ export function TimetableCard({ id,  arrivalTime, departureTime, days, busRoute,
 
             <CardActionButtons
                 deleteAction={isUserAdmin ? deleteAction : undefined}
-                detailsAction={detailsAction}
+                detailsAction={isUserAdmin ? detailsAction : undefined}
             />
         </BaseCard>
     )

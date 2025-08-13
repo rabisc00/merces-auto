@@ -162,7 +162,7 @@ export default function WorkingHoursRegistrationScreen() {
                             </View>
 
                             <SignatureField onOk={(sig) => setSignature(sig)} />
-                            <View style={globalStyles.mainContainer}>
+                            <View style={[globalStyles.mainContainer]}>
                                 <Button title="Register" onPress={() => handleSubmit()} />
                             </View>
                         </>

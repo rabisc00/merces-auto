@@ -6,10 +6,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { BusRoutesOptionsNavigationProp, BusRouteStackParamList } from "../types/navigation";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import HeaderWithSearch from "../components/HeaderWithSearch";
+import { useAuth } from "../context/AuthContext";
 
 type TimetableCalendarRouteProp = RouteProp<BusRouteStackParamList, 'TimetableCalendar'>
 
 export default function TimetableCalendarScreen() {
+    const { isUserAdmin } = useAuth();
     const navigation = useNavigation<NativeStackNavigationProp<BusRouteStackParamList>>();
     const route = useRoute<TimetableCalendarRouteProp>();
 
@@ -30,19 +32,24 @@ export default function TimetableCalendarScreen() {
         <SafeAreaView style={globalStyles.safeAreaContainer}>
             <HeaderWithSearch />
             <View style={globalStyles.mainContainer}>
-                <TouchableOpacity
-                    style={globalStyles.buttonWithIcon}
-                    onPress={navigateAdd}
-                >
-                    <Ionicons
-                        name='calendar'
-                        size={24}
-                        style={globalStyles.buttonIcon}
-                    />
-                    <Text style={globalStyles.buttonWithIconText}>
-                        Add New Timetable
-                    </Text>
-                </TouchableOpacity>
+                {
+                    isUserAdmin ?
+                    <TouchableOpacity
+                        style={globalStyles.buttonWithIcon}
+                        onPress={navigateAdd}
+                    >
+                        <Ionicons
+                            name='calendar'
+                            size={24}
+                            style={globalStyles.buttonIcon}
+                        />
+                        <Text style={globalStyles.buttonWithIconText}>
+                            Add New Timetable
+                        </Text>
+                    </TouchableOpacity> : 
+                    null
+                }
+                
                 
                 <Calendar
                 minDate={new Date().toISOString().split('T')[0]}

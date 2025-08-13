@@ -229,7 +229,7 @@ export const searchUser = async function(req: AuthRequest, res: Response) {
 
         return res.json(userResults);
     } catch (error: any) {
-        console.log('Search error:', error);
+        console.error('Search error:', error);
         return res.status(500).json({ error: HTTP_MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };

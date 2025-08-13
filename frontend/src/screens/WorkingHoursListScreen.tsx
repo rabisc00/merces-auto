@@ -41,7 +41,6 @@ export default function WorkingHoursListScreen() {
                     userId ?
                     <GenericCardList<WorkingHours>
                         fetchData={async (page) => {
-                            const fetchId = id ?? userId;
                             if (id) {
                                 return await fetchWorkingHoursByUser(id, page, userToken);
                             } else {
